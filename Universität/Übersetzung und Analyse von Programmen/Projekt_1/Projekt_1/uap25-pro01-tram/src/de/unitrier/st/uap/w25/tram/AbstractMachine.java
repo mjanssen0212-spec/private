@@ -167,7 +167,7 @@ public class AbstractMachine {
                     //POP
                     stack.remove(TOP);
                     TOP--;
-                    PC = -1;
+                    PC++;
                     break;
             }
         }
