@@ -9,13 +9,22 @@ final class Main
 	
 	public static void main(String[] argv)
 	{
+        String filename = "";
+        if(argv.length > 0) {
+            if(argv[0].equals("-d")) {
+                filename = argv[1];
+            } else {
+                filename = argv[0];
+            }
+        }
 		Instruction[] code = Assembler.readTRAMCode(
-				"tramcode\\square.tram"
+//				"tramcode\\square.tram"
 //				 "tramcode\\wrapper.tram"
 //                 "tramcode\\example1.tram"
 //				 "tramcode\\example2.tram"
 //				 "tramcode\\example3.tram"
 //				"tramcode\\test.tram"
+                filename
 		);
 
 		int lineNr=0;
@@ -27,7 +36,7 @@ final class Main
 		}
 
 		// TODO: Create an instance of the abstract machine with reasonable parameters
-        AbstractMachine am = new AbstractMachine(new ArrayList<>(/*List.of(0, 0)*/), -1, 0, 0, 0);
+        AbstractMachine am = new AbstractMachine(new ArrayList<>(), -1, 0, 0, 0);
         List<Integer> stack = am.runProgram(code);
 	}
 }
