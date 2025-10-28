@@ -1,0 +1,42 @@
+Input file: uap25-pro01-tram\tramcode\example1.tram
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - Code after assembly:
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 000| CONST 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 001| CONST 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 002| CONST 6 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 003| STORE 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 004| LOAD 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 005| CONST 3 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 006| MUL 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 007| CONST 5 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 008| CONST 2 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 009| MUL 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 010| ADD 0 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 011| STORE 1 0 0
+2025-10-23 21:44:51.138 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 012| HALT 0 0 0
+0: CONST 0 0 0
+1: CONST 0 0 0
+2: CONST 6 0 0
+3: STORE 0 0 0
+4: LOAD 0 0 0
+5: CONST 3 0 0
+6: MUL 0 0 0
+7: CONST 5 0 0
+8: CONST 2 0 0
+9: MUL 0 0 0
+10: ADD 0 0 0
+11: STORE 1 0 0
+12: HALT 0 0 0
+CONST 0 0 0: PP=0, FP=0, PC=0, STACK=[]
+CONST 0 0 0: PP=0, FP=0, PC=1, STACK=[0]
+CONST 6 0 0: PP=0, FP=0, PC=2, STACK=[0,0]
+STORE 0 0 0: PP=0, FP=0, PC=3, STACK=[0,0,6]
+LOAD 0 0 0: PP=0, FP=0, PC=4, STACK=[6,0]
+CONST 3 0 0: PP=0, FP=0, PC=5, STACK=[6,0,6]
+MUL 0 0 0: PP=0, FP=0, PC=6, STACK=[6,0,6,3]
+CONST 5 0 0: PP=0, FP=0, PC=7, STACK=[6,0,18]
+CONST 2 0 0: PP=0, FP=0, PC=8, STACK=[6,0,18,5]
+MUL 0 0 0: PP=0, FP=0, PC=9, STACK=[6,0,18,5,2]
+ADD 0 0 0: PP=0, FP=0, PC=10, STACK=[6,0,18,10]
+STORE 1 0 0: PP=0, FP=0, PC=11, STACK=[6,0,28]
+HALT 0 0 0: PP=0, FP=0, PC=12, STACK=[6,28]
+PP=0, FP=0, PC=-1, STACK=[6,28]

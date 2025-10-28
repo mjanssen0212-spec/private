@@ -1,0 +1,70 @@
+Input file: uap25-pro01-tram\tramcode\example3.tram
+2025-10-23 21:45:06.592 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - Code after assembly:
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 000| GOTO 23 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 001| LOAD 1 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 002| LOAD 2 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 003| ADD 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 004| STORE 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 005| LOAD 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 006| POP 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 007| LOAD 1 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 008| CONST 3 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 009| EQ 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 010| IFZERO
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 011| CONST 15 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 012| GOTO 21 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 013| CONST 3 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 014| STORE 2 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 015| LOAD 2 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 016| POP 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 017| CONST 4 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 018| LOAD 1 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 019| LOAD 2 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 020| INVOKE 3 1 1
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 021| NOP 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 022| RETURN 0 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 023| CONST 2 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 024| CONST 3 0 0
+2025-10-23 21:45:06.601 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 025| CONST 4 0 0
+2025-10-23 21:45:06.605 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 026| INVOKE 3 1 0
+2025-10-23 21:45:06.605 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 027| HALT 0 0 0
+0: GOTO 23 0 0
+1: LOAD 1 0 0
+2: LOAD 2 0 0
+3: ADD 0 0 0
+4: STORE 0 0 0
+5: LOAD 0 0 0
+6: POP 0 0 0
+7: LOAD 1 0 0
+8: CONST 3 0 0
+9: EQ 0 0 0
+10: IFZERO
+11: CONST 15 0 0
+12: GOTO 21 0 0
+13: CONST 3 0 0
+14: STORE 2 0 0
+15: LOAD 2 0 0
+16: POP 0 0 0
+17: CONST 4 0 0
+18: LOAD 1 0 0
+19: LOAD 2 0 0
+20: INVOKE 3 1 1
+21: NOP 0 0 0
+22: RETURN 0 0 0
+23: CONST 2 0 0
+24: CONST 3 0 0
+25: CONST 4 0 0
+26: INVOKE 3 1 0
+27: HALT 0 0 0
+GOTO 23 0 0: PP=0, FP=0, PC=0, STACK=[]
+CONST 2 0 0: PP=0, FP=0, PC=23, STACK=[]
+CONST 3 0 0: PP=0, FP=0, PC=24, STACK=[2]
+CONST 4 0 0: PP=0, FP=0, PC=25, STACK=[2,3]
+INVOKE 3 1 0: PP=0, FP=0, PC=26, STACK=[2,3,4]
+LOAD 1 0 0: PP=0, FP=3, PC=1, STACK=[2,3,4,27,0,0,0,0]
+LOAD 2 0 0: PP=0, FP=3, PC=2, STACK=[2,3,4,27,0,0,0,0,3]
+ADD 0 0 0: PP=0, FP=3, PC=3, STACK=[2,3,4,27,0,0,0,0,3,4]
+STORE 0 0 0: PP=0, FP=3, PC=4, STACK=[2,3,4,27,0,0,0,0,7]
+LOAD 0 0 0: PP=0, FP=3, PC=5, STACK=[7,3,4,27,0,0,0,0]
+POP 0 0 0: PP=0, FP=3, PC=6, STACK=[7,3,4,27,0,0,0,0,7]
+PP=0, FP=3, PC=-1, STACK=[7,3,4,27,0,0,0,0]

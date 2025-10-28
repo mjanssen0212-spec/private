@@ -1,0 +1,29 @@
+// Quellkode: let wrapper(number, threshold) {
+//                  let square(x) {
+//                        if (x*x > threshold) x
+//                         else x*x
+//                      }
+//                  in square(number)
+//                }
+//            in wrapper(4, 10)
+// Annahmen: Die Argumente von wrapper werden durch die Kellerzellen 0 und 1 repraesentiert,
+//           sowie PP=0, FP=0 und TOP=-1
+CONST 4
+CONST 10
+INVOKE 2 LWRAPPER 0
+HALT
+LWRAPPER: LOAD 0 0
+INVOKE 1 LSQUARE 0
+RETURN
+LSQUARE: LOAD 0 0
+LOAD 0 0
+MUL
+LOAD 1 1
+GT
+IFZERO L1
+LOAD 0 0
+RETURN
+L1: LOAD 0 0
+LOAD 0 0
+MUL
+RETURN
