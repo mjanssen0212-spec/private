@@ -1,7 +1,9 @@
 package de.unitrier.st.uap.w25.tram;
 
 import java.util.List;
-import java.util.Stack;
+
+import static de.unitrier.st.uap.w25.tram.Main.isDebug;
+import static de.unitrier.st.uap.w25.tram.Main.logger;
 
 public class AbstractMachine {
     private List<Integer> stack;
@@ -22,19 +24,18 @@ public class AbstractMachine {
     }
 
     public List<Integer> runProgram(Instruction[] instructions) {
-        while(PC != -1) {
+        while (PC != -1) {
             Instruction i = instructions[PC];
-            System.out.println(i.toString() + ": " + "PP=" + PP + ", FP=" + FP + ", PC=" + PC + ", STACK=" + stack);
             switch (i.getOpcode()) {
                 case 1:
                     //CONST
-                    stack.add(TOP+1, i.getArg1());
+                    stack.add(TOP + 1, i.getArg1());
                     TOP++;
                     PC++;
                     break;
                 case 2:
                     //LOAD
-                    stack.add(TOP+1, stack.get(spp(i.getArg2(), PP, FP) + i.getArg1()));
+                    stack.add(TOP + 1, stack.get(spp(i.getArg2(), PP, FP) + i.getArg1()));
                     TOP++;
                     PC++;
                     break;
@@ -61,7 +62,7 @@ public class AbstractMachine {
                     break;
                 case 6:
                     //MUL
-                    stack.set(TOP - 1, stack.get(TOP-1) * stack.get(TOP));
+                    stack.set(TOP - 1, stack.get(TOP - 1) * stack.get(TOP));
                     stack.remove(TOP);
                     TOP--;
                     PC++;
@@ -76,7 +77,7 @@ public class AbstractMachine {
                 case 8:
                     //LT
                     if (stack.get(TOP - 1) < stack.get(TOP)) {
-                        stack.set(TOP -1 , 1);
+                        stack.set(TOP - 1, 1);
                     } else {
                         stack.set(TOP - 1, 0);
                     }
@@ -147,7 +148,7 @@ public class AbstractMachine {
                     stack.add(TOP + 4, spp(i.getArg3(), PP, FP));
                     stack.add(TOP + 5, sfp(i.getArg3(), PP, FP));
                     PP = TOP - i.getArg1() + 1;
-                    FP = TOP + 1 ;
+                    FP = TOP + 1;
                     TOP = TOP + 5;
                     PC = i.getArg2();
                     break;
@@ -156,10 +157,10 @@ public class AbstractMachine {
                     int res = stack.get(TOP);
                     TOP = PP;
                     PC = stack.get(FP);
-                    PP = stack.get(FP+1);
-                    FP = stack.get(FP+2);
+                    PP = stack.get(FP + 1);
+                    FP = stack.get(FP + 2);
                     stack.set(TOP, res);
-                    while(stack.size() > TOP+1) {
+                    while (stack.size() > TOP + 1) {
                         stack.removeLast();
                     }
                     break;
@@ -170,13 +171,20 @@ public class AbstractMachine {
                     PC++;
                     break;
             }
+            if (isDebug) {
+                logger.debug(formatHelper(
+                        i, stack
+                ));
+            }
         }
-        System.out.println("PP=" + PP + ", FP=" + FP + ", PC=" + PC + ", STACK=" + stack);
+        if (isDebug) {
+            logger.debug("PP={}, FP={}, PC={}, STACK={}", PP, FP, PC, stack);
+        }
         return stack;
     }
 
     private int spp(int d, int pp, int fp) {
-        if(d == 0) {
+        if (d == 0) {
             return pp;
         } else {
             spp(d - 1, stack.get(fp + 3), stack.get(fp + 4));
@@ -185,10 +193,10 @@ public class AbstractMachine {
     }
 
     private int sfp(int d, int ppp, int fp) {
-        if(d == 0) {
+        if (d == 0) {
             return fp;
         } else {
-            sfp(d - 1,  stack.get(fp + 3), stack.get(fp + 4));
+            sfp(d - 1, stack.get(fp + 3), stack.get(fp + 4));
         }
         return -1;
     }
@@ -232,4 +240,37 @@ public class AbstractMachine {
     public void setPC(int PC) {
         this.PC = PC;
     }
+
+    private String formatHelper(Instruction instr, List<Integer> stack) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("After instruction = %s; configuration = PC = %d; PP = %d; FP = %d; TOP = %d", instr.toString().split(" ")[0], PC, PP, FP, TOP));
+        sb.append(System.lineSeparator());
+        sb.append("Stack:").append(System.lineSeparator());
+
+        if (TOP == -1) {
+            sb.append("[]").append(System.lineSeparator());
+        }
+        for (int i = 0; i <= TOP; i++) {
+            sb.append(String.format("[%d] = %d", i, stack.get(i)));
+
+            if ((int) PP == i) {
+                String label = "PP";
+                sb.append(String.format(" <-- %s (%s = %d)", label, label, i));
+            }
+            if (FP == i) {
+                String label = "FP";
+                sb.append(String.format(" <-- %s (%s = %d)", label, label, i));
+            }
+            if (TOP == i) {
+                String label = "TOP";
+                sb.append(String.format(" <-- %s (%s = %d)", label, label, i));
+            }
+
+            sb.append(System.lineSeparator());
+        }
+
+        return sb.toString();
+    }
+
 }

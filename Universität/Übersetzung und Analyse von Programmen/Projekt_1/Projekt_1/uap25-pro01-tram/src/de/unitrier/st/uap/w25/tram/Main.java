@@ -3,15 +3,24 @@ package de.unitrier.st.uap.w25.tram;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 final class Main
 {
 	private Main(){}
+    protected static final Logger logger = LogManager.getLogger();
+    protected static Boolean isDebug = false;
 	
 	public static void main(String[] argv)
 	{
+        logger.log(Level.ALL, "Hello World");
         String filename = "";
         if(argv.length > 0) {
             if(argv[0].equals("-d")) {
+                isDebug = true;
                 filename = argv[1];
             } else {
                 filename = argv[0];
@@ -22,15 +31,15 @@ final class Main
 //				 "tramcode\\wrapper.tram"
 //                 "tramcode\\example1.tram"
 //				 "tramcode\\example2.tram"
-//				 "tramcode\\example3.tram"
+				 "tramcode\\example3.tram"
 //				"tramcode\\test.tram"
-                filename
+//                filename
 		);
 
 		int lineNr=0;
 		for(Instruction instr: code) {
 			if (instr != null) {
-				System.out.println(String.format("%03d", lineNr) + "| " + instr.toString());
+				logger.debug(String.format("%03d", lineNr) + "| " + instr.toString());
 				lineNr++;
 			}
 		}
