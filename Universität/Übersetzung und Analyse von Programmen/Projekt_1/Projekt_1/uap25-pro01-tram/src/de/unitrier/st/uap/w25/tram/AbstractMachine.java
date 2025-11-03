@@ -1,4 +1,6 @@
 package de.unitrier.st.uap.w25.tram;
+//Matthias Janßen
+//1871808
 
 import java.util.List;
 
@@ -25,6 +27,11 @@ public class AbstractMachine {
 
     public List<Integer> runProgram(Instruction[] instructions) {
         while (PC != -1) {
+
+            if (PC >= instructions.length) {
+                PC = -1;
+                break;
+            }
             Instruction i = instructions[PC];
             switch (i.getOpcode()) {
                 case 1:
@@ -156,12 +163,16 @@ public class AbstractMachine {
                     //RETURN
                     int res = stack.get(TOP);
                     TOP = PP;
+                    int PCtemp = PC;
                     PC = stack.get(FP);
                     PP = stack.get(FP + 1);
                     FP = stack.get(FP + 2);
                     stack.set(TOP, res);
                     while (stack.size() > TOP + 1) {
                         stack.removeLast();
+                    }
+                    if (stack.size() == 1) {
+                        PC = PCtemp + 1;
                     }
                     break;
                 case 18:
@@ -251,7 +262,7 @@ public class AbstractMachine {
         if (TOP == -1) {
             sb.append("[]").append(System.lineSeparator());
         }
-        for (int i = 0; i <= TOP; i++) {
+        for (int i = 0; i < stack.size(); i++) {
             sb.append(String.format("[%d] = %d", i, stack.get(i)));
 
             if ((int) PP == i) {

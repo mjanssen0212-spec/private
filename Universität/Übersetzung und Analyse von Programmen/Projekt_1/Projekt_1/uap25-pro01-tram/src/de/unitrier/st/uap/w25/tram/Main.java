@@ -1,4 +1,6 @@
 package de.unitrier.st.uap.w25.tram;
+//Matthias Janßen
+//1871808
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +14,10 @@ final class Main
 {
 	private Main(){}
     protected static final Logger logger = LogManager.getLogger();
-    protected static Boolean isDebug = false;
-	
+    protected static Boolean isDebug = true;
+
 	public static void main(String[] argv)
 	{
-        logger.log(Level.ALL, "Hello World");
         String filename = "";
         if(argv.length > 0) {
             if(argv[0].equals("-d")) {
@@ -31,9 +32,10 @@ final class Main
 //				 "tramcode\\wrapper.tram"
 //                 "tramcode\\example1.tram"
 //				 "tramcode\\example2.tram"
-				 "tramcode\\example3.tram"
+//				 "tramcode\\example3.tram"
 //				"tramcode\\test.tram"
 //                filename
+                "tramcode\\euklid.tram"
 		);
 
 		int lineNr=0;
