@@ -1,0 +1,148 @@
+% Solution_Template.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel} % remove ngerman if you prefer English only
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{array,etoolbox}
+\usepackage{afterpage}
+\usepackage{longtable}
+\usepackage{bigdelim}
+\usepackage{multirow}
+
+
+\preto\tabular{\setcounter{magicrownumbers}{-1}}
+\newcounter{magicrownumbers}
+\newcommand\rownumber{\stepcounter{magicrownumbers}\arabic{magicrownumbers}}
+
+\geometry{margin=25mm}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\textbf{Name:} \studentname}
+\rhead{\textbf{Matr.-Nr.:} \studentnumber}
+\cfoot{\thepage}
+
+% User info - edit these
+\newcommand{\studentname}{Matthias Janßen}
+\newcommand{\studentnumber}{1871808}
+\newcommand{\course}{Übersetzung und Analyse von Programmen}
+\newcommand{\institute}{Universität Trier}
+
+\title{\course}
+\author{\studentname\\Matrikelnummer: \studentnumber\\\institute}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+    \textbf{Abgabe:} Erstes Übungsblatt \\
+    \vspace{4mm}
+    \textbf{Betreuer:} Prof. Dr. Stephan Diel \\ Jan Niclas Ruppenthal, M.Sc.
+\end{center}
+
+\bigskip
+
+\section*{Aufgaben}
+
+\section{Aufgabe 1: Programm der MaMa}
+\begin{verbatim}
+    1) Sei L = [n1, n2]
+    2) Falls n1 = 0 gehe zu 5
+    3) Falls n1 > n2 dann n1 - n2 sonst n2 - n1
+    4) Falls n2 != 0 gehe zu 3
+    4) Fertig n1 ist der ggT
+    5) Fertig n2 ist der ggT
+
+\end{verbatim}
+\begin{itemize}
+    \item P(0) = ldo(-1)
+    \item p(1) = push(0)
+    \item p(2) = equal(19)
+    \item p(3) = ldo(0)
+    \item p(4) = push(0)
+    \item p(5) = equal(21)
+    \item p(6) = ldo(-1)
+    \item p(7) = ldo(-1)
+    \item p(8) = leq(14)
+    \item (p9) = ldo(-1)
+    \item p(10) = ldo(-1)
+    \item p(11) = sub
+    \item p(12) = sto(-2)
+    \item p(13) = ujp(3)
+    \item p(14) = ldo(0)
+    \item p(15) = ldo(-2)
+    \item p(16) = sub
+    \item p(17) = sto(-1)
+    \item p(18) = ujp(3)
+    \item p(19) = sto(-1)
+    \item p(20) = stop
+    \item p(21) = pop
+    \item p(22) = stop
+\end{itemize}
+
+
+\section{Aufgabe 2: Rechnung der MaMa }
+%\preto\tabular{\setcounter{magicrownumbers}{0}}
+
+
+\begin{longtable}{@{\makebox[3em][r]{\rownumber\space}} c c c}
+    (1,0, [4, 6]) & & \\
+    (2, 1, [4, 6, 4]) &   ldo(-1)  & \rdelim\}{3}{1.8cm}[\normalfont a = 0 check]\\
+    (3, 2, [4, 6, 4, 0]) & push(0)  & \\
+    (1, 3, [4, 6]) & equal(19)  & \\
+    (2, 4, [4, 6, 6]) & ldo(0)  & \rdelim\}{11}{1.8cm}[\normalfont 1. Iteration] \\
+    (3, 5, [4, 6, 6, 0]) & push(0) & \\
+    (1, 6, [4, 6]) & equal(21)  & \\
+    (2, 7, [4, 6, 4]) & ldo(-1) & \\
+    (3, 8, [4, 6, 4, 6]) & ldo(-1) & \\
+    (1, 14, [4, 6]) & leq(14)  & \\
+    (2, 15, [4, 6, 6]) & ldo(0)  & \\
+    (3, 16, [4, 6, 6, 4]) & ldo(-2)  & \\
+    (2, 17, [4, 6, 2]) & sub  & \\
+    (1, 18, [4, 2]) & sto(-1)  & \\
+    (1, 3, [4, 2]) & ujp(3)  & \\
+    (2, 4, [4, 2, 2]) & ldo(0)  & \rdelim\}{11}{1.8cm}[\normalfont 2. Iteration]\\
+    (3, 5, [4, 2, 2, 0]) & push(0)  & \\
+    (1, 6, [4, 2]) & equal(21)  & \\
+    (2, 7, [4, 2, 4]) & ldo(-1)  & \\
+    (3, 8, [4, 2, 4, 2]) & ldo(-1)  & \\
+    (1, 9, [4, 2]) & leq(14)  & \\
+    (2, 10, [4, 2, 4]) & ldo(-1)  & \\
+    (3, 11, [4, 2, 4, 2]) & ldo(-1)  & \\
+    (2, 12, [4, 2, 2]) & sub  & \\
+    (1, 13, [2, 2]) & sto(-2)  & \\
+    (1, 3, [2, 2]) & ujp(3)  & \\
+    (2, 4, [2, 2, 2]) & ldo(0)  & \rdelim\}{11}{1.8cm}[\normalfont 3. Iteration] \\
+    (3, 5, [2, 2, 2, 0]) & push(0)  & \\
+    (1, 6, [2, 2]) & equal(21)  & \\
+    (2, 7, [2, 2, 2]) & ldo(-1)  & \\
+    (3, 8, [2, 2, 2, 2]) & ldo(-1)  & \\
+    (1, 14, [2, 2]) & leq(14)  & \\
+    (2, 15, [2, 2, 2]) & ldo(0)  & \\
+    (3, 16, [2, 2, 2, 2]) & ldo(-2)  & \\
+    (2, 17, [2, 2, 0]) & sub  & \\
+    (1, 18, [2, 0]) & sto(-1)  & \\
+    (1, 3, [2, 0]) & ujp(3)  & \\
+    (2, 4, [2, 0, 0]) & ldo(0)  & \rdelim\}{5}{1.8cm}[\normalfont Letzte Iteration] \\
+    (3, 5, [2, 0, 0, 0]) & push(0)  & \\
+    (1, 21, [2, 0]) & equal(21)  & \\
+    (2, 22, [2]) & pop  & \\
+    (0, 22, [2]) & stop  & \\
+
+\end{longtable}
+
+\bigskip Das Ergebnis ist 2, also der ggT von 4 und 6. Der Algorithmus hat eine Laufzeit von 41 Schritten
+    für die gegebene Eingabe.
+
+\section{Aufgabe 3: Laufzeit der MaMa}
+    Laufzeizt: x * 11 + 8 \\
+    Für die Laufzeit ist irrelevant ob n1 > n2 oder n2 > n1 gilt, da in beiden Fällen die gleiche Anzahl an Schritten benötigt wird.
+    In jedem Schleifendurchlauf werden 11 Schritte ausgeführt, bis eine der beiden Zahlen 0 ist.
+    Zusätzlich werden 8 Schritte für die Initialisierung und das Beenden des Programms benötigt.
+    Der worst case tritt ein, wenn eine der beiden Zahlen 1 ist da dann bei n1 > n2 n1-1 Durchläufe benötigt werden.
+\end{document}

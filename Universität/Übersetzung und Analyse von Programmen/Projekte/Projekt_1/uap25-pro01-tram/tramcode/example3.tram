@@ -1,0 +1,37 @@
+ // Quellkode:  let f (x, y, z) {
+ //               x = y + z;
+ //               if ( y == 3) then
+ //                 15
+ //               else
+ //                f ( z = 3 ; 4 , y, z)
+ //             } in f (2, 3, 4)
+ //
+ // Annahmen: keine
+ GOTO L1
+ LF: LOAD 1 0
+ LOAD 2 0
+ ADD
+ STORE 0 0
+ LOAD 0 0
+ POP
+ LOAD 1 0
+ CONST 3
+ EQ
+ IFZERO L2
+ CONST 15
+ GOTO L3
+ L2: CONST 3
+ STORE 2 0
+ LOAD 2 0
+ POP
+ CONST 4
+ LOAD 1 0
+ LOAD 2 0
+ INVOKE 3 LF 1
+ L3: NOP
+ RETURN
+ L1: CONST 2
+ CONST 3
+ CONST 4
+ INVOKE 3 LF 0
+ HALT

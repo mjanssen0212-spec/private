@@ -1,0 +1,35 @@
+Input file: uap25-pro01-tram\tramcode\example2.tram
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - Code after assembly:
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 000| CONST 0 0 0
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 001| CONST 10 0 0
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 002| STORE 0 0 0
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 003| LOAD 0 0 0
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 004| IFZERO 7 0 0
+2025-10-23 21:44:59.308 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 005| CONST 200 0 0
+2025-10-23 21:44:59.320 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 006| GOTO 8 0 0
+2025-10-23 21:44:59.320 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 007| CONST 100 0 0
+2025-10-23 21:44:59.320 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 008| NOP 0 0 0
+2025-10-23 21:44:59.320 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 009| CONST 3 0 0
+2025-10-23 21:44:59.320 [main] INFO  de.unitrier.st.uap.w25.tram.solution.Main - 010| HALT 0 0 0
+0: CONST 0 0 0
+1: CONST 10 0 0
+2: STORE 0 0 0
+3: LOAD 0 0 0
+4: IFZERO 7 0 0
+5: CONST 200 0 0
+6: GOTO 8 0 0
+7: CONST 100 0 0
+8: NOP 0 0 0
+9: CONST 3 0 0
+10: HALT 0 0 0
+CONST 0 0 0: PP=0, FP=0, PC=0, STACK=[]
+CONST 10 0 0: PP=0, FP=0, PC=1, STACK=[0]
+STORE 0 0 0: PP=0, FP=0, PC=2, STACK=[0,10]
+LOAD 0 0 0: PP=0, FP=0, PC=3, STACK=[10]
+IFZERO 7 0 0: PP=0, FP=0, PC=4, STACK=[10,10]
+CONST 200 0 0: PP=0, FP=0, PC=5, STACK=[10]
+GOTO 8 0 0: PP=0, FP=0, PC=6, STACK=[10,200]
+NOP 0 0 0: PP=0, FP=0, PC=8, STACK=[10,200]
+CONST 3 0 0: PP=0, FP=0, PC=9, STACK=[10,200]
+HALT 0 0 0: PP=0, FP=0, PC=10, STACK=[10,200,3]
+PP=0, FP=0, PC=-1, STACK=[10,200,3]

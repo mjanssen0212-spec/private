@@ -1,0 +1,11 @@
+// Quellkode: let square(x) { x*x }
+//            in square(10)
+// Annahmen: Das Argument von square wird durch Kellerzelle 0 repraesentiert,
+//           sowie PP=0, FP=0 und TOP=-1
+CONST 10
+INVOKE 1 LSQUARE 0
+HALT
+LSQUARE: LOAD 0 0
+LOAD 0 0
+MUL
+RETURN
