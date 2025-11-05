@@ -44,10 +44,97 @@ Bearbeitet von: \textbf{\names}\\
 \section*{Aufgabe 1}
 
 \section*{Aufgabe 2}
+    a)
+\[
+\textbf{Gegeben:} \quad
+\begin{cases}
+\text{Kaufpreis: } M,\\[4pt]
+\text{Zwei-Münzen-Strategie: }
+\begin{cases}
+s_1 = M/2 & \text{mit Wahrscheinlichkeit } p = 1/4,\\
+s_2 = M   & \text{mit Wahrscheinlichkeit } 1 - p = 3/4.
+\end{cases}
+\end{cases}
+\]
 
-\section*{Aufgabe 3}
+Für eine feste tatsächliche Skidauer \(t\) gilt für eine deterministische Schwelle \(s\):
+\[
+\text{Kosten}(s,t) =
+\begin{cases}
+t, & t \le s,\\
+s + M, & t > s.
+\end{cases}
+\]
 
-\section*{Aufgabe 4}
+Damit ergibt sich der Erwartungswert der Kosten des randomisierten Algorithmus zu
+\[
+\mathbb{E}[\text{ALG}(t)] =
+\frac{1}{4} \cdot \text{Kosten}(s_1,t) +
+\frac{3}{4} \cdot \text{Kosten}(s_2,t).
+\]
+Das Offline-Optimum ist \(\text{OPT}(t) = \min(t, M)\).
+
+---
+
+\textbf{Fall 1:} \(t \le \frac{M}{2}\) \\
+Beide Strategien kaufen nicht:
+\[
+\mathbb{E}[\text{ALG}] = t, \quad
+\frac{\mathbb{E}[\text{ALG}]}{\text{OPT}} = 1.
+\]
+
+---
+
+\textbf{Fall 2:} \(\frac{M}{2} < t \le M\) \\
+Die erste Strategie kauft, die zweite nicht:
+\[
+\mathbb{E}[\text{ALG}] =
+\frac{1}{4}(M/2 + M) + \frac{3}{4}t
+= 0.375M + 0.75t,
+\quad \text{OPT} = t.
+\]
+Somit:
+\[
+\frac{\mathbb{E}[\text{ALG}]}{\text{OPT}}
+= 0.375 \frac{M}{t} + 0.75.
+\]
+Da dies für \(t\) fallend ist, liegt das Maximum bei \(t \to M/2^+\):
+\[
+\frac{\mathbb{E}[\text{ALG}]}{\text{OPT}}
+= 0.375 \cdot 2 + 0.75 = 1.5.
+\]
+
+---
+
+\textbf{Fall 3:} \(t > M\) \\
+In beiden Fällen wird gekauft:
+\[
+\mathbb{E}[\text{ALG}] =
+\frac{1}{4}(M/2 + M) + \frac{3}{4}(M + M)
+= 0.375M + 1.5M = 1.875M,
+\]
+\[
+\text{OPT} = M \quad \Rightarrow \quad
+\frac{\mathbb{E}[\text{ALG}]}{\text{OPT}} = 1.875 = \frac{15}{8}.
+\]
+
+---
+
+\[
+\boxed{
+\text{Das erwartete kompetitive Verhältnis beträgt } \frac{15}{8} = 1.875.
+}
+\]
+
+\bigskip
+b) Im ersten Schritt wurde auf alle Seiten im Cache 0 mal zugegriffen. Fragt man nun eine Seite an, die nicht im Cache ist, 
+wird eine Seite aus dem Cache entfernt. Da alle Seiten gleich oft benutzt wurden, wird die erste Seite entfernt. Fragt 
+man nun die Seite an die gerade entfernt wurde wird Seite 2 entfernt, diese am wenigsten genutzt wurde.
+Duch kontinuierliches anfragen von Seiten die im vorherigen Schritt entfernt wurden, wird in jedem
+Schritt ein Seitenfehler produziert.
+% \section*{Aufgabe 3}
+
+% \section*{Aufgabe 4}
 
 
 % -- code for figures
