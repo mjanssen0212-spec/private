@@ -1,0 +1,71 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem,setspace}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.eps,.jpg}
+\usepackage{algorithm2e}
+
+% --- math operators ---
+\usepackage{mathtools}
+\DeclarePairedDelimiter\set{\{}{\}} % use $\set{1, 2, 3}$
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter\ceils{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\def\then{\ensuremath{\Rightarrow}} % =>
+\def\iff{\ensuremath{\Leftrightarrow}} % if and only if <=>
+\def\to{\ensuremath{\rightarrow}} % ->
+\def\ot{\ensuremath{\leftarrow}} % ->
+\def\Oh{\ensuremath{\mathcal{O}}} % big O like $\Oh(n)$
+% ---
+\DeclareMathOperator{\preorder}{preorder}
+\DeclareMathOperator{\postorder}{postorder}
+\DeclareMathOperator{\depth}{depth}
+
+% --- FILL OUT THESE 3 FIELDS ---
+\def\sheetNumber{1}
+\def\names{NAMEN} 
+\def\sumPoints{10} 
+
+% --- ### BEGIN DOCUMENT ### ---
+\begin{document} 
+
+\begin{doublespace} % header
+\noindent \textbf{\LARGE{Übungsblatt \sheetNumber}}
+\hfill  {\large Punkte: $\boxed{\qquad  /\; \sumPoints}$}\\
+{\Large \textbf{Fortgeschrittene Algorithmen (Wintersemester 2022/23)}\\
+Bearbeitet von: \textbf{\names}\\
+\today}
+\end{doublespace}
+
+
+\section*{Aufgabe 1}
+
+a) Behauptung. Sei \(G=(V,E,w)\) ein ungerichteter, gewichteter Graph mit positiven Kantengewichten und sei
+\(e=\{u,v\}\in E\) die eindeutig leichte Kante, d.h. \(w(e)<w(e')\) für alle \(e'\in E\setminus\{e\}\).
+Dann ist \(e\) in jedem minimalen Spannbaum (MST) von \(G\) enthalten.\\
+
+Widerspruchsbeweis: Angenommen, es existiere ein minimaler Spannbaum \(T\) von \(G\) mit \(e\notin T\).
+Durch Hinzufügen von \(e\) zu \(T\) entsteht ein Zyklus \(C\subseteq T\cup\{e\}\), der natürlich \(e\) enthält.
+Wegen der Eindeutigkeit von \(e\) gilt für jede andere Kante \(f\in C\setminus\{e\}\) die Ungleichung \(w(f)>w(e)\).
+Entfernt man nun eine solche Kante \(f\) aus \(C\), so erhält man wieder einen Spannbaum
+\(T' = T + e - f\). Für die Gewichte folgt
+\[
+w(T') = w(T) + w(e) - w(f) < w(T),
+\]
+da \(w(e)<w(f)\). Damit ist \(T'\) ein Spannbaum mit strikt geringerem Gesamtgewicht als \(T\), was der Annahme widerspricht, dass \(T\) minimal sei.
+
+Folglich kann die Annahme nicht gelten und \(e\) muss in jedem minimalen Spannbaum von \(G\) enthalten sein.
+
+% -- code for figures
+% \begin{figure}[htb]
+% \centering
+% \includegraphics{filename} % use option [width=\linewidth] to change size to linewidth (or 0.6\linewidth for example)
+% \label{fig:name}
+% \end{figure}
+
+
+\end{document}
+% --- ### END DOCUMENT ### ---
