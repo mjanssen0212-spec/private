@@ -197,4 +197,46 @@ Context-Aware Feature Ranking:
 
 
 #### Punkte zur kritischen Auseinandersetzung
+Kosten?
 
+    Einbau und Training
+
+Aufwand? (Einbau des Systems, Aufgaben "beibringen")
+
+    Großer overhead
+
+Spezialisiert auf Microsoft Produkte, verringert Möglichkeiten
+
+    Wie modular ist es tatsächlich wenn so spezifische geräte genutzt werden müssen (Abhängigkeit Modell -> Gerät)
+
+Scalability?
+
+Tatsächlicher Nutzen wenn Anwender mit der Aufgabe bereits vertraut sind
+
+    Micromanagement
+
+    Unterforderung
+
+    Überwachung?
+
+Studie mit Schwächen
+
+    Unrealistische Nutzer
+
+    kleine Menge
+
+    Ergebnisse nur subjektiv keine Objektiven kriterien
+
+    Features nicht einzeln getestet => keine Aussagekraft wie gut sie tatsächlich sind
+
+    Laborumgebung stark vereinfacht, kein realistischer Test
+
+        Lärm
+
+        Mehrere Arbeitsplätze nah beieinander
+
+        Schlechtes Licht
+
+    Langzeittest
+
+Welcher Kontext für ein solches System tatsächlich relevant

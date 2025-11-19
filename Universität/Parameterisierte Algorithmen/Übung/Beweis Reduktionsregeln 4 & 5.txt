@@ -1,0 +1,20 @@
+Beweis Reduktionsregeln 4 & 5
+
+
+Annahme: Es existiert ein maximaler Nonblocker N(Teilmenge)V mit |N|=n auf G
+
+Sei D:=V\N und N':=N\C und D':=D\C.
+Da D minimal ist |D(geschnitten)C|=1, ansonsten lösche ein Element v(enthalten)D(geschnitten)C aus D und D\{v} ist dominierend.
+=> |N'| = |N\C| = |N|-|N(geschnitten)C| = |N|-|C\D| = |N|-|C|+1 = |V\D'| <= (k)+1-|C| = (k-(|C|-1))
+Sei v(enthalten)V\C. Da C eine Zusammenhangskomponente ist hat v keinen Nachbarn in C. Da D eine Dominierende Menge ist existiert ein u(enthalten)N[v](geschnitten)D = (N[v](geschnitten)D)\C = N[v](geschnitten)D'.
+
+
+Sei N(Teilmenge)V\C Nonblocker auf G\C. Sei v(enthalten)C. Definiere, D = (V\C)\N, D'= D(vereinigt){}, N'= N(vereinigt)(C\{v}).
+N[D'] = N[D(vereinigt){v}] = N[D](vereinigt)N[v](Teilmenge)(V\C)(geschnitten)C = V daraus folgt D' ist eine Dominierende Menge auf G.
+|D'| = |D(vereinigt){v}|= |D|+1 <= (|V\C|-(k-(|C|-1))+1 = n-|C|-k+1|C|-1+1 = n-k
+
+Regel 5:
+=>Sein N ein Nonblocker auf G mit |N| = k und D = V\N
+Sei u(enthalten)U(Teilmenge)N(x), N[u](Teilmenge)N[U](Teilmenge)U(vereinigt){x}(Teilmenge)N[x]
+(Für alle)v(enthalten)V: u(enthalten)N[v] => x(enthaltenN[v]
+(leere Menge) =/= N(u)(geschnitten)D(Teilmenge)N(U)(geschnitten)D = (U(vereinigt)
