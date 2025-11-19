@@ -1,0 +1,221 @@
+% Solution_Template.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel} % remove ngerman if you prefer English only
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{tikz}
+
+\usetikzlibrary{trees}
+\geometry{margin=25mm}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\textbf{Name:} \studentname}
+\rhead{\textbf{Matr.-Nr.:} \studentnumber}
+\cfoot{\thepage}
+
+% User info - edit these
+\newcommand{\studentname}{Matthias Janßen}
+\newcommand{\studentnumber}{1871808}
+\newcommand{\course}{Übersetzung und Analyse von Programmen}
+\newcommand{\institute}{Universität Trier}
+
+\title{\course}
+\author{\studentname\\Matrikelnummer: \studentnumber\\\institute}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+    \textbf{Abgabe:} Assignment / Sheet \\
+    \vspace{4mm}
+    \textbf{Betreuer:} Supervisor Name
+\end{center}
+
+\bigskip
+
+\section*{Aufgaben}
+% Start writing your solutions here.
+
+\section{Aufgabe 1}
+a) \\
+    Terminale: \textit{T} = {\textit{a, e, g, l, r}}\\
+    Nichtterminale: {S, A}    
+\\   
+    Produktionsregeln: \\
+
+\begin{center}    
+    S $\rightarrow \epsilon$ \\
+    S $\rightarrow$ A \\
+
+    A $\rightarrow$ aAa \\
+    A $\rightarrow$ eAe \\
+    A $\rightarrow$ gAg \\
+    A $\rightarrow$ lAl \\
+    A $\rightarrow$ rAr \\
+
+    A $\rightarrow$ aa \\
+    A $\rightarrow$ ee \\
+    A $\rightarrow$ gg \\
+    A $\rightarrow$ ll \\
+    A $\rightarrow$ rr \\
+
+    A $\rightarrow$ a \\
+    A $\rightarrow$ e \\
+    A $\rightarrow$ g \\
+    A $\rightarrow$ l \\
+    A $\rightarrow$ r \\
+
+\end{center}
+
+b)
+Ableitungsbaum für das Wort "Lagerregal":
+\begin{center}
+    \begin{figure}
+        \tikzset{
+        % Set the overall layout of the tree
+        level 1/.style = {level distance=3.5cm, sibling distance=3.5cm},
+        level 2/.style = {level distance=3.5cm, sibling distance=2cm},
+        % Define styles for bags and leafs
+        bag/.style = {text width=4cm, text centered,  inner sep=1pt},
+        end/.style = {circle, minimum width=3pt,fill, inner sep=0pt} 
+        }
+        \begin{tikzpicture}[grow=down]
+            \tikzset{frontier/.style={distance from root=150pt}}
+            
+            \node {S}
+                child {
+                    node[bag] (l) {l}
+                    edge from parent 
+                    node[above] {}
+                    node[below] {}
+                }
+                child {
+                    node[bag] (A) {A}
+                    child {
+                        node[bag] (a) {a}
+                        edge from parent
+                        node[above] {}
+                        node[below] {}
+                    }
+                    child {
+                        node[bag] (a) {A}
+                        child {
+                            node[bag] (g) {g}
+                            edge from parent
+                            node[above] {}
+                            node[below] {}
+                        }
+                        child {
+                            node[bag] (g) {A}
+                            child {
+                                node[bag] (e) {e}
+                                edge from parent
+                                node[above] {}
+                                node[below] {}
+                            }
+                            child {
+                                node[bag] (e) {A}
+                                child {
+                                    node[bag] (r) {r}
+                                    edge from parent
+                                    node[above] {}
+                                    node[below] {}
+                                }
+                                child {
+                                    node[bag] (r) {r}
+                                    edge from parent
+                                    node[above] {}
+                                    node[below] {}
+                                }
+                                edge from parent
+                                node[above] {}
+                                node[below] {}
+                            }
+                            child {
+                                node[bag] (e) {e}
+                                edge from parent
+                                node[above] {}
+                                node[below] {}
+                            }
+                            edge from parent
+                            node[above] {}
+                            node[below] {}
+                        }
+                        child {
+                            node[bag] (g) {g}
+                            edge from parent
+                            node[above] {}
+                            node[below] {}
+                        }
+                        edge from parent
+                        node[above] {}
+                        node[below] {}
+                    }
+                    child {
+                        node[bag] (a) {a}
+                        edge from parent
+                        node[above] {}
+                        node[below] {}
+                    }
+                    edge from parent 
+                    node[above] {}
+                    node[below] {}
+                }
+                    child {
+                    node[bag] (l) {l}      
+                    edge from parent 
+                    node[above] {}
+                    node[below] {}
+                }
+                ;
+        \end{tikzpicture}
+    \end{figure}
+\end{center}    
+\section{Aufgabe 2}
+Nach einem gelesenen Zeichen gibt es einen Konflikt zwischen den Regeln 1 \& 2 da beide das Zeichen 
+"if" enthalten. Nach Zeichen 2 ist der Konflikt weiterhin nicht gelöst da beide Regeln "(" zeigen.
+Nach dem dritten Zeichen ist eindeutig, welche Regel angewendet wird, da Regel 1 "id" enthält während
+in Regel 2 "not" ist. Die Grammatik ist daher LL(3).
+
+\section{Aufgabe 3}
+
+\section{Aufgabe 4}
+a)
+\begin{center}
+    S $\rightarrow$ AB \\
+    AB $\rightarrow$ BB (Regel: A $\rightarrow$ B) \\
+    BB $\rightarrow$ CB (Regel: B $\rightarrow$ C) \\
+    CB $\rightarrow$ AabB (Regel: C $\rightarrow$ Aab)
+\end{center} 
+
+Durch die richtige Reihenfolge der Regeln kann erneut das Nichtterminal A an der Linken Stelle erzeugt werden.
+Die Grammatik ist daher nicht Rekursionsfrei.
+
+b)
+\begin{center}
+    1.) S $\rightarrow$ AB \\
+    AB $\rightarrow$ aBCB (Regel: A $\rightarrow$ aBC) \\
+    aBCB $\rightarrow$ abCB (Regel: B $\rightarrow$ b) \\
+    abCB $\rightarrow$ abB (Regel: C $\rightarrow$ $\epsilon$) \\
+    abB $\rightarrow$ abC (Regel: B $\rightarrow$ C) \\
+    abC $\rightarrow$ ab (Regel: C $\rightarrow$ $\epsilon$) \\
+    \bigskip
+    2.) S $\rightarrow$ AB \\
+    AB $\rightarrow$ BB (Regel: AB $\rightarrow$ B)\\
+    BB $\rightarrow$ aAB (Regel: B $\rightarrow$ aA)\\
+    aAB $\rightarrow$ aBB (Regel: A $\rightarrow$ B)\\
+    aBB $\rightarrow$ abB (Regel: B $\rightarrow$ b) \\
+    abB $\rightarrow$ abC (Regel: B $\rightarrow$ C) \\
+    abC $\rightarrow$ ab (Regel: C $\rightarrow$$ \epsilon$)
+\end{center}
+
+Es ist möglich auf verschiedene Arten das Wort "ab" zu erzeugen, damit ist die Grammatik mehrdeutig.
+
+
+\end{document}
