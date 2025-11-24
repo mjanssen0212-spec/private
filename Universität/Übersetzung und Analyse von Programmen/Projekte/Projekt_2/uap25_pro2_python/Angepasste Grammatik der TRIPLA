@@ -1,0 +1,28 @@
+E -> let D in E
+    | ID
+    | ID ( A )
+    | E AOP E
+    | ( E )
+    | CONST
+    | ID = E
+    | E ; E
+    | if B then E else E
+    | while B do { E }
+A -> E
+    | A , E
+D -> ID ( V ) { E }
+    | D D
+V -> ID
+    | V , V
+B -> (B)
+    BOOL
+    B LOP B
+    E RELOP E
+
+
+ID : Bezeichner = [A-Za-z_][A-Za-z0-9_]*
+CONST: Positive, ganze Zahl = 0 | [1-9][0-9]*
+AOP: Operatoren (+, -, *, /)
+RELOP: Vergleichsoperatoren (==, !=, <, >, <=, >=)
+BOOL: Booleans (true, false)
+LOP: Logische Operatoren (||, ==, !=, &&)

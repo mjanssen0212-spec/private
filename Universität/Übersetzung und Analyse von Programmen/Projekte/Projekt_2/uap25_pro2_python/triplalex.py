@@ -9,24 +9,58 @@ import ply.lex as lex
 reserved = {
     'while' : 'WHILE',
     'do' : 'DO',
+
+    'if' : 'IF',
+    'then' : 'THEN',
+    'else' : 'ELSE',
+
+    'let' : 'LET',
+    'in' : 'IN',
+    'true': 'TRUE',
+    'false': 'FALSE',
 }
 
 # List of token names. This is always required
 tokens = [
     'CONST',
-    'LBRACE', 'RBRACE'
+    'ID',
+    'AOP',
+    'RELOP',
+    'LOP',
+    'BOOL',
+    'COMMA', 'SEMI',
+    'LBRACE', 'RBRACE',
+    'LPAREN', 'RPAREN',
+    'ASSIGN'
 ]+list(reserved.values())
 
 # Regular expression rules for simple tokens
 t_LBRACE  = r'\{'
 t_RBRACE  = r'\}'
-t_WHILE = r'while'
-t_DO = r'do'
+t_RELOP = r'==|!=|<=|>=|<|>'
+t_LOP   = r'\|\||&&'
+t_AOP   = r'\+|\-|\*|/'
+t_LPAREN  = r'\('
+t_RPAREN  = r'\)'
+t_COMMA   = r','
+t_SEMI    = r';'
+t_ASSIGN = r'='
+
+def t_BOOL(t):
+    r'true|false'
+    t.value = (t.value == 'true')
+    return t
 
 # A regular expression rule with some action code
 def t_CONST(t):
     r'\d+'
     t.value = int(t.value)
+    return t
+
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    # Check for reserved words
+    t.type = reserved.get(t.value,'ID')
     return t
 
 # Define a rule so we can track line numbers

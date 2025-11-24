@@ -7,6 +7,16 @@
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage{array,etoolbox}
+\usepackage{afterpage}
+\usepackage{longtable}
+\usepackage{bigdelim}
+\usepackage{multirow}
+\usepackage{comment}
+
+\preto\tabular{\setcounter{magicrownumbers}{-1}}
+\newcounter{magicrownumbers}
+\newcommand\rownumber{\stepcounter{magicrownumbers}\arabic{magicrownumbers}}
 
 \usetikzlibrary{trees}
 \geometry{margin=25mm}
@@ -45,7 +55,7 @@
 \section{Aufgabe 1}
 a) \\
     Terminale: \textit{T} = {\textit{a, e, g, l, r}}\\
-    Nichtterminale: {S, A}    
+    Nichtterminale: {S (Startsymbol), A}    
 \\   
     Produktionsregeln: \\
 
@@ -59,17 +69,21 @@ a) \\
     A $\rightarrow$ lAl \\
     A $\rightarrow$ rAr \\
 
+\begin{comment}
     A $\rightarrow$ aa \\
     A $\rightarrow$ ee \\
     A $\rightarrow$ gg \\
     A $\rightarrow$ ll \\
     A $\rightarrow$ rr \\
+\end{comment}
 
     A $\rightarrow$ a \\
     A $\rightarrow$ e \\
     A $\rightarrow$ g \\
     A $\rightarrow$ l \\
     A $\rightarrow$ r \\
+    
+    A $\rightarrow$ $\epsilon$ \\
 
 \end{center}
 
@@ -90,45 +104,57 @@ Ableitungsbaum für das Wort "Lagerregal":
             
             \node {S}
                 child {
-                    node[bag] (l) {l}
-                    edge from parent 
-                    node[above] {}
-                    node[below] {}
-                }
-                child {
-                    node[bag] (A) {A}
+                    node[bag] (S) {A}      
                     child {
-                        node[bag] (a) {a}
-                        edge from parent
+                        node[bag] (l) {l}
+                        edge from parent 
                         node[above] {}
                         node[below] {}
                     }
                     child {
-                        node[bag] (a) {A}
+                        node[bag] (A) {A}
                         child {
-                            node[bag] (g) {g}
+                            node[bag] (a) {a}
                             edge from parent
                             node[above] {}
                             node[below] {}
                         }
                         child {
-                            node[bag] (g) {A}
+                            node[bag] (a) {A}
                             child {
-                                node[bag] (e) {e}
+                                node[bag] (g) {g}
                                 edge from parent
                                 node[above] {}
                                 node[below] {}
                             }
                             child {
-                                node[bag] (e) {A}
+                                node[bag] (g) {A}
                                 child {
-                                    node[bag] (r) {r}
+                                    node[bag] (e) {e}
                                     edge from parent
                                     node[above] {}
                                     node[below] {}
                                 }
                                 child {
-                                    node[bag] (r) {r}
+                                    node[bag] (e) {A}
+                                    child {
+                                        node[bag] (r) {r}
+                                        edge from parent
+                                        node[above] {}
+                                        node[below] {}
+                                    }
+                                    child {
+                                        node[bag] (r) {r}
+                                        edge from parent
+                                        node[above] {}
+                                        node[below] {}
+                                    }
+                                    edge from parent
+                                    node[above] {}
+                                    node[below] {}
+                                }
+                                child {
+                                    node[bag] (e) {e}
                                     edge from parent
                                     node[above] {}
                                     node[below] {}
@@ -138,7 +164,7 @@ Ableitungsbaum für das Wort "Lagerregal":
                                 node[below] {}
                             }
                             child {
-                                node[bag] (e) {e}
+                                node[bag] (g) {g}
                                 edge from parent
                                 node[above] {}
                                 node[below] {}
@@ -148,35 +174,30 @@ Ableitungsbaum für das Wort "Lagerregal":
                             node[below] {}
                         }
                         child {
-                            node[bag] (g) {g}
+                            node[bag] (a) {a}
                             edge from parent
                             node[above] {}
                             node[below] {}
                         }
-                        edge from parent
+                        edge from parent 
                         node[above] {}
                         node[below] {}
                     }
-                    child {
-                        node[bag] (a) {a}
-                        edge from parent
+                        child {
+                        node[bag] (l) {l}      
+                        edge from parent 
                         node[above] {}
                         node[below] {}
                     }
-                    edge from parent 
-                    node[above] {}
-                    node[below] {}
-                }
-                    child {
-                    node[bag] (l) {l}      
-                    edge from parent 
-                    node[above] {}
-                    node[below] {}
-                }
-                ;
+                        edge from parent 
+                        node[above] {}
+                        node[below] {}
+                };
         \end{tikzpicture}
     \end{figure}
-\end{center}    
+\end{center}   
+
+\newpage
 \section{Aufgabe 2}
 Nach einem gelesenen Zeichen gibt es einen Konflikt zwischen den Regeln 1 \& 2 da beide das Zeichen 
 "if" enthalten. Nach Zeichen 2 ist der Konflikt weiterhin nicht gelöst da beide Regeln "(" zeigen.
@@ -184,7 +205,72 @@ Nach dem dritten Zeichen ist eindeutig, welche Regel angewendet wird, da Regel 1
 in Regel 2 "not" ist. Die Grammatik ist daher LL(3).
 
 \section{Aufgabe 3}
+\begin{center}
+    Umformulierte Grammatik mit First und Follow Symbolen
+    \begin{longtable}{@{\makebox[3em][r]{\rownumber\space}} | c c c | c | c}
+        & & & First($alpha$) & Follow(X) falls $\epsilon$ $\in$ First($alpha$) \\
+        \hline
+        S & $\rightarrow$ & A & (, \underline{var} & \\
+        \hline
+        A & $\rightarrow$ & BC & (, \underline{var} & \\
+        \hline
+        B & $\rightarrow$ & DE & (, \underline{var} & \\
+        \hline
+        C & $\rightarrow$ & -A & - & \\
+        \hline
+        & | & $\epsilon$ & $\epsilon$ & ) \\
+        \hline
+        D & $\rightarrow$ & (a) & ( & \\
+        \hline
+        & | & \underline{var} & \underline{var} & \\
+        \hline
+        E & $\rightarrow$ & *B & * & \\
+        \hline
+        & | & $\epsilon$ & $\epsilon$ & -, )\\
+    \end{longtable}
 
+    \bigskip
+    LL(1)-Parsertabelle
+    \begin{longtable}{| c | c | c | c | c | c |}
+        \hline
+        & - & ( & ) & \underline{var} & * \\
+        \hline
+        S &   & S $\rightarrow$ A &  & S $\rightarrow$ A & \\
+        \hline
+        A &   & A $\rightarrow$ BC &  & A $\rightarrow$ BC & \\
+        \hline
+        B &   & B $\rightarrow$ DE & & B $\rightarrow$ DE & \\
+        \hline
+        C & C $\rightarrow$ -A &  & C $\rightarrow$ $\epsilon$ &  & \\
+        \hline
+        D & & D $\rightarrow$ (a) & & D $\rightarrow$ \underline{var} & \\
+        \hline
+        E & E $\rightarrow$ $\epsilon$ & & E $\rightarrow$ $\epsilon$ & & E $\rightarrow$ *B \\
+        \hline
+    \end{longtable}
+
+    \bigskip
+    Rechnung des Parsers für das Wort: \underline{var}- -
+    \begin{longtable}{| c | c |}
+        \hline
+        Kellerinhalt & Eingabe \\
+        \hline
+        \#[S $\rightarrow$ .A][A $\rightarrow$ .BC][B $\rightarrow$ .DE][D $\rightarrow$ .\underline{var}] & \underline{var}- -\\
+        \hline
+        \#[S $\rightarrow$ .A][A $\rightarrow$ .BC][B $\rightarrow$ .DE][D $\rightarrow$ \underline{var}.] & - -\\
+        \hline        
+        \#[S $\rightarrow$ .A][A $\rightarrow$ .BC][B $\rightarrow$ D.E][E $\rightarrow$ $\epsilon$.] & - -\\
+        \hline
+        \#[S $\rightarrow$ .A][A $\rightarrow$ .BC][B $\rightarrow$ DE.] & - -\\
+        \hline
+        \#[S $\rightarrow$ .A][A $\rightarrow$ B.C][C $\rightarrow$ .-A] & - -\\
+        \hline
+        \#[S $\rightarrow$ .A][A $\rightarrow$ B.C][C $\rightarrow$ -.A]\textbf{ERROR} & -\\
+        \hline
+    \end{longtable}
+    Im Kellert wird ein Fehler erkannt, da das Eingabezeichen "-" nicht in der Parsertabelle für das Nichtterminal A definiert ist. \underline{var}- -
+    ist daher kein Wort der Sprache.
+\end{center}
 \section{Aufgabe 4}
 a)
 \begin{center}
@@ -207,7 +293,7 @@ b)
     abC $\rightarrow$ ab (Regel: C $\rightarrow$ $\epsilon$) \\
     \bigskip
     2.) S $\rightarrow$ AB \\
-    AB $\rightarrow$ BB (Regel: AB $\rightarrow$ B)\\
+    AB $\rightarrow$ BB (Regel: A $\rightarrow$ B)\\
     BB $\rightarrow$ aAB (Regel: B $\rightarrow$ aA)\\
     aAB $\rightarrow$ aBB (Regel: A $\rightarrow$ B)\\
     aBB $\rightarrow$ abB (Regel: B $\rightarrow$ b) \\

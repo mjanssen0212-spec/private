@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CONST DO LBRACE RBRACE WHILEexpression : CONSTexpression : WHILE expression DO LBRACE expression RBRACE'
+_lr_signature = 'leftSEMIrightASSIGNleftLOPnonassocRELOPleftAOPAOP ASSIGN BOOL COMMA CONST DO ELSE FALSE ID IF IN LBRACE LET LOP LPAREN RBRACE RELOP RPAREN SEMI THEN TRUE WHILEexpression : CONSTexpression : WHILE expression DO LBRACE expression RBRACEexpression : IF expression THEN expression ELSE expressionexpression : IDexpression : expression AOP expressionexpression : expression RELOP expressionexpression : expression LOP expressionexpression : BOOLexpression : expression COMMA expressionexpression : expression SEMI expressionexpression : LET expression IN expressionexpression : LPAREN expression RPARENexpression : LBRACE expression RBRACEexpression : expression ASSIGN expression'
     
-_lr_action_items = {'CONST':([0,3,6,],[2,2,2,]),'WHILE':([0,3,6,],[3,3,3,]),'$end':([1,2,8,],[0,-1,-2,]),'DO':([2,4,8,],[-1,5,-2,]),'RBRACE':([2,7,8,],[-1,8,-2,]),'LBRACE':([5,],[6,]),}
+_lr_action_items = {'CONST':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,]),'WHILE':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,]),'IF':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,]),'ID':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,]),'BOOL':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,]),'LET':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,]),'LPAREN':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,]),'LBRACE':([0,3,4,5,8,9,10,11,12,13,14,15,27,29,30,32,36,],[4,4,4,4,4,4,4,4,4,4,4,4,32,4,4,4,4,]),'$end':([1,2,6,7,21,22,23,24,25,26,28,31,34,37,38,],[0,-1,-4,-8,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'AOP':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[10,-1,-4,-8,10,10,10,10,10,-5,10,10,10,10,10,-13,-12,10,10,10,-2,10,]),'RELOP':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[11,-1,-4,-8,11,11,11,11,11,-5,None,11,11,11,11,-13,-12,11,11,11,-2,11,]),'LOP':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[12,-1,-4,-8,12,12,12,12,12,-5,-6,-7,12,12,12,-13,-12,12,12,12,-2,12,]),'COMMA':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[13,-1,-4,-8,13,13,13,13,13,-5,-6,-7,13,-10,-14,-13,-12,13,13,13,-2,13,]),'SEMI':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[14,-1,-4,-8,14,14,14,14,14,-5,-6,-7,14,-10,-14,-13,-12,14,14,14,-2,14,]),'ASSIGN':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[15,-1,-4,-8,15,15,15,15,15,-5,-6,-7,15,15,15,-13,-12,15,15,15,-2,15,]),'DO':([2,6,7,16,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,27,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'RBRACE':([2,6,7,17,21,22,23,24,25,26,28,31,34,35,37,38,],[-1,-4,-8,28,-5,-6,-7,-9,-10,-14,-13,-12,-11,37,-2,-3,]),'THEN':([2,6,7,18,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,29,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'IN':([2,6,7,19,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,30,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'RPAREN':([2,6,7,20,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,31,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'ELSE':([2,6,7,21,22,23,24,25,26,28,31,33,34,37,38,],[-1,-4,-8,-5,-6,-7,-9,-10,-14,-13,-12,36,-11,-2,-3,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,3,6,],[1,4,7,]),}
+_lr_goto_items = {'expression':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[1,16,17,18,19,20,21,22,23,24,25,26,33,34,35,38,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,6 +27,18 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> CONST','expression',1,'p_expression_const','triplayacc.py',28),
-  ('expression -> WHILE expression DO LBRACE expression RBRACE','expression',6,'p_expression_while','triplayacc.py',33),
+  ('expression -> CONST','expression',1,'p_expression_const','triplayacc.py',32),
+  ('expression -> WHILE expression DO LBRACE expression RBRACE','expression',6,'p_expression_while','triplayacc.py',36),
+  ('expression -> IF expression THEN expression ELSE expression','expression',6,'p_expression_if','triplayacc.py',40),
+  ('expression -> ID','expression',1,'p_expression_id','triplayacc.py',44),
+  ('expression -> expression AOP expression','expression',3,'p_expression_aop','triplayacc.py',48),
+  ('expression -> expression RELOP expression','expression',3,'p_expression_relop','triplayacc.py',52),
+  ('expression -> expression LOP expression','expression',3,'p_expression_lop','triplayacc.py',56),
+  ('expression -> BOOL','expression',1,'p_expression_bool','triplayacc.py',60),
+  ('expression -> expression COMMA expression','expression',3,'p_expression_comma','triplayacc.py',64),
+  ('expression -> expression SEMI expression','expression',3,'p_expression_semi','triplayacc.py',68),
+  ('expression -> LET expression IN expression','expression',4,'p_expression_let','triplayacc.py',72),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_paren','triplayacc.py',76),
+  ('expression -> LBRACE expression RBRACE','expression',3,'p_expression_brace','triplayacc.py',80),
+  ('expression -> expression ASSIGN expression','expression',3,'p_expression_assign','triplayacc.py',84),
 ]
