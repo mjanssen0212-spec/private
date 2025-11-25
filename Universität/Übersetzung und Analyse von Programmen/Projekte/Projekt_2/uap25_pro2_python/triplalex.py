@@ -27,6 +27,7 @@ tokens = [
     'AOP',
     'RELOP',
     'LOP',
+    'EQOP',
     'BOOL',
     'COMMA', 'SEMI',
     'LBRACE', 'RBRACE',
@@ -37,9 +38,10 @@ tokens = [
 # Regular expression rules for simple tokens
 t_LBRACE  = r'\{'
 t_RBRACE  = r'\}'
-t_RELOP = r'==|!=|<=|>=|<|>'
+t_RELOP = r'<=|>=|<|>'
 t_LOP   = r'\|\||&&'
 t_AOP   = r'\+|\-|\*|/'
+t_EQOP  = r'==, !='
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_COMMA   = r','

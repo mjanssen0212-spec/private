@@ -17,12 +17,15 @@ V -> ID
 B -> (B)
     BOOL
     B LOP B
+    B EQOP B
     E RELOP E
+    E EQOP E
 
 
 ID : Bezeichner = [A-Za-z_][A-Za-z0-9_]*
 CONST: Positive, ganze Zahl = 0 | [1-9][0-9]*
 AOP: Operatoren (+, -, *, /)
-RELOP: Vergleichsoperatoren (==, !=, <, >, <=, >=)
+RELOP: Vergleichsoperatoren (<, >, <=, >=)
+LOP: Logische Operatoren (||, &&)
 BOOL: Booleans (true, false)
-LOP: Logische Operatoren (||, ==, !=, &&)
+EQOP: ==, !=

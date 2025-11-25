@@ -29,7 +29,7 @@ class LET(EXPRESSION):
         self.body=body
 
     def __str__(self): return "let " \
-        +','.join([ str(decl) for decl in self.declarations ]) \
+        +' '.join([ str(decl) for decl in self.declarations ]) \
         + " in " + str(self.body)
 
 class DECL(EXPRESSION):
