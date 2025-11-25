@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftSEMIrightASSIGNleftLOPnonassocRELOPleftAOPAOP ASSIGN BOOL COMMA CONST DO ELSE FALSE ID IF IN LBRACE LET LOP LPAREN RBRACE RELOP RPAREN SEMI THEN TRUE WHILEexpression : CONSTexpression : WHILE expression DO LBRACE expression RBRACEexpression : IF expression THEN expression ELSE expressionexpression : IDexpression : expression AOP expressionexpression : expression RELOP expressionexpression : expression LOP expressionexpression : BOOLexpression : expression COMMA expressionexpression : expression SEMI expressionexpression : LET expression IN expressionexpression : LPAREN expression RPARENexpression : LBRACE expression RBRACEexpression : expression ASSIGN expression'
+_lr_signature = 'leftSEMIrightASSIGNleftLOPnonassocRELOPleftAOPAOP ASSIGN BOOL COMMA CONST DO ELSE FALSE ID IF IN LBRACE LET LOP LPAREN RBRACE RELOP RPAREN SEMI THEN TRUE WHILEexpression : LET dexpr IN expressionexpression : IDexpression : ID LPAREN aexpr RPARENexpression : expression AOP expressionexpression : LPAREN expression RPARENexpression : CONSTexpression : ID ASSIGN expressionexpression : expression SEMI expressionexpression : IF bexpr THEN expression ELSE expressionexpression : WHILE bexpr DO LBRACE expression RBRACEaexpr : expressionaexpr : aexpr COMMA expressiondexpr : ID LPAREN vexpr RPAREN LBRACE expression RBRACEdexpr : dexpr dexprvexpr : IDvexpr : vexpr COMMA vexprbexpr : LPAREN expression RPARENbexpr : BOOLbexpr : bexpr LOP bexprbexpr : expression RELOP expression'
     
-_lr_action_items = {'CONST':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,]),'WHILE':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,]),'IF':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,]),'ID':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,]),'BOOL':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,]),'LET':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,]),'LPAREN':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,]),'LBRACE':([0,3,4,5,8,9,10,11,12,13,14,15,27,29,30,32,36,],[4,4,4,4,4,4,4,4,4,4,4,4,32,4,4,4,4,]),'$end':([1,2,6,7,21,22,23,24,25,26,28,31,34,37,38,],[0,-1,-4,-8,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'AOP':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[10,-1,-4,-8,10,10,10,10,10,-5,10,10,10,10,10,-13,-12,10,10,10,-2,10,]),'RELOP':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[11,-1,-4,-8,11,11,11,11,11,-5,None,11,11,11,11,-13,-12,11,11,11,-2,11,]),'LOP':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[12,-1,-4,-8,12,12,12,12,12,-5,-6,-7,12,12,12,-13,-12,12,12,12,-2,12,]),'COMMA':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[13,-1,-4,-8,13,13,13,13,13,-5,-6,-7,13,-10,-14,-13,-12,13,13,13,-2,13,]),'SEMI':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[14,-1,-4,-8,14,14,14,14,14,-5,-6,-7,14,-10,-14,-13,-12,14,14,14,-2,14,]),'ASSIGN':([1,2,6,7,16,17,18,19,20,21,22,23,24,25,26,28,31,33,34,35,37,38,],[15,-1,-4,-8,15,15,15,15,15,-5,-6,-7,15,15,15,-13,-12,15,15,15,-2,15,]),'DO':([2,6,7,16,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,27,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'RBRACE':([2,6,7,17,21,22,23,24,25,26,28,31,34,35,37,38,],[-1,-4,-8,28,-5,-6,-7,-9,-10,-14,-13,-12,-11,37,-2,-3,]),'THEN':([2,6,7,18,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,29,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'IN':([2,6,7,19,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,30,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'RPAREN':([2,6,7,20,21,22,23,24,25,26,28,31,34,37,38,],[-1,-4,-8,31,-5,-6,-7,-9,-10,-14,-13,-12,-11,-2,-3,]),'ELSE':([2,6,7,21,22,23,24,25,26,28,31,33,34,37,38,],[-1,-4,-8,-5,-6,-7,-9,-10,-14,-13,-12,36,-11,-2,-3,]),}
+_lr_action_items = {'LET':([0,4,6,7,8,9,12,13,17,23,29,30,31,38,43,47,49,],[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,]),'ID':([0,2,4,6,7,8,9,10,12,13,17,22,23,24,29,30,31,38,43,45,47,49,54,],[3,11,3,3,3,3,3,11,3,3,3,11,3,35,3,3,3,3,3,35,3,3,-13,]),'LPAREN':([0,3,4,6,7,8,9,11,12,13,17,23,29,30,31,38,43,47,49,],[4,12,4,17,17,4,4,24,4,4,4,4,4,17,4,4,4,4,4,]),'CONST':([0,4,6,7,8,9,12,13,17,23,29,30,31,38,43,47,49,],[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,]),'IF':([0,4,6,7,8,9,12,13,17,23,29,30,31,38,43,47,49,],[6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,]),'WHILE':([0,4,6,7,8,9,12,13,17,23,29,30,31,38,43,47,49,],[7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,]),'$end':([1,3,5,20,21,27,28,34,37,51,52,],[0,-2,-6,-4,-8,-7,-5,-1,-3,-9,-10,]),'AOP':([1,3,5,14,16,20,21,26,27,28,32,34,37,39,41,42,46,48,51,52,53,],[8,-2,-6,8,8,-4,8,8,8,-5,8,8,-3,8,8,-5,8,8,8,-10,8,]),'SEMI':([1,3,5,14,16,20,21,26,27,28,32,34,37,39,41,42,46,48,51,52,53,],[9,-2,-6,9,9,-4,-8,9,-7,-5,9,9,-3,9,9,-5,9,9,9,-10,9,]),'RPAREN':([3,5,14,20,21,25,26,27,28,32,34,35,36,37,46,50,51,52,],[-2,-6,28,-4,-8,37,-11,-7,-5,42,-1,-15,44,-3,-12,-16,-9,-10,]),'RELOP':([3,5,16,20,21,27,28,34,37,42,51,52,],[-2,-6,31,-4,-8,-7,-5,-1,-3,-5,-9,-10,]),'COMMA':([3,5,20,21,25,26,27,28,34,35,36,37,46,50,51,52,],[-2,-6,-4,-8,38,-11,-7,-5,-1,-15,45,-3,-12,45,-9,-10,]),'ELSE':([3,5,20,21,27,28,34,37,39,51,52,],[-2,-6,-4,-8,-7,-5,-1,-3,47,-9,-10,]),'THEN':([3,5,15,18,20,21,27,28,34,37,40,41,42,51,52,],[-2,-6,29,-18,-4,-8,-7,-5,-1,-3,-19,-20,-17,-9,-10,]),'LOP':([3,5,15,18,19,20,21,27,28,34,37,40,41,42,51,52,],[-2,-6,30,-18,30,-4,-8,-7,-5,-1,-3,-19,-20,-17,-9,-10,]),'DO':([3,5,18,19,20,21,27,28,34,37,40,41,42,51,52,],[-2,-6,-18,33,-4,-8,-7,-5,-1,-3,-19,-20,-17,-9,-10,]),'RBRACE':([3,5,20,21,27,28,34,37,48,51,52,53,],[-2,-6,-4,-8,-7,-5,-1,-3,52,-9,-10,54,]),'ASSIGN':([3,],[13,]),'BOOL':([6,7,30,],[18,18,18,]),'IN':([10,22,54,],[23,-14,-13,]),'LBRACE':([33,44,],[43,49,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,3,4,5,8,9,10,11,12,13,14,15,29,30,32,36,],[1,16,17,18,19,20,21,22,23,24,25,26,33,34,35,38,]),}
+_lr_goto_items = {'expression':([0,4,6,7,8,9,12,13,17,23,29,30,31,38,43,47,49,],[1,14,16,16,20,21,26,27,32,34,39,16,41,46,48,51,53,]),'dexpr':([2,10,22,],[10,22,22,]),'bexpr':([6,7,30,],[15,19,40,]),'aexpr':([12,],[25,]),'vexpr':([24,45,],[36,50,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,18 +27,24 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> CONST','expression',1,'p_expression_const','triplayacc.py',32),
-  ('expression -> WHILE expression DO LBRACE expression RBRACE','expression',6,'p_expression_while','triplayacc.py',36),
-  ('expression -> IF expression THEN expression ELSE expression','expression',6,'p_expression_if','triplayacc.py',40),
-  ('expression -> ID','expression',1,'p_expression_id','triplayacc.py',44),
-  ('expression -> expression AOP expression','expression',3,'p_expression_aop','triplayacc.py',48),
-  ('expression -> expression RELOP expression','expression',3,'p_expression_relop','triplayacc.py',52),
-  ('expression -> expression LOP expression','expression',3,'p_expression_lop','triplayacc.py',56),
-  ('expression -> BOOL','expression',1,'p_expression_bool','triplayacc.py',60),
-  ('expression -> expression COMMA expression','expression',3,'p_expression_comma','triplayacc.py',64),
-  ('expression -> expression SEMI expression','expression',3,'p_expression_semi','triplayacc.py',68),
-  ('expression -> LET expression IN expression','expression',4,'p_expression_let','triplayacc.py',72),
-  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_paren','triplayacc.py',76),
-  ('expression -> LBRACE expression RBRACE','expression',3,'p_expression_brace','triplayacc.py',80),
-  ('expression -> expression ASSIGN expression','expression',3,'p_expression_assign','triplayacc.py',84),
+  ('expression -> LET dexpr IN expression','expression',4,'p_expression_let','triplayacc.py',32),
+  ('expression -> ID','expression',1,'p_expression_id','triplayacc.py',36),
+  ('expression -> ID LPAREN aexpr RPAREN','expression',4,'p_expression_call','triplayacc.py',40),
+  ('expression -> expression AOP expression','expression',3,'p_expression_aop','triplayacc.py',44),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_paren','triplayacc.py',48),
+  ('expression -> CONST','expression',1,'p_expression_const','triplayacc.py',52),
+  ('expression -> ID ASSIGN expression','expression',3,'p_expression_assign','triplayacc.py',56),
+  ('expression -> expression SEMI expression','expression',3,'p_expression_semi','triplayacc.py',60),
+  ('expression -> IF bexpr THEN expression ELSE expression','expression',6,'p_expression_if','triplayacc.py',64),
+  ('expression -> WHILE bexpr DO LBRACE expression RBRACE','expression',6,'p_expression_while','triplayacc.py',68),
+  ('aexpr -> expression','aexpr',1,'p_aexpr_expression','triplayacc.py',72),
+  ('aexpr -> aexpr COMMA expression','aexpr',3,'p_aexpr_comma','triplayacc.py',76),
+  ('dexpr -> ID LPAREN vexpr RPAREN LBRACE expression RBRACE','dexpr',7,'p_dexpr_decl','triplayacc.py',80),
+  ('dexpr -> dexpr dexpr','dexpr',2,'p_dexpr_concat','triplayacc.py',84),
+  ('vexpr -> ID','vexpr',1,'p_vexpr_id','triplayacc.py',88),
+  ('vexpr -> vexpr COMMA vexpr','vexpr',3,'p_vexpr_comma','triplayacc.py',92),
+  ('bexpr -> LPAREN expression RPAREN','bexpr',3,'p_bexpr_paren','triplayacc.py',96),
+  ('bexpr -> BOOL','bexpr',1,'p_bexpr_bool','triplayacc.py',100),
+  ('bexpr -> bexpr LOP bexpr','bexpr',3,'p_bexpr_lop','triplayacc.py',104),
+  ('bexpr -> expression RELOP expression','bexpr',3,'p_bexpr_relop','triplayacc.py',108),
 ]

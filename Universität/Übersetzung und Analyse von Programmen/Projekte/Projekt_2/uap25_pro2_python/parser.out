@@ -8,1080 +8,974 @@ Unused terminals:
 Grammar
 
 Rule 0     S' -> expression
-Rule 1     expression -> CONST
-Rule 2     expression -> WHILE expression DO LBRACE expression RBRACE
-Rule 3     expression -> IF expression THEN expression ELSE expression
-Rule 4     expression -> ID
-Rule 5     expression -> expression AOP expression
-Rule 6     expression -> expression RELOP expression
-Rule 7     expression -> expression LOP expression
-Rule 8     expression -> BOOL
-Rule 9     expression -> expression COMMA expression
-Rule 10    expression -> expression SEMI expression
-Rule 11    expression -> LET expression IN expression
-Rule 12    expression -> LPAREN expression RPAREN
-Rule 13    expression -> LBRACE expression RBRACE
-Rule 14    expression -> expression ASSIGN expression
+Rule 1     expression -> LET dexpr IN expression
+Rule 2     expression -> ID
+Rule 3     expression -> ID LPAREN aexpr RPAREN
+Rule 4     expression -> expression AOP expression
+Rule 5     expression -> LPAREN expression RPAREN
+Rule 6     expression -> CONST
+Rule 7     expression -> ID ASSIGN expression
+Rule 8     expression -> expression SEMI expression
+Rule 9     expression -> IF bexpr THEN expression ELSE expression
+Rule 10    expression -> WHILE bexpr DO LBRACE expression RBRACE
+Rule 11    aexpr -> expression
+Rule 12    aexpr -> aexpr COMMA expression
+Rule 13    dexpr -> ID LPAREN vexpr RPAREN LBRACE expression RBRACE
+Rule 14    dexpr -> dexpr dexpr
+Rule 15    vexpr -> ID
+Rule 16    vexpr -> vexpr COMMA vexpr
+Rule 17    bexpr -> LPAREN expression RPAREN
+Rule 18    bexpr -> BOOL
+Rule 19    bexpr -> bexpr LOP bexpr
+Rule 20    bexpr -> expression RELOP expression
 
 Terminals, with rules where they appear
 
-AOP                  : 5
-ASSIGN               : 14
-BOOL                 : 8
-COMMA                : 9
-CONST                : 1
-DO                   : 2
-ELSE                 : 3
+AOP                  : 4
+ASSIGN               : 7
+BOOL                 : 18
+COMMA                : 12 16
+CONST                : 6
+DO                   : 10
+ELSE                 : 9
 FALSE                : 
-ID                   : 4
-IF                   : 3
-IN                   : 11
-LBRACE               : 2 13
-LET                  : 11
-LOP                  : 7
-LPAREN               : 12
-RBRACE               : 2 13
-RELOP                : 6
-RPAREN               : 12
-SEMI                 : 10
-THEN                 : 3
+ID                   : 2 3 7 13 15
+IF                   : 9
+IN                   : 1
+LBRACE               : 10 13
+LET                  : 1
+LOP                  : 19
+LPAREN               : 3 5 13 17
+RBRACE               : 10 13
+RELOP                : 20
+RPAREN               : 3 5 13 17
+SEMI                 : 8
+THEN                 : 9
 TRUE                 : 
-WHILE                : 2
+WHILE                : 10
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 2 2 3 3 3 5 5 6 6 7 7 9 9 10 10 11 11 12 13 14 14 0
+aexpr                : 3 12
+bexpr                : 9 10 19 19
+dexpr                : 1 14 14
+expression           : 1 4 4 5 7 8 8 9 9 10 11 12 13 17 20 20 0
+vexpr                : 13 16 16
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
     expression                     shift and go to state 1
 
 state 1
 
     (0) S' -> expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
 
 state 2
 
-    (1) expression -> CONST .
+    (1) expression -> LET . dexpr IN expression
+    (13) dexpr -> . ID LPAREN vexpr RPAREN LBRACE expression RBRACE
+    (14) dexpr -> . dexpr dexpr
 
-    AOP             reduce using rule 1 (expression -> CONST .)
-    RELOP           reduce using rule 1 (expression -> CONST .)
-    LOP             reduce using rule 1 (expression -> CONST .)
-    COMMA           reduce using rule 1 (expression -> CONST .)
-    SEMI            reduce using rule 1 (expression -> CONST .)
-    ASSIGN          reduce using rule 1 (expression -> CONST .)
-    $end            reduce using rule 1 (expression -> CONST .)
-    DO              reduce using rule 1 (expression -> CONST .)
-    RBRACE          reduce using rule 1 (expression -> CONST .)
-    THEN            reduce using rule 1 (expression -> CONST .)
-    IN              reduce using rule 1 (expression -> CONST .)
-    RPAREN          reduce using rule 1 (expression -> CONST .)
-    ELSE            reduce using rule 1 (expression -> CONST .)
+    ID              shift and go to state 11
 
+    dexpr                          shift and go to state 10
 
 state 3
 
-    (2) expression -> WHILE . expression DO LBRACE expression RBRACE
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (2) expression -> ID .
+    (3) expression -> ID . LPAREN aexpr RPAREN
+    (7) expression -> ID . ASSIGN expression
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    AOP             reduce using rule 2 (expression -> ID .)
+    SEMI            reduce using rule 2 (expression -> ID .)
+    $end            reduce using rule 2 (expression -> ID .)
+    RPAREN          reduce using rule 2 (expression -> ID .)
+    RELOP           reduce using rule 2 (expression -> ID .)
+    COMMA           reduce using rule 2 (expression -> ID .)
+    ELSE            reduce using rule 2 (expression -> ID .)
+    THEN            reduce using rule 2 (expression -> ID .)
+    LOP             reduce using rule 2 (expression -> ID .)
+    DO              reduce using rule 2 (expression -> ID .)
+    RBRACE          reduce using rule 2 (expression -> ID .)
+    LPAREN          shift and go to state 12
+    ASSIGN          shift and go to state 13
 
-    expression                     shift and go to state 16
 
 state 4
 
-    (13) expression -> LBRACE . expression RBRACE
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (5) expression -> LPAREN . expression RPAREN
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
-    expression                     shift and go to state 17
+    expression                     shift and go to state 14
 
 state 5
 
-    (3) expression -> IF . expression THEN expression ELSE expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (6) expression -> CONST .
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    AOP             reduce using rule 6 (expression -> CONST .)
+    SEMI            reduce using rule 6 (expression -> CONST .)
+    $end            reduce using rule 6 (expression -> CONST .)
+    RPAREN          reduce using rule 6 (expression -> CONST .)
+    RELOP           reduce using rule 6 (expression -> CONST .)
+    COMMA           reduce using rule 6 (expression -> CONST .)
+    ELSE            reduce using rule 6 (expression -> CONST .)
+    THEN            reduce using rule 6 (expression -> CONST .)
+    LOP             reduce using rule 6 (expression -> CONST .)
+    DO              reduce using rule 6 (expression -> CONST .)
+    RBRACE          reduce using rule 6 (expression -> CONST .)
 
-    expression                     shift and go to state 18
 
 state 6
 
-    (4) expression -> ID .
+    (9) expression -> IF . bexpr THEN expression ELSE expression
+    (17) bexpr -> . LPAREN expression RPAREN
+    (18) bexpr -> . BOOL
+    (19) bexpr -> . bexpr LOP bexpr
+    (20) bexpr -> . expression RELOP expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    AOP             reduce using rule 4 (expression -> ID .)
-    RELOP           reduce using rule 4 (expression -> ID .)
-    LOP             reduce using rule 4 (expression -> ID .)
-    COMMA           reduce using rule 4 (expression -> ID .)
-    SEMI            reduce using rule 4 (expression -> ID .)
-    ASSIGN          reduce using rule 4 (expression -> ID .)
-    $end            reduce using rule 4 (expression -> ID .)
-    DO              reduce using rule 4 (expression -> ID .)
-    RBRACE          reduce using rule 4 (expression -> ID .)
-    THEN            reduce using rule 4 (expression -> ID .)
-    IN              reduce using rule 4 (expression -> ID .)
-    RPAREN          reduce using rule 4 (expression -> ID .)
-    ELSE            reduce using rule 4 (expression -> ID .)
+    LPAREN          shift and go to state 17
+    BOOL            shift and go to state 18
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
+    bexpr                          shift and go to state 15
+    expression                     shift and go to state 16
 
 state 7
 
-    (8) expression -> BOOL .
+    (10) expression -> WHILE . bexpr DO LBRACE expression RBRACE
+    (17) bexpr -> . LPAREN expression RPAREN
+    (18) bexpr -> . BOOL
+    (19) bexpr -> . bexpr LOP bexpr
+    (20) bexpr -> . expression RELOP expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    AOP             reduce using rule 8 (expression -> BOOL .)
-    RELOP           reduce using rule 8 (expression -> BOOL .)
-    LOP             reduce using rule 8 (expression -> BOOL .)
-    COMMA           reduce using rule 8 (expression -> BOOL .)
-    SEMI            reduce using rule 8 (expression -> BOOL .)
-    ASSIGN          reduce using rule 8 (expression -> BOOL .)
-    $end            reduce using rule 8 (expression -> BOOL .)
-    DO              reduce using rule 8 (expression -> BOOL .)
-    RBRACE          reduce using rule 8 (expression -> BOOL .)
-    THEN            reduce using rule 8 (expression -> BOOL .)
-    IN              reduce using rule 8 (expression -> BOOL .)
-    RPAREN          reduce using rule 8 (expression -> BOOL .)
-    ELSE            reduce using rule 8 (expression -> BOOL .)
+    LPAREN          shift and go to state 17
+    BOOL            shift and go to state 18
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
+    bexpr                          shift and go to state 19
+    expression                     shift and go to state 16
 
 state 8
 
-    (11) expression -> LET . expression IN expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (4) expression -> expression AOP . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
-
-    expression                     shift and go to state 19
-
-state 9
-
-    (12) expression -> LPAREN . expression RPAREN
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
-
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
     expression                     shift and go to state 20
 
-state 10
+state 9
 
-    (5) expression -> expression AOP . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (8) expression -> expression SEMI . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
     expression                     shift and go to state 21
 
+state 10
+
+    (1) expression -> LET dexpr . IN expression
+    (14) dexpr -> dexpr . dexpr
+    (13) dexpr -> . ID LPAREN vexpr RPAREN LBRACE expression RBRACE
+    (14) dexpr -> . dexpr dexpr
+
+    IN              shift and go to state 23
+    ID              shift and go to state 11
+
+    dexpr                          shift and go to state 22
+
 state 11
 
-    (6) expression -> expression RELOP . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (13) dexpr -> ID . LPAREN vexpr RPAREN LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LPAREN          shift and go to state 24
 
-    expression                     shift and go to state 22
 
 state 12
 
-    (7) expression -> expression LOP . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (3) expression -> ID LPAREN . aexpr RPAREN
+    (11) aexpr -> . expression
+    (12) aexpr -> . aexpr COMMA expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
-    expression                     shift and go to state 23
+    aexpr                          shift and go to state 25
+    expression                     shift and go to state 26
 
 state 13
 
-    (9) expression -> expression COMMA . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (7) expression -> ID ASSIGN . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
-    expression                     shift and go to state 24
+    expression                     shift and go to state 27
 
 state 14
 
-    (10) expression -> expression SEMI . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (5) expression -> LPAREN expression . RPAREN
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    RPAREN          shift and go to state 28
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
-    expression                     shift and go to state 25
 
 state 15
 
-    (14) expression -> expression ASSIGN . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (9) expression -> IF bexpr . THEN expression ELSE expression
+    (19) bexpr -> bexpr . LOP bexpr
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    THEN            shift and go to state 29
+    LOP             shift and go to state 30
 
-    expression                     shift and go to state 26
 
 state 16
 
-    (2) expression -> WHILE expression . DO LBRACE expression RBRACE
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (20) bexpr -> expression . RELOP expression
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    DO              shift and go to state 27
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    RELOP           shift and go to state 31
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
 
 state 17
 
-    (13) expression -> LBRACE expression . RBRACE
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (17) bexpr -> LPAREN . expression RPAREN
+    (5) expression -> LPAREN . expression RPAREN
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    RBRACE          shift and go to state 28
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
+    expression                     shift and go to state 32
 
 state 18
 
-    (3) expression -> IF expression . THEN expression ELSE expression
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (18) bexpr -> BOOL .
 
-    THEN            shift and go to state 29
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    THEN            reduce using rule 18 (bexpr -> BOOL .)
+    LOP             reduce using rule 18 (bexpr -> BOOL .)
+    DO              reduce using rule 18 (bexpr -> BOOL .)
 
 
 state 19
 
-    (11) expression -> LET expression . IN expression
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (10) expression -> WHILE bexpr . DO LBRACE expression RBRACE
+    (19) bexpr -> bexpr . LOP bexpr
 
-    IN              shift and go to state 30
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    DO              shift and go to state 33
+    LOP             shift and go to state 30
 
 
 state 20
 
-    (12) expression -> LPAREN expression . RPAREN
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (4) expression -> expression AOP expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    RPAREN          shift and go to state 31
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    AOP             reduce using rule 4 (expression -> expression AOP expression .)
+    SEMI            reduce using rule 4 (expression -> expression AOP expression .)
+    $end            reduce using rule 4 (expression -> expression AOP expression .)
+    RPAREN          reduce using rule 4 (expression -> expression AOP expression .)
+    RELOP           reduce using rule 4 (expression -> expression AOP expression .)
+    COMMA           reduce using rule 4 (expression -> expression AOP expression .)
+    ELSE            reduce using rule 4 (expression -> expression AOP expression .)
+    THEN            reduce using rule 4 (expression -> expression AOP expression .)
+    LOP             reduce using rule 4 (expression -> expression AOP expression .)
+    DO              reduce using rule 4 (expression -> expression AOP expression .)
+    RBRACE          reduce using rule 4 (expression -> expression AOP expression .)
+
+  ! AOP             [ shift and go to state 8 ]
+  ! SEMI            [ shift and go to state 9 ]
 
 
 state 21
 
-    (5) expression -> expression AOP expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (8) expression -> expression SEMI expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    AOP             reduce using rule 5 (expression -> expression AOP expression .)
-    RELOP           reduce using rule 5 (expression -> expression AOP expression .)
-    LOP             reduce using rule 5 (expression -> expression AOP expression .)
-    COMMA           reduce using rule 5 (expression -> expression AOP expression .)
-    SEMI            reduce using rule 5 (expression -> expression AOP expression .)
-    ASSIGN          reduce using rule 5 (expression -> expression AOP expression .)
-    $end            reduce using rule 5 (expression -> expression AOP expression .)
-    DO              reduce using rule 5 (expression -> expression AOP expression .)
-    RBRACE          reduce using rule 5 (expression -> expression AOP expression .)
-    THEN            reduce using rule 5 (expression -> expression AOP expression .)
-    IN              reduce using rule 5 (expression -> expression AOP expression .)
-    RPAREN          reduce using rule 5 (expression -> expression AOP expression .)
-    ELSE            reduce using rule 5 (expression -> expression AOP expression .)
+    SEMI            reduce using rule 8 (expression -> expression SEMI expression .)
+    $end            reduce using rule 8 (expression -> expression SEMI expression .)
+    RPAREN          reduce using rule 8 (expression -> expression SEMI expression .)
+    RELOP           reduce using rule 8 (expression -> expression SEMI expression .)
+    COMMA           reduce using rule 8 (expression -> expression SEMI expression .)
+    ELSE            reduce using rule 8 (expression -> expression SEMI expression .)
+    THEN            reduce using rule 8 (expression -> expression SEMI expression .)
+    LOP             reduce using rule 8 (expression -> expression SEMI expression .)
+    DO              reduce using rule 8 (expression -> expression SEMI expression .)
+    RBRACE          reduce using rule 8 (expression -> expression SEMI expression .)
+    AOP             shift and go to state 8
 
-  ! AOP             [ shift and go to state 10 ]
-  ! RELOP           [ shift and go to state 11 ]
-  ! LOP             [ shift and go to state 12 ]
-  ! COMMA           [ shift and go to state 13 ]
-  ! SEMI            [ shift and go to state 14 ]
-  ! ASSIGN          [ shift and go to state 15 ]
+  ! AOP             [ reduce using rule 8 (expression -> expression SEMI expression .) ]
+  ! SEMI            [ shift and go to state 9 ]
 
 
 state 22
 
-    (6) expression -> expression RELOP expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (14) dexpr -> dexpr dexpr .
+    (14) dexpr -> dexpr . dexpr
+    (13) dexpr -> . ID LPAREN vexpr RPAREN LBRACE expression RBRACE
+    (14) dexpr -> . dexpr dexpr
 
-    RELOP           reduce using rule 6 (expression -> expression RELOP expression .)
-    LOP             reduce using rule 6 (expression -> expression RELOP expression .)
-    COMMA           reduce using rule 6 (expression -> expression RELOP expression .)
-    SEMI            reduce using rule 6 (expression -> expression RELOP expression .)
-    ASSIGN          reduce using rule 6 (expression -> expression RELOP expression .)
-    $end            reduce using rule 6 (expression -> expression RELOP expression .)
-    DO              reduce using rule 6 (expression -> expression RELOP expression .)
-    RBRACE          reduce using rule 6 (expression -> expression RELOP expression .)
-    THEN            reduce using rule 6 (expression -> expression RELOP expression .)
-    IN              reduce using rule 6 (expression -> expression RELOP expression .)
-    RPAREN          reduce using rule 6 (expression -> expression RELOP expression .)
-    ELSE            reduce using rule 6 (expression -> expression RELOP expression .)
-    AOP             shift and go to state 10
+  ! shift/reduce conflict for ID resolved as shift
+    IN              reduce using rule 14 (dexpr -> dexpr dexpr .)
+    ID              shift and go to state 11
 
-  ! AOP             [ reduce using rule 6 (expression -> expression RELOP expression .) ]
-  ! RELOP           [ shift and go to state 11 ]
-  ! LOP             [ shift and go to state 12 ]
-  ! COMMA           [ shift and go to state 13 ]
-  ! SEMI            [ shift and go to state 14 ]
-  ! ASSIGN          [ shift and go to state 15 ]
+  ! ID              [ reduce using rule 14 (dexpr -> dexpr dexpr .) ]
 
+    dexpr                          shift and go to state 22
 
 state 23
 
-    (7) expression -> expression LOP expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (1) expression -> LET dexpr IN . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    LOP             reduce using rule 7 (expression -> expression LOP expression .)
-    COMMA           reduce using rule 7 (expression -> expression LOP expression .)
-    SEMI            reduce using rule 7 (expression -> expression LOP expression .)
-    ASSIGN          reduce using rule 7 (expression -> expression LOP expression .)
-    $end            reduce using rule 7 (expression -> expression LOP expression .)
-    DO              reduce using rule 7 (expression -> expression LOP expression .)
-    RBRACE          reduce using rule 7 (expression -> expression LOP expression .)
-    THEN            reduce using rule 7 (expression -> expression LOP expression .)
-    IN              reduce using rule 7 (expression -> expression LOP expression .)
-    RPAREN          reduce using rule 7 (expression -> expression LOP expression .)
-    ELSE            reduce using rule 7 (expression -> expression LOP expression .)
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
-  ! AOP             [ reduce using rule 7 (expression -> expression LOP expression .) ]
-  ! RELOP           [ reduce using rule 7 (expression -> expression LOP expression .) ]
-  ! LOP             [ shift and go to state 12 ]
-  ! COMMA           [ shift and go to state 13 ]
-  ! SEMI            [ shift and go to state 14 ]
-  ! ASSIGN          [ shift and go to state 15 ]
-
+    expression                     shift and go to state 34
 
 state 24
 
-    (9) expression -> expression COMMA expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (13) dexpr -> ID LPAREN . vexpr RPAREN LBRACE expression RBRACE
+    (15) vexpr -> . ID
+    (16) vexpr -> . vexpr COMMA vexpr
 
-  ! shift/reduce conflict for AOP resolved as shift
-  ! shift/reduce conflict for RELOP resolved as shift
-  ! shift/reduce conflict for LOP resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
-  ! shift/reduce conflict for SEMI resolved as shift
-  ! shift/reduce conflict for ASSIGN resolved as shift
-    $end            reduce using rule 9 (expression -> expression COMMA expression .)
-    DO              reduce using rule 9 (expression -> expression COMMA expression .)
-    RBRACE          reduce using rule 9 (expression -> expression COMMA expression .)
-    THEN            reduce using rule 9 (expression -> expression COMMA expression .)
-    IN              reduce using rule 9 (expression -> expression COMMA expression .)
-    RPAREN          reduce using rule 9 (expression -> expression COMMA expression .)
-    ELSE            reduce using rule 9 (expression -> expression COMMA expression .)
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    ID              shift and go to state 35
 
-  ! AOP             [ reduce using rule 9 (expression -> expression COMMA expression .) ]
-  ! RELOP           [ reduce using rule 9 (expression -> expression COMMA expression .) ]
-  ! LOP             [ reduce using rule 9 (expression -> expression COMMA expression .) ]
-  ! COMMA           [ reduce using rule 9 (expression -> expression COMMA expression .) ]
-  ! SEMI            [ reduce using rule 9 (expression -> expression COMMA expression .) ]
-  ! ASSIGN          [ reduce using rule 9 (expression -> expression COMMA expression .) ]
-
+    vexpr                          shift and go to state 36
 
 state 25
 
-    (10) expression -> expression SEMI expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (3) expression -> ID LPAREN aexpr . RPAREN
+    (12) aexpr -> aexpr . COMMA expression
 
-    COMMA           reduce using rule 10 (expression -> expression SEMI expression .)
-    SEMI            reduce using rule 10 (expression -> expression SEMI expression .)
-    $end            reduce using rule 10 (expression -> expression SEMI expression .)
-    DO              reduce using rule 10 (expression -> expression SEMI expression .)
-    RBRACE          reduce using rule 10 (expression -> expression SEMI expression .)
-    THEN            reduce using rule 10 (expression -> expression SEMI expression .)
-    IN              reduce using rule 10 (expression -> expression SEMI expression .)
-    RPAREN          reduce using rule 10 (expression -> expression SEMI expression .)
-    ELSE            reduce using rule 10 (expression -> expression SEMI expression .)
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    ASSIGN          shift and go to state 15
-
-  ! AOP             [ reduce using rule 10 (expression -> expression SEMI expression .) ]
-  ! RELOP           [ reduce using rule 10 (expression -> expression SEMI expression .) ]
-  ! LOP             [ reduce using rule 10 (expression -> expression SEMI expression .) ]
-  ! ASSIGN          [ reduce using rule 10 (expression -> expression SEMI expression .) ]
-  ! COMMA           [ shift and go to state 13 ]
-  ! SEMI            [ shift and go to state 14 ]
+    RPAREN          shift and go to state 37
+    COMMA           shift and go to state 38
 
 
 state 26
 
-    (14) expression -> expression ASSIGN expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (11) aexpr -> expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    COMMA           reduce using rule 14 (expression -> expression ASSIGN expression .)
-    SEMI            reduce using rule 14 (expression -> expression ASSIGN expression .)
-    $end            reduce using rule 14 (expression -> expression ASSIGN expression .)
-    DO              reduce using rule 14 (expression -> expression ASSIGN expression .)
-    RBRACE          reduce using rule 14 (expression -> expression ASSIGN expression .)
-    THEN            reduce using rule 14 (expression -> expression ASSIGN expression .)
-    IN              reduce using rule 14 (expression -> expression ASSIGN expression .)
-    RPAREN          reduce using rule 14 (expression -> expression ASSIGN expression .)
-    ELSE            reduce using rule 14 (expression -> expression ASSIGN expression .)
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    ASSIGN          shift and go to state 15
-
-  ! AOP             [ reduce using rule 14 (expression -> expression ASSIGN expression .) ]
-  ! RELOP           [ reduce using rule 14 (expression -> expression ASSIGN expression .) ]
-  ! LOP             [ reduce using rule 14 (expression -> expression ASSIGN expression .) ]
-  ! ASSIGN          [ reduce using rule 14 (expression -> expression ASSIGN expression .) ]
-  ! COMMA           [ shift and go to state 13 ]
-  ! SEMI            [ shift and go to state 14 ]
+    RPAREN          reduce using rule 11 (aexpr -> expression .)
+    COMMA           reduce using rule 11 (aexpr -> expression .)
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
 
 state 27
 
-    (2) expression -> WHILE expression DO . LBRACE expression RBRACE
+    (7) expression -> ID ASSIGN expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    LBRACE          shift and go to state 32
+    SEMI            reduce using rule 7 (expression -> ID ASSIGN expression .)
+    $end            reduce using rule 7 (expression -> ID ASSIGN expression .)
+    RPAREN          reduce using rule 7 (expression -> ID ASSIGN expression .)
+    RELOP           reduce using rule 7 (expression -> ID ASSIGN expression .)
+    COMMA           reduce using rule 7 (expression -> ID ASSIGN expression .)
+    ELSE            reduce using rule 7 (expression -> ID ASSIGN expression .)
+    THEN            reduce using rule 7 (expression -> ID ASSIGN expression .)
+    LOP             reduce using rule 7 (expression -> ID ASSIGN expression .)
+    DO              reduce using rule 7 (expression -> ID ASSIGN expression .)
+    RBRACE          reduce using rule 7 (expression -> ID ASSIGN expression .)
+    AOP             shift and go to state 8
+
+  ! AOP             [ reduce using rule 7 (expression -> ID ASSIGN expression .) ]
+  ! SEMI            [ shift and go to state 9 ]
 
 
 state 28
 
-    (13) expression -> LBRACE expression RBRACE .
+    (5) expression -> LPAREN expression RPAREN .
 
-    AOP             reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    RELOP           reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    LOP             reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    COMMA           reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    SEMI            reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    ASSIGN          reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    $end            reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    DO              reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    RBRACE          reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    THEN            reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    IN              reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    RPAREN          reduce using rule 13 (expression -> LBRACE expression RBRACE .)
-    ELSE            reduce using rule 13 (expression -> LBRACE expression RBRACE .)
+    AOP             reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    SEMI            reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    RELOP           reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    ELSE            reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    THEN            reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    LOP             reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    DO              reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    RBRACE          reduce using rule 5 (expression -> LPAREN expression RPAREN .)
 
 
 state 29
 
-    (3) expression -> IF expression THEN . expression ELSE expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (9) expression -> IF bexpr THEN . expression ELSE expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
-    expression                     shift and go to state 33
+    expression                     shift and go to state 39
 
 state 30
 
-    (11) expression -> LET expression IN . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (19) bexpr -> bexpr LOP . bexpr
+    (17) bexpr -> . LPAREN expression RPAREN
+    (18) bexpr -> . BOOL
+    (19) bexpr -> . bexpr LOP bexpr
+    (20) bexpr -> . expression RELOP expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    LPAREN          shift and go to state 17
+    BOOL            shift and go to state 18
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
-    expression                     shift and go to state 34
+    bexpr                          shift and go to state 40
+    expression                     shift and go to state 16
 
 state 31
 
-    (12) expression -> LPAREN expression RPAREN .
+    (20) bexpr -> expression RELOP . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
 
-    AOP             reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    RELOP           reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    LOP             reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    COMMA           reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    SEMI            reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    ASSIGN          reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    $end            reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    DO              reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    RBRACE          reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    THEN            reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    IN              reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 12 (expression -> LPAREN expression RPAREN .)
-    ELSE            reduce using rule 12 (expression -> LPAREN expression RPAREN .)
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
 
+    expression                     shift and go to state 41
 
 state 32
 
-    (2) expression -> WHILE expression DO LBRACE . expression RBRACE
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (17) bexpr -> LPAREN expression . RPAREN
+    (5) expression -> LPAREN expression . RPAREN
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    RPAREN          shift and go to state 42
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
-    expression                     shift and go to state 35
 
 state 33
 
-    (3) expression -> IF expression THEN expression . ELSE expression
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (10) expression -> WHILE bexpr DO . LBRACE expression RBRACE
 
-    ELSE            shift and go to state 36
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    LBRACE          shift and go to state 43
 
 
 state 34
 
-    (11) expression -> LET expression IN expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (1) expression -> LET dexpr IN expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
   ! shift/reduce conflict for AOP resolved as shift
-  ! shift/reduce conflict for RELOP resolved as shift
-  ! shift/reduce conflict for LOP resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
   ! shift/reduce conflict for SEMI resolved as shift
-  ! shift/reduce conflict for ASSIGN resolved as shift
-    $end            reduce using rule 11 (expression -> LET expression IN expression .)
-    DO              reduce using rule 11 (expression -> LET expression IN expression .)
-    RBRACE          reduce using rule 11 (expression -> LET expression IN expression .)
-    THEN            reduce using rule 11 (expression -> LET expression IN expression .)
-    IN              reduce using rule 11 (expression -> LET expression IN expression .)
-    RPAREN          reduce using rule 11 (expression -> LET expression IN expression .)
-    ELSE            reduce using rule 11 (expression -> LET expression IN expression .)
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    $end            reduce using rule 1 (expression -> LET dexpr IN expression .)
+    RPAREN          reduce using rule 1 (expression -> LET dexpr IN expression .)
+    RELOP           reduce using rule 1 (expression -> LET dexpr IN expression .)
+    COMMA           reduce using rule 1 (expression -> LET dexpr IN expression .)
+    ELSE            reduce using rule 1 (expression -> LET dexpr IN expression .)
+    THEN            reduce using rule 1 (expression -> LET dexpr IN expression .)
+    LOP             reduce using rule 1 (expression -> LET dexpr IN expression .)
+    DO              reduce using rule 1 (expression -> LET dexpr IN expression .)
+    RBRACE          reduce using rule 1 (expression -> LET dexpr IN expression .)
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
-  ! AOP             [ reduce using rule 11 (expression -> LET expression IN expression .) ]
-  ! RELOP           [ reduce using rule 11 (expression -> LET expression IN expression .) ]
-  ! LOP             [ reduce using rule 11 (expression -> LET expression IN expression .) ]
-  ! COMMA           [ reduce using rule 11 (expression -> LET expression IN expression .) ]
-  ! SEMI            [ reduce using rule 11 (expression -> LET expression IN expression .) ]
-  ! ASSIGN          [ reduce using rule 11 (expression -> LET expression IN expression .) ]
+  ! AOP             [ reduce using rule 1 (expression -> LET dexpr IN expression .) ]
+  ! SEMI            [ reduce using rule 1 (expression -> LET dexpr IN expression .) ]
 
 
 state 35
 
-    (2) expression -> WHILE expression DO LBRACE expression . RBRACE
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (15) vexpr -> ID .
 
-    RBRACE          shift and go to state 37
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    RPAREN          reduce using rule 15 (vexpr -> ID .)
+    COMMA           reduce using rule 15 (vexpr -> ID .)
 
 
 state 36
 
-    (3) expression -> IF expression THEN expression ELSE . expression
-    (1) expression -> . CONST
-    (2) expression -> . WHILE expression DO LBRACE expression RBRACE
-    (3) expression -> . IF expression THEN expression ELSE expression
-    (4) expression -> . ID
-    (5) expression -> . expression AOP expression
-    (6) expression -> . expression RELOP expression
-    (7) expression -> . expression LOP expression
-    (8) expression -> . BOOL
-    (9) expression -> . expression COMMA expression
-    (10) expression -> . expression SEMI expression
-    (11) expression -> . LET expression IN expression
-    (12) expression -> . LPAREN expression RPAREN
-    (13) expression -> . LBRACE expression RBRACE
-    (14) expression -> . expression ASSIGN expression
+    (13) dexpr -> ID LPAREN vexpr . RPAREN LBRACE expression RBRACE
+    (16) vexpr -> vexpr . COMMA vexpr
 
-    CONST           shift and go to state 2
-    WHILE           shift and go to state 3
-    IF              shift and go to state 5
-    ID              shift and go to state 6
-    BOOL            shift and go to state 7
-    LET             shift and go to state 8
-    LPAREN          shift and go to state 9
-    LBRACE          shift and go to state 4
+    RPAREN          shift and go to state 44
+    COMMA           shift and go to state 45
 
-    expression                     shift and go to state 38
 
 state 37
 
-    (2) expression -> WHILE expression DO LBRACE expression RBRACE .
+    (3) expression -> ID LPAREN aexpr RPAREN .
 
-    AOP             reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    RELOP           reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    LOP             reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    COMMA           reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    SEMI            reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    ASSIGN          reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    $end            reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    DO              reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    RBRACE          reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    THEN            reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    IN              reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    RPAREN          reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
-    ELSE            reduce using rule 2 (expression -> WHILE expression DO LBRACE expression RBRACE .)
+    AOP             reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    SEMI            reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    $end            reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    RPAREN          reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    RELOP           reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    COMMA           reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    ELSE            reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    THEN            reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    LOP             reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    DO              reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
+    RBRACE          reduce using rule 3 (expression -> ID LPAREN aexpr RPAREN .)
 
 
 state 38
 
-    (3) expression -> IF expression THEN expression ELSE expression .
-    (5) expression -> expression . AOP expression
-    (6) expression -> expression . RELOP expression
-    (7) expression -> expression . LOP expression
-    (9) expression -> expression . COMMA expression
-    (10) expression -> expression . SEMI expression
-    (14) expression -> expression . ASSIGN expression
+    (12) aexpr -> aexpr COMMA . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
+
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+
+    expression                     shift and go to state 46
+
+state 39
+
+    (9) expression -> IF bexpr THEN expression . ELSE expression
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
+
+    ELSE            shift and go to state 47
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
+
+
+state 40
+
+    (19) bexpr -> bexpr LOP bexpr .
+    (19) bexpr -> bexpr . LOP bexpr
+
+    THEN            reduce using rule 19 (bexpr -> bexpr LOP bexpr .)
+    LOP             reduce using rule 19 (bexpr -> bexpr LOP bexpr .)
+    DO              reduce using rule 19 (bexpr -> bexpr LOP bexpr .)
+
+  ! LOP             [ shift and go to state 30 ]
+
+
+state 41
+
+    (20) bexpr -> expression RELOP expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
+
+    THEN            reduce using rule 20 (bexpr -> expression RELOP expression .)
+    LOP             reduce using rule 20 (bexpr -> expression RELOP expression .)
+    DO              reduce using rule 20 (bexpr -> expression RELOP expression .)
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
+
+
+state 42
+
+    (17) bexpr -> LPAREN expression RPAREN .
+    (5) expression -> LPAREN expression RPAREN .
+
+    THEN            reduce using rule 17 (bexpr -> LPAREN expression RPAREN .)
+    LOP             reduce using rule 17 (bexpr -> LPAREN expression RPAREN .)
+    DO              reduce using rule 17 (bexpr -> LPAREN expression RPAREN .)
+    RELOP           reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    AOP             reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+    SEMI            reduce using rule 5 (expression -> LPAREN expression RPAREN .)
+
+
+state 43
+
+    (10) expression -> WHILE bexpr DO LBRACE . expression RBRACE
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
+
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+
+    expression                     shift and go to state 48
+
+state 44
+
+    (13) dexpr -> ID LPAREN vexpr RPAREN . LBRACE expression RBRACE
+
+    LBRACE          shift and go to state 49
+
+
+state 45
+
+    (16) vexpr -> vexpr COMMA . vexpr
+    (15) vexpr -> . ID
+    (16) vexpr -> . vexpr COMMA vexpr
+
+    ID              shift and go to state 35
+
+    vexpr                          shift and go to state 50
+
+state 46
+
+    (12) aexpr -> aexpr COMMA expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
+
+    RPAREN          reduce using rule 12 (aexpr -> aexpr COMMA expression .)
+    COMMA           reduce using rule 12 (aexpr -> aexpr COMMA expression .)
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
+
+
+state 47
+
+    (9) expression -> IF bexpr THEN expression ELSE . expression
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
+
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+
+    expression                     shift and go to state 51
+
+state 48
+
+    (10) expression -> WHILE bexpr DO LBRACE expression . RBRACE
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
+
+    RBRACE          shift and go to state 52
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
+
+
+state 49
+
+    (13) dexpr -> ID LPAREN vexpr RPAREN LBRACE . expression RBRACE
+    (1) expression -> . LET dexpr IN expression
+    (2) expression -> . ID
+    (3) expression -> . ID LPAREN aexpr RPAREN
+    (4) expression -> . expression AOP expression
+    (5) expression -> . LPAREN expression RPAREN
+    (6) expression -> . CONST
+    (7) expression -> . ID ASSIGN expression
+    (8) expression -> . expression SEMI expression
+    (9) expression -> . IF bexpr THEN expression ELSE expression
+    (10) expression -> . WHILE bexpr DO LBRACE expression RBRACE
+
+    LET             shift and go to state 2
+    ID              shift and go to state 3
+    LPAREN          shift and go to state 4
+    CONST           shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+
+    expression                     shift and go to state 53
+
+state 50
+
+    (16) vexpr -> vexpr COMMA vexpr .
+    (16) vexpr -> vexpr . COMMA vexpr
+
+  ! shift/reduce conflict for COMMA resolved as shift
+    RPAREN          reduce using rule 16 (vexpr -> vexpr COMMA vexpr .)
+    COMMA           shift and go to state 45
+
+  ! COMMA           [ reduce using rule 16 (vexpr -> vexpr COMMA vexpr .) ]
+
+
+state 51
+
+    (9) expression -> IF bexpr THEN expression ELSE expression .
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
 
   ! shift/reduce conflict for AOP resolved as shift
-  ! shift/reduce conflict for RELOP resolved as shift
-  ! shift/reduce conflict for LOP resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
   ! shift/reduce conflict for SEMI resolved as shift
-  ! shift/reduce conflict for ASSIGN resolved as shift
-    $end            reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    DO              reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    RBRACE          reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    THEN            reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    IN              reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    RPAREN          reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    ELSE            reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .)
-    AOP             shift and go to state 10
-    RELOP           shift and go to state 11
-    LOP             shift and go to state 12
-    COMMA           shift and go to state 13
-    SEMI            shift and go to state 14
-    ASSIGN          shift and go to state 15
+    $end            reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    RPAREN          reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    RELOP           reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    COMMA           reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    ELSE            reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    THEN            reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    LOP             reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    DO              reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    RBRACE          reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .)
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
 
-  ! AOP             [ reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .) ]
-  ! RELOP           [ reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .) ]
-  ! LOP             [ reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .) ]
-  ! COMMA           [ reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .) ]
-  ! SEMI            [ reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .) ]
-  ! ASSIGN          [ reduce using rule 3 (expression -> IF expression THEN expression ELSE expression .) ]
+  ! AOP             [ reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .) ]
+  ! SEMI            [ reduce using rule 9 (expression -> IF bexpr THEN expression ELSE expression .) ]
+
+
+state 52
+
+    (10) expression -> WHILE bexpr DO LBRACE expression RBRACE .
+
+    AOP             reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    SEMI            reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    $end            reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    RPAREN          reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    RELOP           reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    COMMA           reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    ELSE            reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    THEN            reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    LOP             reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    DO              reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+    RBRACE          reduce using rule 10 (expression -> WHILE bexpr DO LBRACE expression RBRACE .)
+
+
+state 53
+
+    (13) dexpr -> ID LPAREN vexpr RPAREN LBRACE expression . RBRACE
+    (4) expression -> expression . AOP expression
+    (8) expression -> expression . SEMI expression
+
+    RBRACE          shift and go to state 54
+    AOP             shift and go to state 8
+    SEMI            shift and go to state 9
+
+
+state 54
+
+    (13) dexpr -> ID LPAREN vexpr RPAREN LBRACE expression RBRACE .
+
+    IN              reduce using rule 13 (dexpr -> ID LPAREN vexpr RPAREN LBRACE expression RBRACE .)
+    ID              reduce using rule 13 (dexpr -> ID LPAREN vexpr RPAREN LBRACE expression RBRACE .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for AOP in state 24 resolved as shift
-WARNING: shift/reduce conflict for RELOP in state 24 resolved as shift
-WARNING: shift/reduce conflict for LOP in state 24 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 24 resolved as shift
-WARNING: shift/reduce conflict for SEMI in state 24 resolved as shift
-WARNING: shift/reduce conflict for ASSIGN in state 24 resolved as shift
+WARNING: shift/reduce conflict for ID in state 22 resolved as shift
 WARNING: shift/reduce conflict for AOP in state 34 resolved as shift
-WARNING: shift/reduce conflict for RELOP in state 34 resolved as shift
-WARNING: shift/reduce conflict for LOP in state 34 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 34 resolved as shift
 WARNING: shift/reduce conflict for SEMI in state 34 resolved as shift
-WARNING: shift/reduce conflict for ASSIGN in state 34 resolved as shift
-WARNING: shift/reduce conflict for AOP in state 38 resolved as shift
-WARNING: shift/reduce conflict for RELOP in state 38 resolved as shift
-WARNING: shift/reduce conflict for LOP in state 38 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 38 resolved as shift
-WARNING: shift/reduce conflict for SEMI in state 38 resolved as shift
-WARNING: shift/reduce conflict for ASSIGN in state 38 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 50 resolved as shift
+WARNING: shift/reduce conflict for AOP in state 51 resolved as shift
+WARNING: shift/reduce conflict for SEMI in state 51 resolved as shift

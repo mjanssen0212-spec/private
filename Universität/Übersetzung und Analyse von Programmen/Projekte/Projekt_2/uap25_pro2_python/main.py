@@ -6,12 +6,12 @@ import triplayacc
 
 def test_parser(name):
     source = "\n".join(open(name).readlines())
-    ast = triplayacc.parser.parse(source)  # ,debug=True)
+    ast = triplayacc.parser.parse(source) #,debug=True)
     print("AST:")
     print(ast)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    test_parser('whileprograms/complex.while')
+    test_parser('triplaprograms/defSemiExample.tripla')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
