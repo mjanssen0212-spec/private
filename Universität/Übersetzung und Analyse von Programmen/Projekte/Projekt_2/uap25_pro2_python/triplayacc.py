@@ -22,12 +22,12 @@ from triplalex import tokens
 
 precedence = (
     ('left', 'SEMI'),
-    ('right', 'ASSIGN'),
     ('left', 'LOP'),
-    ('nonassoc', 'RELOP'),
+    ('nonassoc', 'EQOP', 'RELOP'),
     ('left', 'AOP'),
+    ('right', 'ASSIGN'),
 )
-
+#E ->
 def p_expression_let(p):
     'expression : LET dexpr IN expression'
     p[0] = ast.LET(p[2], p[4])
@@ -68,14 +68,16 @@ def p_expression_while(p):
     'expression : WHILE bexpr DO LBRACE expression RBRACE'
     p[0] = ast.WHILE(p[2],p[5])
 
+#A ->
 def p_aexpr_expression(p):
     'aexpr : expression'
     p[0] = [p[1]]
 
 def p_aexpr_comma(p):
     'aexpr : aexpr COMMA expression'
-    p[0] = p[1] + p[3]
+    p[0] = p[1] + [p[3]]
 
+#D ->
 def p_dexpr_decl(p):
     'dexpr : ID LPAREN vexpr RPAREN LBRACE expression RBRACE'
     p[0] = [ast.DECL(p[1], p[3], p[6])]
@@ -84,6 +86,7 @@ def p_dexpr_concat(p):
     'dexpr : dexpr dexpr'
     p[0] = p[1] + p[2]
 
+#V ->
 def p_vexpr_id(p):
     'vexpr : ID'
     p[0] = [ast.VAR(p[1])]
@@ -92,8 +95,9 @@ def p_vexpr_comma(p):
     'vexpr : vexpr COMMA vexpr'
     p[0] = p[1] + p[3]
 
+#B ->
 def p_bexpr_paren(p):
-    'bexpr : LPAREN expression RPAREN'
+    'bexpr : LPAREN bexpr RPAREN'
     p[0] = p[2]
 
 def p_bexpr_bool(p):

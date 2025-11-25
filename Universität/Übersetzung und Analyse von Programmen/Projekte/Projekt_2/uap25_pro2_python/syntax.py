@@ -81,7 +81,7 @@ class ASSIGN(EXPRESSION):
         self.variable=variable
         self.expression=expression
 
-    def __str__(self): return self.variable.name+"="+str(self.expression)
+    def __str__(self): return self.variable+"="+str(self.expression)
 
 class SEQ(EXPRESSION):
     def __init__(self, exp1, exp2):

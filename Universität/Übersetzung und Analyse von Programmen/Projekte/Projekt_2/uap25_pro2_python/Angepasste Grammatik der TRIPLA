@@ -14,7 +14,7 @@ D -> ID ( V ) { E }
     | D D
 V -> ID
     | V , V
-B -> (B)
+B -> ( B )
     BOOL
     B LOP B
     B EQOP B
