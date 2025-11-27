@@ -1,9 +1,11 @@
+#Matthias Janßen
+#1871808
+
 # This is a sample Python script for testing your TRIPLA parser.
 
 # In PyCharm press Umschalt+F10 to execute it.
 
 import os
-import sys
 import argparse
 import html
 
