@@ -1,0 +1,105 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem,setspace}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.eps,.jpg}
+\usepackage{algorithm2e}
+
+% --- math operators ---
+\usepackage{mathtools}
+\DeclarePairedDelimiter\set{\{}{\}} % use $\set{1, 2, 3}$
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter\ceils{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\def\then{\ensuremath{\Rightarrow}} % =>
+\def\iff{\ensuremath{\Leftrightarrow}} % if and only if <=>
+\def\to{\ensuremath{\rightarrow}} % ->
+\def\ot{\ensuremath{\leftarrow}} % ->
+\def\Oh{\ensuremath{\mathcal{O}}} % big O like $\Oh(n)$
+% ---
+\DeclareMathOperator{\preorder}{preorder}
+\DeclareMathOperator{\postorder}{postorder}
+\DeclareMathOperator{\depth}{depth}
+
+% theorem environment
+\newtheorem{satz}{Satz}
+
+% --- FILL OUT THESE 3 FIELDS ---
+\def\sheetNumber{1}
+\def\names{NAMEN} 
+\def\sumPoints{20} 
+
+% --- ### BEGIN DOCUMENT ### ---
+\begin{document}
+
+\begin{doublespace} % header
+\noindent \textbf{\LARGE{Übungsblatt \sheetNumber}}
+\hfill  {\large Punkte: $\boxed{\qquad  /\; \sumPoints}$}\\
+{\Large \textbf{Fortgeschrittene Algorithmen (Wintersemester 2022/23)}\\
+Bearbeitet von: \textbf{\names}}
+\end{doublespace}
+
+\section*{Aufgabe 1}
+
+Sei $G=(V,E)$ ein gerichteter Graph mit Kantenkapazitäten $c:E\to\mathbb{R}_{+}$ und sei
+$b:V\to\mathbb{R}$ eine Bedarfsfunktion. Ein \emph{zulässiger $b$-Fluss} ist eine Funktion $f:E\to\mathbb{R}_{+}$ mit
+$0\le f(e)\le c(e)$ für alle $e\in E$ und
+\[\text{Nettozufluss}_f(v):=\sum_{(u,v)\in E} f(u,v)-\sum_{(v,w)\in E} f(v,w)=b(v)\quad\text{für alle }v\in V.
+\]
+
+\subsection*{Konstruktion}
+Wir bauen den erweiterten Graphen $G'=(V',E')$ durch Hinzufügen einer Superquelle $s^*$ und einer Supersenke $t^*$:
+\begin{itemize}
+  \item Für jedes $v\in V$ mit $b(v)>0$ füge die Kante $(s^*,v)$ mit Kapazität $c(s^*,v)=b(v)$ hinzu.
+  \item Für jedes $v\in V$ mit $b(v)<0$ füge die Kante $(v,t^*)$ mit Kapazität $c(v,t^*)=-b(v)$ hinzu.
+  \item Alle ursprünglichen Kanten aus $E$ behalten ihre Kapazitäten.
+\end{itemize}
+Setze $B:=\sum_{v:\,b(v)>0} b(v)$. Eine notwendige Bedingung für die Existenz eines $b$-Flusses ist $\sum_{v\in V} b(v)=0$;
+ist dies nicht erfüllt, existiert kein $b$-Fluss.
+
+\begin{satz}
+Es existiert genau dann ein zulässiger $b$-Fluss auf $G$, wenn der maximale $s^*$--$t^*$-Fluss in $G'$ den Wert $B$ erreicht.
+\end{satz}
+\begin{proof}
+
+Idee: Die zusätzlichen Kanten von $s^*$ liefern genau die Überschüsse, und die Kanten zu $t^*$ nehmen die Forderungen auf. Wir zeigen beide Richtungen kurz.
+
+($\Rightarrow$): Sei $f$ ein zulässiger $b$-Fluss in $G$. Definiere $f'$ auf $G'$ durch $f'(e)=f(e)$ für $e\in E$, $f'(s^*,v)=b(v)$ für $b(v)>0$ und $f'(v,t^*)=-b(v)$ für $b(v)<0$. Dann sind Kapazität und Erhaltung erfüllt und $|f'|=\sum_{b(v)>0}b(v)=B$.
+
+($\Leftarrow$): Sei $f'$ ein $s^*$--$t^*$-Fluss in $G'$ mit Wert $B$. Da $B$ die gesamte Angebotssumme ist, sind alle Kanten $(s^*,v)$ bzw. $(v,t^*)$ gesättigt. Beschränkt man $f'$ auf die Kanten $E$, so ergibt die Flusserhaltung für jeden Knoten $v$ die Gleichung
+\[\sum_{(u,v)\in E} f(u,v)-\sum_{(v,w)\in E} f(v,w)=b(v),\]
+also ist die Beschränkung ein zulässiger $b$-Fluss.
+
+Damit ist die Äquivalenz gezeigt.
+\end{proof}
+
+\subsection*{Extraktion und Laufzeit}
+Ist der Max-Flow in $G'$ gleich $B$, so erhält man den gesuchten $b$-Fluss durch Beschränkung des $s^*$--$t^*$-Flusses auf die ursprünglichen Kanten $E$.
+Der Aufbau von $G'$ fügt höchstens $|V|$ Kanten hinzu; die Max-Flow-Berechnung auf $G'$ benötigt damit Zeit $T(|V|+2,|E|+O(|V|))$,
+wobei $T(n,m)$ die Laufzeit des verwendeten Max-Flow-Algorithmus ist. Asymptotisch ändert dies nichts am Aufwand gegenüber einem
+einzigen Max-Flow-Lauf auf $G$ (z. B. Dinic: $O(|V|^2|E|)$ im Worst-Case, in der Praxis oft schneller).
+
+\medskip
+Die Reduktion ist damit vollständig und korrekt.
+
+\section*{Aufgabe 2}
+
+\section*{Aufgabe 3}
+
+\section*{Aufgabe 4}
+
+
+% -- code for figures
+% \begin{figure}[htb]
+% \centering
+% \includegraphics{filename} % use option [width=\linewidth] to change size to linewidth (or 0.6\linewidth for example)
+% \label{fig:name}
+% \end{figure}
+
+
+\end{document}
+% --- ### END DOCUMENT ### ---
