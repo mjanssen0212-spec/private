@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CONST DO LBRACE RBRACE WHILEexpression : CONSTexpression : WHILE expression DO LBRACE expression RBRACE'
+_lr_signature = 'leftSEMIleftLOPnonassocEQOPRELOPleftAOPrightASSIGNAOP ASSIGN BOOL COMMA CONST DO ELSE EQOP ID IF IN LBRACE LET LOP LPAREN RBRACE RELOP RPAREN SEMI THEN WHILEexpression : LET dexpr IN expressionexpression : IDexpression : ID LPAREN aexpr RPARENexpression : expression AOP expressionexpression : LPAREN expression RPARENexpression : CONSTexpression : ID ASSIGN expressionexpression : expression SEMI expressionexpression : IF bexpr THEN expression ELSE expressionexpression : WHILE bexpr DO LBRACE expression RBRACEexpressione : DO LBRACE expression RBRACE WHILE bexpraexpr : expressionaexpr : aexpr COMMA expressiondexpr : ID LPAREN vexpr RPAREN LBRACE expression RBRACEdexpr : dexpr dexprvexpr : IDvexpr : vexpr COMMA vexprbexpr : LPAREN bexpr RPARENbexpr : BOOLbexpr : bexpr LOP bexprbexpr : bexpr EQOP bexprbexpr : expression EQOP expressionbexpr : expression RELOP expression'
     
-_lr_action_items = {'CONST':([0,3,6,],[2,2,2,]),'WHILE':([0,3,6,],[3,3,3,]),'$end':([1,2,8,],[0,-1,-2,]),'DO':([2,4,8,],[-1,5,-2,]),'RBRACE':([2,7,8,],[-1,8,-2,]),'LBRACE':([5,],[6,]),}
+_lr_action_items = {'LET':([0,4,6,7,8,9,12,13,17,23,29,30,31,32,33,41,48,52,54,],[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,]),'ID':([0,2,4,6,7,8,9,10,12,13,17,22,23,24,29,30,31,32,33,41,48,50,52,54,59,],[3,11,3,3,3,3,3,11,3,3,3,11,3,38,3,3,3,3,3,3,3,38,3,3,-14,]),'LPAREN':([0,3,4,6,7,8,9,11,12,13,17,23,29,30,31,32,33,41,48,52,54,],[4,12,4,17,17,4,4,24,4,4,17,4,4,17,17,4,4,4,4,4,4,]),'CONST':([0,4,6,7,8,9,12,13,17,23,29,30,31,32,33,41,48,52,54,],[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,]),'IF':([0,4,6,7,8,9,12,13,17,23,29,30,31,32,33,41,48,52,54,],[6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,]),'WHILE':([0,4,6,7,8,9,12,13,17,23,29,30,31,32,33,41,48,52,54,],[7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,]),'$end':([1,3,5,20,21,27,28,37,40,56,57,],[0,-2,-6,-4,-8,-7,-5,-1,-3,-9,-10,]),'AOP':([1,3,5,14,16,20,21,26,27,28,35,37,40,42,45,46,51,53,56,57,58,],[8,-2,-6,8,8,-4,8,8,-7,-5,8,8,-3,8,8,8,8,8,8,-10,8,]),'SEMI':([1,3,5,14,16,20,21,26,27,28,35,37,40,42,45,46,51,53,56,57,58,],[9,-2,-6,9,9,-4,-8,9,-7,-5,9,9,-3,9,9,9,9,9,9,-10,9,]),'RPAREN':([3,5,14,18,20,21,25,26,27,28,34,35,37,38,39,40,43,44,45,46,47,51,55,56,57,],[-2,-6,28,-19,-4,-8,40,-12,-7,-5,47,28,-1,-16,49,-3,-20,-21,-22,-23,-18,-13,-17,-9,-10,]),'EQOP':([3,5,15,16,18,19,20,21,27,28,34,35,37,40,43,44,45,46,47,56,57,],[-2,-6,31,32,-19,31,-4,-8,-7,-5,31,32,-1,-3,31,None,-22,-23,-18,-9,-10,]),'RELOP':([3,5,16,20,21,27,28,35,37,40,56,57,],[-2,-6,33,-4,-8,-7,-5,33,-1,-3,-9,-10,]),'COMMA':([3,5,20,21,25,26,27,28,37,38,39,40,51,55,56,57,],[-2,-6,-4,-8,41,-12,-7,-5,-1,-16,50,-3,-13,50,-9,-10,]),'ELSE':([3,5,20,21,27,28,37,40,42,56,57,],[-2,-6,-4,-8,-7,-5,-1,-3,52,-9,-10,]),'THEN':([3,5,15,18,20,21,27,28,37,40,43,44,45,46,47,56,57,],[-2,-6,29,-19,-4,-8,-7,-5,-1,-3,-20,-21,-22,-23,-18,-9,-10,]),'LOP':([3,5,15,18,19,20,21,27,28,34,37,40,43,44,45,46,47,56,57,],[-2,-6,30,-19,30,-4,-8,-7,-5,30,-1,-3,-20,-21,-22,-23,-18,-9,-10,]),'DO':([3,5,18,19,20,21,27,28,37,40,43,44,45,46,47,56,57,],[-2,-6,-19,36,-4,-8,-7,-5,-1,-3,-20,-21,-22,-23,-18,-9,-10,]),'RBRACE':([3,5,20,21,27,28,37,40,53,56,57,58,],[-2,-6,-4,-8,-7,-5,-1,-3,57,-9,-10,59,]),'ASSIGN':([3,],[13,]),'BOOL':([6,7,17,30,31,],[18,18,18,18,18,]),'IN':([10,22,59,],[23,-15,-14,]),'LBRACE':([36,49,],[48,54,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,3,6,],[1,4,7,]),}
+_lr_goto_items = {'expression':([0,4,6,7,8,9,12,13,17,23,29,30,31,32,33,41,48,52,54,],[1,14,16,16,20,21,26,27,35,37,42,16,16,45,46,51,53,56,58,]),'dexpr':([2,10,22,],[10,22,22,]),'bexpr':([6,7,17,30,31,],[15,19,34,43,44,]),'aexpr':([12,],[25,]),'vexpr':([24,50,],[39,55,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,6 +27,27 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> CONST','expression',1,'p_expression_const','triplayacc.py',31),
-  ('expression -> WHILE expression DO LBRACE expression RBRACE','expression',6,'p_expression_while','triplayacc.py',36),
+  ('expression -> LET dexpr IN expression','expression',4,'p_expression_let','triplayacc.py',49),
+  ('expression -> ID','expression',1,'p_expression_id','triplayacc.py',54),
+  ('expression -> ID LPAREN aexpr RPAREN','expression',4,'p_expression_call','triplayacc.py',59),
+  ('expression -> expression AOP expression','expression',3,'p_expression_aop','triplayacc.py',64),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_paren','triplayacc.py',70),
+  ('expression -> CONST','expression',1,'p_expression_const','triplayacc.py',75),
+  ('expression -> ID ASSIGN expression','expression',3,'p_expression_assign','triplayacc.py',80),
+  ('expression -> expression SEMI expression','expression',3,'p_expression_semi','triplayacc.py',85),
+  ('expression -> IF bexpr THEN expression ELSE expression','expression',6,'p_expression_if','triplayacc.py',90),
+  ('expression -> WHILE bexpr DO LBRACE expression RBRACE','expression',6,'p_expression_while','triplayacc.py',95),
+  ('expressione -> DO LBRACE expression RBRACE WHILE bexpr','expressione',6,'p_expression_do','triplayacc.py',100),
+  ('aexpr -> expression','aexpr',1,'p_aexpr_expression','triplayacc.py',109),
+  ('aexpr -> aexpr COMMA expression','aexpr',3,'p_aexpr_comma','triplayacc.py',114),
+  ('dexpr -> ID LPAREN vexpr RPAREN LBRACE expression RBRACE','dexpr',7,'p_dexpr_decl','triplayacc.py',128),
+  ('dexpr -> dexpr dexpr','dexpr',2,'p_dexpr_concat','triplayacc.py',134),
+  ('vexpr -> ID','vexpr',1,'p_vexpr_id','triplayacc.py',145),
+  ('vexpr -> vexpr COMMA vexpr','vexpr',3,'p_vexpr_comma','triplayacc.py',150),
+  ('bexpr -> LPAREN bexpr RPAREN','bexpr',3,'p_bexpr_paren','triplayacc.py',164),
+  ('bexpr -> BOOL','bexpr',1,'p_bexpr_bool','triplayacc.py',169),
+  ('bexpr -> bexpr LOP bexpr','bexpr',3,'p_bexpr_lop','triplayacc.py',174),
+  ('bexpr -> bexpr EQOP bexpr','bexpr',3,'p_bexpr_eqop_bexpr','triplayacc.py',179),
+  ('bexpr -> expression EQOP expression','bexpr',3,'p_bexpr_eqop_expression','triplayacc.py',184),
+  ('bexpr -> expression RELOP expression','bexpr',3,'p_bexpr_relop_expr','triplayacc.py',189),
 ]

@@ -1,7 +1,6 @@
 
 # (c) Stephan Diehl, University of Trier, Germany, 2025
 
-from instruction import *
 
 class EXPRESSION:
     ppcount=0

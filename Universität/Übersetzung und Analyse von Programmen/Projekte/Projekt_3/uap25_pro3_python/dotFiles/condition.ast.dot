@@ -1,0 +1,4 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  n0 [label="&lt;syntax.IF object at 0x0000015DA8B54980&gt;"];
+}

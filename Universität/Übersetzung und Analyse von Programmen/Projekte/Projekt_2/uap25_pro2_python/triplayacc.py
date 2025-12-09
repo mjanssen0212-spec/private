@@ -86,6 +86,10 @@ def p_expression_while(p):
     'expression : WHILE bexpr DO LBRACE expression RBRACE'
     p[0] = Node('E', children=[p[1], p[2], p[3], p[4], p[5], p[6]])
 
+def p_expression_do(p):
+    'expressione : DO LBRACE expression RBRACE WHILE bexpr'
+    p[0] = Node('E', children=[p[1], p[2], p[3], p[4], p[5], p[6]])
+
 # -------------------------
 # A : Argumentliste (calls) -> keep ARGS node as before
 # -------------------------
