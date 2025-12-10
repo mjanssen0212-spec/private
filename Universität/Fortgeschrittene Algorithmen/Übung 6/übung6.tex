@@ -49,6 +49,8 @@ Bearbeitet von: \textbf{\names}\\
     a)
 \end{verbatim}
 \begin{center}
+  \textbf{Ford-Fulkerson} \\ \bigskip
+  Initiales Residualnetzwerk:
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -73,7 +75,10 @@ Bearbeitet von: \textbf{\names}\\
         (d) edge node {9} (t)
         (e) edge node {3} (t);
     \end{tikzpicture}
-    Fluss = 0
+    \\ 
+    Fluss = 0 \\
+    \newpage
+    Augmentierender Pfad: s $\to$ b $\to$ d $\to$ t \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -98,7 +103,8 @@ Bearbeitet von: \textbf{\names}\\
         (e) edge [bend left=15] node {2} (c)
         (e) edge node {3} (t);
     \end{tikzpicture}
-    Fluss = 0
+    \\ Neuer Flusswert = 5 \\
+    Neues Residualnetzwerk nach Augmentierung:
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -125,7 +131,7 @@ Bearbeitet von: \textbf{\names}\\
         (d) edge [red] node {5} (b)
         (t) edge [bend left=15][red] node {5} (d);
     \end{tikzpicture}
-    Fluss 5
+    \\ Fluss = 5 \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -152,7 +158,7 @@ Bearbeitet von: \textbf{\names}\\
         (d) edge [red] node {5} (b)
         (t) edge [bend left=15][red] node {5} (d);
     \end{tikzpicture} 
-    Fluss = 5
+    \\ Fluss = 8 \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -181,7 +187,7 @@ Bearbeitet von: \textbf{\names}\\
         (e) edge [bend left=15][red] node {3} (a)
         (t) edge [red] node {3} (e);
     \end{tikzpicture} 
-    Fluss = 8
+    \\ Fluss = 8 \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -197,7 +203,7 @@ Bearbeitet von: \textbf{\names}\\
         (a) edge [blue] node {2} (b)
         (a) edge [bend left=15] node {3} (e)
         (b) edge [blue] node {6} (c)
-        (c) edge [blue] node {2} (d)
+        (c) edge [blue] node {4} (d)
         (c) edge node {3} (a)
         (c) edge [bend left=15] node {4} (e)
         (e) edge [bend left=15] node {2} (c)
@@ -210,7 +216,7 @@ Bearbeitet von: \textbf{\names}\\
         (e) edge [bend left=15][red] node {3} (a)
         (t) edge [red] node {3} (e);
     \end{tikzpicture}
-    Fluss = 8
+    \\ Fluss = 10 \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -241,7 +247,7 @@ Bearbeitet von: \textbf{\names}\\
         (e) edge [bend left=15][red] node {3} (a)
         (t) edge [red] node {3} (e);
     \end{tikzpicture}
-    Fluss = 12
+    \\ Fluss = 10 \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -272,7 +278,7 @@ Bearbeitet von: \textbf{\names}\\
         (e) edge [bend left=15][red] node {3} (a)
         (t) edge [red] node {3} (e);
     \end{tikzpicture}
-    Fluss = 10
+    \\ Fluss = 12 \\
     \begin{tikzpicture}[->,>=stealth,shorten >=1pt,auto,node distance=2cm,thick,
       main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
       \node[main node] (c) {c};
@@ -300,7 +306,7 @@ Bearbeitet von: \textbf{\names}\\
         (t) edge [red] node {3} (e)
         (c) edge [bend right=15][red] node {2} (e);
     \end{tikzpicture}
-    Fluss = 12
+    \\ Fluss = 12 \\
 \end{center}
 Es existiert kein weiterer augmentierender Pfad von s nach t.
 Der maximale Fluss in dem gegebenen Graphen ist daher 12.
@@ -338,11 +344,10 @@ Der maximale Fluss in dem gegebenen Graphen ist daher 12.
 \end{center}
 Der eingezeichnete Schnitt ist minimal und hat die Kapazität 12, was dem maximalen Fluss entspricht.
 \\\\
-\begin{verbatim}
-    c)
-\end{verbatim}
-Alle Knoten im Graphen sind von s aus erreichbar. Es gibt keine Kante, die von einem erreichbaren Knoten zu einem nicht erreichbaren Knoten führt.
-Ein S,T SChnitt ist daher immer zusammenhängend.
+c) In einem gültigen Flussetzwerk sind alle Knoten v $\in V$ von der Quelle s aus erreichbar.
+Andernfalls könnte kein Fluss von s nach v fließen, was gegen die Definition eines Flussnetzwerks verstößt.
+Daher ist die Menge S, die alle von s aus erreichbaren Knoten enthält, zwingend schwach zusammenhängend. Da
+Flüsse gerichtet sind, kann die Menge S jedoch nicht stark zusammenhängend sein, da keine Pfade zu s führen.
 \section*{Aufgabe 2}
 
 \section*{Aufgabe 3}
