@@ -1,0 +1,179 @@
+% Solution_Template.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel} % remove ngerman if you prefer English only
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\geometry{margin=25mm}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\textbf{Name:} \studentname}
+\rhead{\textbf{Matr.-Nr.:} \studentnumber}
+\cfoot{\thepage}
+
+% User info - edit these
+\newcommand{\studentname}{Matthias Janßen}
+\newcommand{\studentnumber}{1871808}
+\newcommand{\course}{Übersetzung und Analyse von Programmen}
+\newcommand{\institute}{Universität Trier}
+
+\title{\course}
+\author{\studentname\\Matrikelnummer: \studentnumber\\\institute}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+    \textbf{Abgabe:} Assignment / Sheet \\
+    \vspace{4mm}
+    \textbf{Betreuer:} Prof. Dr. Stephan Diehl\\Jan Niclas Ruppenthal, M.Sc.
+\end{center}
+
+\bigskip
+
+\section*{Aufgaben}
+
+\section{Aufgabe 1}
+Startzustand:
+$\rho$ = $\emptyset$\\
+Nav = 0\\
+Nas = 0\\
+Loc = 0\\\\
+%
+\textbf{Klasse A}\\
+$\text{elab\_def}(\text{class A\{...\}}) = \text{elab\_def } \emptyset \, 0 \, 0 \, 0$\\\\
+elab\_def(B x; long myMethod(...) \{...\}) $\emptyset$ 0 0 0 =\\
+let ($\rho_1$, Nav$_1$, Nas$_1$, Loc$_1$) = elab\_def(B x; $\emptyset$ 0 0 0) \\
+in elab\_def(long myMethod(...) \{...\} $\rho_1$ Nav$_1$ Nas$_1$ Loc$_1$) end\\
+%
+\\
+\textbf{B x}\\
+$\text{elab\_def}(B \, x; \, \rho \, 0 \, 0 \, 0) = (\rho[(B, 0)/x], 0 + 1, 0, 0)$\\\\
+%
+$\rho_1 = \{x \mapsto (B, 0)\}$\\
+$\text{Nav}_1 = 1$, \\$\text{Nas}_1 = 0$, \\$\text{Loc}_1 = 0$\\\\
+%
+\textbf{myMethod}\\
+$\text{elab\_def}(\text{long myMethod}(B \, a, A[] \, b) \{...\} \, \rho_1 \, 1 \, 0 \, 0) =$
+\begin{align*}
+\text{let } (\rho_2, \text{Nav}_2, \text{Nas}_2, \text{Loc}_2) &=\\
+\text{elab\_def } b
+&\quad\, \rho_1[(B, 1)/a][(A[], 2)/b] \, 0 \, 0 \, 3 \\
+\text{in } &(\rho_1[(\text{long}, \text{Loc}_2, \rho_2)/\text{myMethod}], 1, 0, 0) \text{ end}
+\end{align*}
+%
+\textbf{Parametererstellung}\\
+$\rho_1[(B, 1)/a][(A[], 2)/b] = \{x \mapsto (B, 0), a \mapsto (B, 1), b \mapsto (A[], 2)\} = \rho_{\text{params}}$\\\\
+%
+elab\_def(int k = 0) $\rho_{\text{params}} \, 0 \, 0 \, 3$ =
+    $\rho_{\text{params}}$[(int, 3)/x], 0, 0, 3 + 1\\\\
+%
+$\rho_2$ = $\rho_\text{params} \cup \{k \mapsto (\text{int}, 3)\}$\\
+nav$_2$ = 0\\
+nas$_2$ = 0\\
+loc$_2$ = 4\\
+%
+\\\textbf{in:}
+$\rho_1[(\text{long}, \text{Loc}_2, \rho_2)/\text{myMethod}] =$
+$\{x \mapsto (B, 0), \text{myMethod} \mapsto (\text{long}, 4, \rho_2)\}$\\\\
+%
+%
+\textbf{$\rho$ Klasse A:}\\
+$\rho_A = \{x \mapsto (B, 0), \text{myMethod} \mapsto (\text{long}, 4, \rho_2)\}$\\
+Nav$_A$ = 1\\
+Nas$_A$ = 0\\
+Loc$_A$ = 0\\
+%
+\\\\
+%
+\textbf{Klasse B (extends A)}\\
+$\rho = \rho_A$\\ $\text{Nav} = 1$\\ $\text{Nas} = 0$\\ $\text{Loc} = 0$\\\\
+%
+$\text{elab\_def}(\text{class B extends A} \{...\}) = \text{elab\_def b }\rho_A \,1 \,0 \,0$\\\\
+%
+\textbf{static long y}\\
+$\text{elab\_def}(\text{static long } y; \, \rho_A \, 1 \, 0 \, 0) = (\rho_A[(\text{long}, 0)/y], 1, 0 + 1, 0)$\\\\
+%
+$\rho_3 = \rho_A \cup \{y \mapsto (\text{long}, 0)\}$\\
+$\text{Nav}_3 = 1$, $\text{Nas}_3 = 1$, $\text{Loc}_3 = 0$\\\\
+%
+\textbf{myMethod}\\
+$\text{elab\_def}(\text{long myMethod}(A[] \, a) \{...\} \, \rho_3 \, 1 \, 1 \, 0) =$
+\begin{align*}
+\text{let } (\rho_4, \text{Nav}_4, \text{Nas}_4, \text{Loc}_4) &= \\
+\text{elab\_def } \{b_{\text{body}}\} &\quad\, \rho_3[(A[], 1)/a] \, 0 \, 1 \, 2 \\
+\text{in } &(\rho_3[(\text{long}, \text{Loc}_4, \rho_4)/\text{myMethod}], 1, 1, 0) \text{ end}
+\end{align*}
+
+\textbf{Parametererstellung}\\
+$\rho_3[(A[], 1)/a] = \{x \mapsto (B, 0), \text{myMethod} \mapsto \ldots, y \mapsto (\text{long}, 0), a \mapsto (A[], 1)\} = \rho_{\text{params}}$\\\\
+%
+\textbf{Methodenrumpf }\\
+$\text{elab\_def}(\text{b}) \, \rho_{\text{params}} \, 0 \, 1 \, 2$\\\\
+Im Methodenrumpf wird die Umgebung $\rho$ nicht verändert\\\\
+%
+$\rho_4 = \{x \mapsto (B, 0), \text{myMethod} \mapsto \ldots, y \mapsto (\text{long}, 0), a \mapsto (A[], 1)\}$\\
+$\text{Loc}_4 = 2$, $\text{Nav}_4 = 0$, $\text{Nas}_4 = 1$\\\\
+%
+\textbf{$\rho$ Klasse B:}\\
+$\rho_B = \{x \mapsto (B, 0), y \mapsto (\text{long}, 0), \text{myMethod} \mapsto (\text{long}, 2, \rho_4)\}$\\
+Nav$_B$ = 1\\
+Nas$_B$ = 1\\
+Nas$_B$ = 1\\\\
+%
+%
+%
+%
+%
+\textbf{Bytecode-Übersetzung}
+\\
+Adressumgebung: $\rho_2 = \{x \mapsto (B, 0), a \mapsto (A[], 1), b \mapsto (A[], 2), k \mapsto (int, 3)\}$\\\\
+\\
+\textbf{int k = 0;}\\
+$\text{code}(0) \, \rho_2 = \texttt{iconst\_0}$\\
+$\text{istore } 3$\\\\
+%
+\textbf{b[k].x = a;}\\
+$\text{code}(b) \, \rho_2 = \texttt{aload } 2$\\
+$\text{code}(k) \, \rho_2 = \texttt{iload } 3$\\
+$\texttt{aaload}$\\
+$\text{code}(a) \, \rho_2 = \texttt{aload } 1$\\
+$\texttt{putfield}$\\\\
+%
+\textbf{B.y = B.y + 3;}\\
+$\texttt{getstatic}$\\
+$\text{code}(3) \, \rho_2 = \texttt{bipush } 3$\\
+$\texttt{ladd}$\\
+$\texttt{putstatic}$\\\\
+%
+\textbf{return B.y;}\\
+$\texttt{getstatic}$\\
+$\texttt{lreturn}$
+
+\section*{B.myMethod(A[] a)}
+
+Adressumgebung: $\rho_4 = \{a \mapsto 1\}$ \\
+%
+\textbf{y = y + 1;}\\
+$\texttt{getstatic}$\\
+$\text{code}(1) \, \rho_4 = \texttt{lconst\_1}$\\
+$\texttt{ladd}$\\
+$\texttt{putstatic}$\\\\
+%
+\textbf{return myMethod(a);}\\
+$\text{code}(a) \, \rho_4 = \texttt{aload } 1$\\
+$\texttt{invokevirtual}$\\
+$\texttt{lreturn}$
+
+\section{Aufgabe 2}
+% ...
+
+\end{document}
