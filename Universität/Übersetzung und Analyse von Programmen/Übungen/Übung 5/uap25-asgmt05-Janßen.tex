@@ -175,5 +175,18 @@ $\texttt{lreturn}$
 
 \section{Aufgabe 2}
 % ...
-
+\begin{centering}
+    vis\_meths(C) = \\\{m(A, double), m(B, double), m(A, int, int), m(B, int), m(C, boolean), m(A, int)\} \\
+\end{centering}
+\bigskip
+Die Methode m(A, double) aus Klasse B wird in Klasse C überscchrieben. Das gilt auch für m(A, int, int)
+aus Klasse A. Alle anderen Methoden bleiben sichtbar.\\\\
+\bigskip
+\begin{centering}
+    applicabble(D,(C,int)) = \\\{m(B, double), m(A, double), m(B, int), m(A, int)\} \\    
+\end{centering}
+\bigskip
+Da D ein Subtyp von C und damit auch von B und a ist. Double ist spezifischer als int
+und kann dadurch durch int representiert werden. Da double nicht durch boolean representiert 
+werden kann und nur 2 Parameter gegeben sind, sind die verbleibenden Methoden nicht anwendbar.\\\\
 \end{document}
