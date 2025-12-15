@@ -30,24 +30,11 @@ precedence = (
     ('right', 'ASSIGN'),
 )
 
-class Node:
-    def __init__(self, type, children=None, leaf=None):
-         self.type = type
-         self.children = children if children else []
-         self.leaf = leaf
-    def __repr__(self):
-         if self.leaf is not None and not self.children:
-             return f"Node({self.type!r}, leaf={self.leaf!r})"
-         if self.children:
-             return f"Node({self.type!r}, children={self.children!r})"
-         return f"Node({self.type!r})"
-
 # -------------------------
-# Expression (E) -> produce Node('expression', ...)
+# Expression (E) -> produce syntax nodes
 # -------------------------
 def p_expression_let(p):
     'expression : LET dexpr IN expression'
-    # p[0] = Node('E', children=[p[1], p[2], p[3], p[4]])
     p[0] = ast.LET(p[2], p[4])
 
 def p_expression_id(p):
@@ -73,48 +60,38 @@ def p_expression_paren(p):
 
 def p_expression_const(p):
     'expression : CONST'
-    # p[0] = Node('E', children=[Node('CONST', leaf=p[1])])
     p[0] = ast.CONST(p[1])
 
 def p_expression_assign(p):
     'expression : ID ASSIGN expression'
-    # p[0] = Node('E', children=[Node('ID', leaf=p[1]), Node('ASSIGN', leaf=p[2]), p[3]])
     p[0] = ast.ASSIGN(p[1], p[3])
 
 def p_expression_semi(p):
     'expression : expression SEMI expression'
-    # p[0] = Node('E', children=[p[1],p[2], p[3]])
     p[0] = ast.SEQ(p[1], p[3])
 
 def p_expression_if(p):
     'expression : IF bexpr THEN expression ELSE expression'
-    # p[0] = Node('E', children=[p[1], p[2], p[3], p[4], p[5], p[6]])
     p[0] = ast.IF(p[2], p[4], p[6])
 
 def p_expression_while(p):
     'expression : WHILE bexpr DO LBRACE expression RBRACE'
-    # p[0] = Node('E', children=[p[1], p[2], p[3], p[4], p[5], p[6]])
     p[0] = ast.WHILE(p[2], p[5])
 
 def p_expression_do(p):
     'expressione : DO LBRACE expression RBRACE WHILE bexpr'
-    # p[0] = Node('E', children=[p[1], p[2], p[3], p[4], p[5], p[6]])
     p[0] = ast.DO(p[3], p[6])
 
 #
 # -------------------------
-# A : Argumentliste (calls) -> keep ARGS node as before
+# A : Argumentliste (calls)
 # -------------------------
 def p_aexpr_expression(p):
     'aexpr : expression'
-    # p[0] = Node('A', children=[p[1]])
     p[0] = p[1]
 
 def p_aexpr_comma(p):
     'aexpr : aexpr COMMA expression'
-    # args_node = p[1]
-    # args_node.children.append(p[3])
-    # p[0] = args_node
     p[0] = [p[1] + p[3]]
 
 # def p_aexpr_empty(p):
@@ -122,33 +99,25 @@ def p_aexpr_comma(p):
 #     p[0] = Node('A', children=[])
 
 # -------------------------
-# D : Deklarationen -> dexpr node
+# D : Deklarationen
 # -------------------------
 def p_dexpr_decl(p):
     'dexpr : ID LPAREN vexpr RPAREN LBRACE expression RBRACE'
-    # children: ID, vexpr, expression
-    # p[0] = Node('D', children=[Node('ID', leaf=p[1]),p[2], p[3], p[4], p[5], p[6], p[7]])
     p[0] = ast.DECL(p[1], p[3], p[6])
 
 def p_dexpr_concat(p):
     'dexpr : dexpr dexpr'
-    # flatten children of both dexpr nodes
-    # left = p[1]
-    # right = p[2]
-    # p[0] = Node('D', children=left.children + right.children)
     p[0] = [p[1] + p[2]]
 
 # -------------------------
-# V : Parameterliste -> vexpr node
+# V : Parameterliste
 # -------------------------
 def p_vexpr_id(p):
     'vexpr : ID'
-    # p[0] = Node('V', children=[Node('ID', leaf=p[1])])
     p[0] = ast.VAR(p[1])
 
 def p_vexpr_comma(p):
     'vexpr : vexpr COMMA vexpr'
-    # p[0] = Node('V', children=[p[1], p[2], p[3]])
     p[0] = [p[1] + p[3]]
 
 # def p_vexpr_empty(p):
@@ -156,38 +125,32 @@ def p_vexpr_comma(p):
     # p[0] = Node('V', children=[])
 
 # -------------------------
-# B : Boolesche Ausdrücke -> bexpr node
+# B : Boolesche Ausdrücke
 # B -> (B) | BOOL | B LOP B | B EQOP B | E RELOP E | E EQOP E
 # -------------------------
 
 def p_bexpr_paren(p):
     'bexpr : LPAREN bexpr RPAREN'
-    # p[0] = Node('B', children=[p[1], p[2], p[3]])
     p[0] = p[2]
 
 def p_bexpr_bool(p):
     'bexpr : BOOL'
-    # p[0] = Node('B', children=[Node('BOOL', leaf=p[1])])
     p[0] = p[1]
 
 def p_bexpr_lop(p):
     'bexpr : bexpr LOP bexpr'
-    # p[0] = Node('B', children=[p[1], Node('LOP', leaf=p[2]), p[3]])
     p[0] = ast.BINOP(p[2], p[1], p[3])
 
 def p_bexpr_eqop_bexpr(p):
     'bexpr : bexpr EQOP bexpr'
-    # p[0] = Node('B', children=[p[1], Node('EQOP', leaf=p[2]), p[3]])
     p[0] = ast.BINOP(p[2], p[1], p[3])
 
 def p_bexpr_eqop_expression(p):
     'bexpr : expression EQOP expression'
-    # p[0] = Node('B', children=[p[1], Node('EQOP', leaf=p[2]), p[3]])
     p[0] = ast.BINOP(p[2], p[1], p[3])
 
 def p_bexpr_relop_expr(p):
     'bexpr : expression RELOP expression'
-    # p[0] = Node('B', children=[p[1], Node('RELOP', leaf=p[2]), p[3]])
     p[0] = ast.BINOP(p[2], p[1], p[3])
 
 #def p_empty(p):

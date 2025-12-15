@@ -1,6 +1,7 @@
 
 # (c) Stephan Diehl, University of Trier, Germany, 2025
 
+import html
 
 class EXPRESSION:
     ppcount=0
@@ -22,6 +23,93 @@ class EXPRESSION:
                     if isinstance(n, EXPRESSION):
                         ret = ret + n.allNodes()
         return ret
+
+    def _escape_label(self, s: str) -> str:
+        """Escape label for DOT format."""
+        return html.escape(s).replace('\n', '\\n').replace('"', '\\"')
+
+    def _to_dot(self, idmap, counter):
+        """Generate DOT representation for this node and return its node ID.
+        
+        Args:
+            idmap: Dictionary mapping Python object ids to DOT node IDs
+            counter: List with a single integer to track node count
+            
+        Returns:
+            Tuple of (node_id, list of DOT lines for this subtree)
+        """
+        nid = f'n{counter[0]}'
+        counter[0] += 1
+        idmap[id(self)] = nid
+        
+        # Build label: class name with any leaf values
+        label = self.__class__.__name__
+        
+        # Add leaf values to the label for certain node types
+        leaf_values = []
+        for attr_name in self.__dict__:
+            if attr_name == 'pp':  # Skip internal counter
+                continue
+            attr_val = getattr(self, attr_name)
+            
+            # Add simple leaf values to label (not EXPRESSION or list)
+            if not isinstance(attr_val, EXPRESSION) and not isinstance(attr_val, list):
+                leaf_values.append(f"{attr_name}={attr_val}")
+        
+        if leaf_values:
+            label = label + "\\n" + ", ".join(leaf_values)
+        
+        label = self._escape_label(label)
+        
+        # Generate DOT node definition
+        lines = [f'  {nid} [label="{label}"];']
+        
+        # Process child attributes
+        for attr_name in self.__dict__:
+            if attr_name == 'pp':  # Skip internal counter
+                continue
+            attr_val = getattr(self, attr_name)
+            
+            if isinstance(attr_val, EXPRESSION):
+                # Single child node
+                child_nid, child_lines = attr_val._to_dot(idmap, counter)
+                lines.extend(child_lines)
+                lines.append(f'  {nid} -> {child_nid} [label="{attr_name}"];')
+            elif isinstance(attr_val, list):
+                # List of children (e.g., declarations, arguments)
+                for i, item in enumerate(attr_val):
+                    if isinstance(item, EXPRESSION):
+                        child_nid, child_lines = item._to_dot(idmap, counter)
+                        lines.extend(child_lines)
+                        lines.append(f'  {nid} -> {child_nid} [label="{attr_name}[{i}]"];')
+        
+        return nid, lines
+
+    def to_dot(self):
+        """Generate complete DOT representation of the AST.
+        
+        Returns:
+            A string containing the complete DOT graph
+        """
+        idmap = {}
+        counter = [0]
+        lines = ['digraph AST {', '  node [shape=box, fontname="Arial"];']
+        
+        root_nid, root_lines = self._to_dot(idmap, counter)
+        lines.extend(root_lines)
+        
+        lines.append('}')
+        return '\n'.join(lines)
+
+    def export_dot(self, filename: str):
+        """Export AST as DOT file.
+        
+        Args:
+            filename: Path to output DOT file
+        """
+        dot_content = self.to_dot()
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(dot_content)
 
 class LET(EXPRESSION):
     def __init__(self, declarations, body):

@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{pifont}
 
 \geometry{margin=25mm}
 \pagestyle{fancy}
@@ -174,19 +175,67 @@ $\texttt{invokevirtual}$\\
 $\texttt{lreturn}$
 
 \section{Aufgabe 2}
-% ...
-\begin{centering}
-    vis\_meths(C) = \\\{m(A, double), m(B, double), m(A, int, int), m(B, int), m(C, boolean), m(A, int)\} \\
-\end{centering}
-\bigskip
-Die Methode m(A, double) aus Klasse B wird in Klasse C überscchrieben. Das gilt auch für m(A, int, int)
-aus Klasse A. Alle anderen Methoden bleiben sichtbar.\\\\
-\bigskip
-\begin{centering}
-    applicabble(D,(C,int)) = \\\{m(B, double), m(A, double), m(B, int), m(A, int)\} \\    
-\end{centering}
-\bigskip
-Da D ein Subtyp von C und damit auch von B und a ist. Double ist spezifischer als int
-und kann dadurch durch int representiert werden. Da double nicht durch boolean representiert 
-werden kann und nur 2 Parameter gegeben sind, sind die verbleibenden Methoden nicht anwendbar.\\\\
+
+\subsection*{a) Sichtbare Methoden in Klasse C}
+
+\subsubsection*{Berechnung von vis\_meths(C)}
+\[
+    \textbf{vis\_meths(C)} = \{m(A, \text{double}), m(B, \text{double}), m(A, \text{int, int}), m(B, \text{int}), m(C, \text{boolean}), m(A, \text{int})\}
+\]
+
+\paragraph{Erklärung der Methoden:}
+\begin{itemize}
+    \item \textbf{m(A, double)} -- ursprünglich in A definiert, sichtbar in C
+    \item \textbf{m(B, double)} -- überschreibt m(A, double) in B, sichtbar in C
+    \item \textbf{m(A, int, int)} -- in A definiert mit zwei int-Parametern, sichtbar in C
+    \item \textbf{m(B, int)} -- in B definiert, sichtbar in C
+    \item \textbf{m(C, boolean)} -- in C selbst definiert
+    \item \textbf{m(A, int)} -- in A definiert mit einem int-Parameter, sichtbar in C
+\end{itemize}
+
+\paragraph{Methoden-Überschreibungen in C:}
+\begin{itemize}
+    \item Die Methode \textbf{m(A, double)} aus Klasse B wird in Klasse C überschrieben (gemäß Klassendefinition)
+    \item Die Methode \textbf{m(A, int, int)} aus Klasse A wird ebenfalls in Klasse C überschrieben
+    \item Alle anderen Methoden bleiben sichtbar und unverändert
+\end{itemize}
+
+\subsection*{b) Anwendbare Methoden bei Aufruf d.m(c, int)}
+
+Gegeben: d ist vom Typ D, Methodenaufruf: d.m(c, int), wobei c vom Typ C ist.
+
+\subsubsection*{Berechnung von applicable(D, (C, int))}
+
+\[
+    \textbf{applicable(D, (C, int))} = \{m(B, \text{double}), m(A, \text{double}), m(B, \text{int}), m(A, \text{int})\}
+\]
+
+\paragraph{Analyse der Anwendbarkeit:}
+
+Eine Methode m($T_1, T_2, \ldots$) ist anwendbar für den Aufruf m($S_1, S_2, \ldots$), wenn:
+$$S_i \sqsubseteq T_i \text{ für alle Parameter } i$$
+
+Hierbei gilt: $D \sqsubseteq C \sqsubseteq B \sqsubseteq A$ (Vererbungshierarchie)
+und $\text{int} \sqsubseteq \text{double}$ (Java Typ-Kompatibilität).
+
+\paragraph{Überprüfung jeder Methode:}
+\begin{itemize}
+    \item \textbf{m(B, double)}: Da $C \sqsubseteq B$ und $\text{int} \sqsubseteq \text{double}$, ist die Methode \textbf{anwendbar}.
+    \item \textbf{m(A, double)}: Da $C \sqsubseteq A$ und $\text{int} \sqsubseteq \text{double}$, ist die Methode \textbf{anwendbar}.
+    \item \textbf{m(B, int)}: Da $C \sqsubseteq B$ und $\text{int} = \text{int}$, ist die Methode \textbf{anwendbar}.
+    \item \textbf{m(C, boolean)}: Zwar ist $C \sqsubseteq C$, aber $\text{int} \not\sqsubseteq \text{boolean}$, die Methode ist \textbf{nicht anwendbar}.
+    \item \textbf{m(A, int, int)}: Der Aufruf hat nur einen int-Parameter, die Methode ist \textbf{nicht anwendbar}.
+    \item \textbf{m(A, int)}: Da $C \sqsubseteq A$ und $\text{int} = \text{int}$, ist die Methode \textbf{anwendbar}.
+\end{itemize}
+
+\paragraph{Mehrdeutigkeit des Aufrufs:}
+
+Der Methodenaufruf \textbf{d.m(c, int)} ist \textbf{nicht eindeutig}, da insgesamt vier anwendbare Methoden existieren:
+\begin{itemize}
+    \item m(B, double)
+    \item m(A, double)
+    \item m(B, int)
+    \item m(A, int)
+\end{itemize}
+
 \end{document}
