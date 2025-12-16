@@ -15,6 +15,8 @@ def assemble(tram_code,filename=""):
         f.write(assembly_code)
     return assembly_code
 
+def elab_def(d,rho, nl):
+    return
 ##########################################
 
 class CONST(syntax.CONST):
@@ -31,6 +33,26 @@ class WHILE(syntax.WHILE):
         code_condition[0].assigned_labels += [l1] # Die erste Instruktion könnte schon einen Label haben, daher +=
         return code_condition + [ifzero(l2)]+code_body+[goto(l1)] + [nop(assigned_label=l1)]
 
+class LET(syntax.LET):
+    def code(self, declarations, body, rho, nl):
+        l1 = Label()
+        rho = elab_def(body, rho, nl)
+        code_call = CALL.code(body, rho, nl)
+        code_declarations = ""
+        for declaration in declarations:
+            code_declarations += declaration.code(rho, nl)
+        return [goto l] + code_declarations +
 
+class DECL(syntax.DECL):
+    def code(self, fname, parameters, body, rho, nl):
+        return
 
+class CALL(syntax.CALL):
+    def code(self, fname, parameters, rho, nl):
+        for parameter in parameters:
+            code = parameter.code(rho, nl)
+        return ""
 
+class VAR(syntax.VAR):
+    def code(self, rho, nl):
+        return

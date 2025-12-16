@@ -77,7 +77,7 @@ def test_parser(name):
             print(f'Failed to export DOT: {e}')
 
 if __name__ == '__main__':
-    src='triplaprograms/condition.tripla'
+    src='triplaprograms/argsParamsExample.tripla'
     main(src)
     test_parser(src)
 

@@ -1,0 +1,14 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  n0 [label="LET"];
+  n1 [label="DECL\nfname=a"];
+  n2 [label="VAR\nname=x"];
+  n1 -> n2 [label="params[0]"];
+  n3 [label="VAR\nname=x"];
+  n1 -> n3 [label="body"];
+  n0 -> n1 [label="declarations[0]"];
+  n4 [label="CALL\nfname=a"];
+  n5 [label="CONST\nvalue=3"];
+  n4 -> n5 [label="arguments[1]"];
+  n0 -> n4 [label="body"];
+}

@@ -92,7 +92,7 @@ def p_aexpr_expression(p):
 
 def p_aexpr_comma(p):
     'aexpr : aexpr COMMA expression'
-    p[0] = [p[1] + p[3]]
+    p[0] = [p[1]] + [p[3]]
 
 # def p_aexpr_empty(p):
 #     'aexpr : '
@@ -103,7 +103,7 @@ def p_aexpr_comma(p):
 # -------------------------
 def p_dexpr_decl(p):
     'dexpr : ID LPAREN vexpr RPAREN LBRACE expression RBRACE'
-    p[0] = ast.DECL(p[1], p[3], p[6])
+    p[0] = [ast.DECL(p[1], p[3], p[6])]
 
 def p_dexpr_concat(p):
     'dexpr : dexpr dexpr'
@@ -118,7 +118,7 @@ def p_vexpr_id(p):
 
 def p_vexpr_comma(p):
     'vexpr : vexpr COMMA vexpr'
-    p[0] = [p[1] + p[3]]
+    p[0] = [p[1]] + [p[3]]
 
 # def p_vexpr_empty(p):
 #     'vexpr : '
