@@ -1,0 +1,117 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem,setspace}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.eps,.jpg}
+\usepackage{algorithm2e}
+
+% --- math operators ---
+\usepackage{mathtools}
+\DeclarePairedDelimiter\set{\{}{\}} % use $\set{1, 2, 3}$
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter\ceils{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\def\then{\ensuremath{\Rightarrow}} % =>
+\def\iff{\ensuremath{\Leftrightarrow}} % if and only if <=>
+\def\to{\ensuremath{\rightarrow}} % ->
+\def\ot{\ensuremath{\leftarrow}} % ->
+\def\Oh{\ensuremath{\mathcal{O}}} % big O like $\Oh(n)$
+% ---
+\DeclareMathOperator{\preorder}{preorder}
+\DeclareMathOperator{\postorder}{postorder}
+\DeclareMathOperator{\depth}{depth}
+
+% --- FILL OUT THESE 3 FIELDS ---
+\def\sheetNumber{1}
+\def\names{NAMEN} 
+\def\sumPoints{20} 
+
+% --- ### BEGIN DOCUMENT ### ---
+\begin{document} 
+
+\begin{doublespace} % header
+\noindent \textbf{\LARGE{Übungsblatt \sheetNumber}}
+\hfill  {\large Punkte: $\boxed{\qquad  /\; \sumPoints}$}\\
+{\Large \textbf{Fortgeschrittene Algorithmen (Wintersemester 2022/23)}\\
+Bearbeitet von: \textbf{\names}\\
+\today}
+\end{doublespace}
+
+
+\section*{Aufgabe 1: Tamassia-Netzwerk für Rechteck-Knoten}
+
+\subsection*{Idee}
+
+Die Aufgabe ist es, Knoten mit Grad $> 4$ nicht als Punkte, sondern als Rechtecke zu zeichnen. Dafür ersetzen wir einen solchen Knoten $v$ durch einen Ring von $\deg(v)$ Knoten, die auf den vier Seiten eines Rechtecks verteilt werden (nicht in den Ecken!).
+
+Das klassische Tamassia-Netzwerk muss angepasst werden, um sicherzustellen, dass:
+\begin{itemize}
+    \item Der Ring als Rechteck gezeichnet wird
+    \item Jede Seite mindestens einen Knoten hat
+    \item Die vier Ecken \textbf{keine} Knoten enthalten
+\end{itemize}
+
+\subsection*{Lösung}
+
+Die Anpassung des Tamassia-Netzwerks funktioniert wie folgt:
+
+\textbf{1. Ring-Knoten-Anordnung:}
+Die $k = \deg(v)$ Knoten $v_1, \ldots, v_k$ werden auf den vier Seiten angeordnet:
+\begin{itemize}
+    \item Oben, Rechts, Unten, Links: jeweils $\geq 1$ Knoten
+    \item Die Ecken bleiben leer
+\end{itemize}
+
+\textbf{2. Winkel-Constraints für Ringknoten:}
+Ein Ringknoten $v_i$ auf einer Seite (z.B. oben) hat einen Innenwinkel von $180°$. Das bedeutet, alle seine Kanten liegen auf derselben Seite des Rechtecks:
+$$\sum_{e \text{ inzident an } v_i} \text{angle}(e) = 180°$$
+
+\textbf{3. Eck-Verbote (Hauptidee):}
+Um zu erzwingen, dass die Ecken keine Knoten erhalten, belegen wir die Kanten, die zu den Ecken führen, mit \textbf{prohibitiv hohen Kosten} oder setzen ihre Kapazität auf 0 im Flussnetzwerk:
+$$\text{cost}(\text{Kanten zu Ecken}) = \infty \quad \text{(oder Kapazität } = 0\text{)}$$
+
+Der Min-Cost-Max-Flow-Algorithmus wird dann automatisch diese Kanten vermeiden.
+
+\subsection*{Formalisierung}
+
+Im Tamassia-Netzwerk:
+\begin{enumerate}
+    \item Für jeden Ringknoten $v_i$ gibt es einen Knoten im Netzwerk
+    \item Zwischen Ringknoten und angrenzenden Facetten verlaufen Standard-Tamassia-Kanten
+    \item Zusätzlich gibt es spezielle Kanten zu den vier Eck-Positionen mit Kosten $M = \infty$ (oder Kapazität 0)
+    \item Der Algorithmus findet automatisch eine knickminimale Zeichnung, bei der die Ecken leer bleiben
+\end{enumerate}
+
+\subsection*{Beispiel}
+
+Knoten mit Grad 6 $\to$ Ring $\{v_1, \ldots, v_6\}$:
+\begin{itemize}
+    \item Oben: $v_1, v_2$
+    \item Rechts: $v_3$
+    \item Unten: $v_4, v_5$
+    \item Links: $v_6$
+\end{itemize}
+Die Ecken sind unbesetzt. Dadurch entsteht ein Rechteck ohne Knoten in den Ecken.
+
+
+
+\section*{Aufgabe 2}
+
+\section*{Aufgabe 3}
+
+\section*{Aufgabe 4}
+
+
+% -- code for figures
+% \begin{figure}[htb]
+% \centering
+% \includegraphics{filename} % use option [width=\linewidth] to change size to linewidth (or 0.6\linewidth for example)
+% \label{fig:name}
+% \end{figure}
+
+
+\end{document}
+% --- ### END DOCUMENT ### ---

@@ -37,8 +37,9 @@ final class Main {
 //				 "tramcode\\example2.tram"
 //				 "tramcode\\example3.tram"
 //				"tramcode\\test.tram"
-                filename
+//                filename
 //                "tramcode\\euklid.tram"
+                "tramcode\\complex.tram"
         );
 
         int lineNr = 0;

@@ -10,6 +10,7 @@ import argparse
 
 from triplalex import lexer
 import triplayacc
+import compiler
 
 def run(input_path: str, dot_out: str | None = None):
 
@@ -48,7 +49,21 @@ def run(input_path: str, dot_out: str | None = None):
         print(f'AST exported to: {out_path}')
     except Exception as e:
         print(f'Failed to export DOT: {e}')
-        return
+    
+    # Generate and export TRAM code
+    try:
+        base = os.path.splitext(os.path.basename(input_path))[0]
+        tram_dir = os.path.join(proj_dir, 'tram_out')
+        os.makedirs(tram_dir, exist_ok=True)
+        tram_path = os.path.join(tram_dir, base + '.tram')
+        
+        tram_code = ast_root.code({}, 0)
+        assembly_code = compiler.assemble(tram_code, tram_path)
+        print(f'TRAM code exported to: {tram_path}')
+    except Exception as e:
+        print(f'Failed to generate TRAM code: {e}')
+        import traceback
+        traceback.print_exc()
 
 def main(src):
     ap = argparse.ArgumentParser()
@@ -75,9 +90,23 @@ def test_parser(name):
             print(f'AST exported to: {out_path}')
         except Exception as e:
             print(f'Failed to export DOT: {e}')
+        
+        # Generate and export TRAM code
+        try:
+            tram_dir = os.path.join(proj_dir, 'tram_out')
+            os.makedirs(tram_dir, exist_ok=True)
+            tram_path = os.path.join(tram_dir, base + '.tram')
+            
+            tram_code = ast.code({}, 0)
+            assembly_code = compiler.assemble(tram_code, tram_path)
+            print(f'TRAM code exported to: {tram_path}')
+        except Exception as e:
+            print(f'Failed to generate TRAM code: {e}')
+            import traceback
+            traceback.print_exc()
 
 if __name__ == '__main__':
-    src='triplaprograms/argsParamsExample.tripla'
+    src='triplaprograms/defSemiExample.tripla'
     main(src)
     test_parser(src)
 

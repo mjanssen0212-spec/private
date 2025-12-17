@@ -200,7 +200,7 @@ public class AbstractMachine {
         } else {
             spp(d - 1, stack.get(fp + 3), stack.get(fp + 4));
         }
-        return -1;
+        return 0;
     }
 
     private int sfp(int d, int ppp, int fp) {
