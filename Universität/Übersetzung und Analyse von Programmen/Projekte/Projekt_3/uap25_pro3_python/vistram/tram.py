@@ -274,6 +274,31 @@ class neq(Instruction):
 
     def toString(self): return super().toString() + "NEQ"
 
+class land(Instruction):
+    def __init__(self, assigned_label=None):
+        super().__init__(assigned_label=assigned_label)
+
+    def execute(self,tram):
+        if tram.stack[tram.top-1] == 1 & tram.stack[tram.top] == 1:
+            tram.stack[tram.top-1]=1
+        else:
+            tram.stack[tram.top-1]=0
+        tram.pop()
+        tram.pc=tram.pc+1
+
+
+class lor(Instruction):
+    def __init__(self, assigned_label=None):
+        super().__init__(assigned_label=assigned_label)
+
+    def execute(self,tram):
+        if tram.stack[tram.top-1] == 1 | tram.stack[tram.top] == 1:
+            tram.stack[tram.top-1]=1
+        else:
+            tram.stack[tram.top-1]=0
+        tram.pop()
+        tram.pc=tram.pc+1
+
 class goto(Instruction):
     def __init__(self, label, assigned_label=None):
         super().__init__(assigned_label=assigned_label)

@@ -106,7 +106,7 @@ def test_parser(name):
             traceback.print_exc()
 
 if __name__ == '__main__':
-    src='triplaprograms/defSemiExample.tripla'
+    src='triplaprograms/complex.tripla'
     main(src)
     test_parser(src)
 
