@@ -1,0 +1,12 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  n0 [label="IF\ncondition=True"];
+  n1 [label="CONST\nvalue=1"];
+  n0 -> n1 [label="exp1"];
+  n2 [label="CONST\nvalue=0"];
+  n0 -> n2 [label="exp2"];
+  n3 [label="CONST\nvalue=1"];
+  n0 -> n3 [label="then_exp"];
+  n4 [label="CONST\nvalue=0"];
+  n0 -> n4 [label="else_exp"];
+}

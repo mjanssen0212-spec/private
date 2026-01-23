@@ -12,6 +12,8 @@ from triplalex import lexer
 import triplayacc
 import compiler
 
+import graphbuilder as gb
+
 def run(input_path: str, dot_out: str | None = None):
 
     proj_dir = os.path.dirname(__file__)
@@ -43,6 +45,8 @@ def run(input_path: str, dot_out: str | None = None):
         print('Parsing produced no AST (syntax error or empty input).')
         return
 
+
+    gb.build_graph(ast_root)
     # Export using the syntax node's built-in DOT export method
     try:
         ast_root.export_dot(out_path)
@@ -106,7 +110,7 @@ def test_parser(name):
             traceback.print_exc()
 
 if __name__ == '__main__':
-    src='triplaprograms/complex.tripla'
+    src='triplaprograms/argsParamsExample.tripla'
     main(src)
     test_parser(src)
 
