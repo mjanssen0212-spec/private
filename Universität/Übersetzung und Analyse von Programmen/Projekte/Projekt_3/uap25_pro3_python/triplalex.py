@@ -18,7 +18,7 @@ reserved = {
     'else' : 'ELSE',
 
     'let' : 'LET',
-    'in' : 'IN',
+    'in' : 'IN'
 }
 
 # List of token names. This is always required
@@ -52,7 +52,6 @@ t_ASSIGN = r'='
 def t_BOOL(t):
     r'true|false'
     t.value = (t.value == 'true')
-    t.type = 'BOOL'
     return t
 
 # A regular expression rule with some action code

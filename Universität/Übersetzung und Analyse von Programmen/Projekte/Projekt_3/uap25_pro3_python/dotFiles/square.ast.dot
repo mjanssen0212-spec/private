@@ -1,0 +1,22 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  n0 [label="LET"];
+  n1 [label="DECL\nfname=square"];
+  n2 [label="VAR\nname=x"];
+  n1 -> n2 [label="params[0]"];
+  n3 [label="BINOP\noperator=*, op=*"];
+  n4 [label="VAR\nname=x"];
+  n3 -> n4 [label="arg1"];
+  n5 [label="VAR\nname=x"];
+  n3 -> n5 [label="arg2"];
+  n6 [label="VAR\nname=x"];
+  n3 -> n6 [label="left"];
+  n7 [label="VAR\nname=x"];
+  n3 -> n7 [label="right"];
+  n1 -> n3 [label="body"];
+  n0 -> n1 [label="declarations[0]"];
+  n8 [label="CALL\nfname=square"];
+  n9 [label="CONST\nvalue=10"];
+  n8 -> n9 [label="arguments[0]"];
+  n0 -> n8 [label="body"];
+}

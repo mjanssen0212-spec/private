@@ -1,5 +1,7 @@
 #Matthias Janßen
 #1871808
+from symtable import Class
+
 import syntax
 from vistram.tram import *
 
@@ -98,7 +100,7 @@ class WHILE(syntax.WHILE):
         code_body[0].assigned_labels += [l4]
 
         return (code_condition_unlabeled + [ifzero(l3)] + [goto(l4)]
-                + code_condition + [ifzero(l2)] + [pop]
+                + code_condition + [ifzero(l2)] + [pop()]
                 + code_body + [goto(l1)]
                 + [const(0, assigned_label=l3)]
                 + [nop(assigned_label=l2)])
@@ -282,10 +284,10 @@ class IF(syntax.IF):
         
         code_else[0].assigned_labels += [l1]
 
-        return code_cond + [ifzero(l1)] + code_then + [goto(l2)] + code_else + nop(assigned_label=l2)
+        return code_cond + [ifzero(l1)] + code_then + [goto(l2)] + code_else + [nop(assigned_label=l2)]
     
     def __str__(self):
-        return f"if {self.condition} then {self.then_branch} else {self.else_branch}"
+        return f"if {self.condition} then {self.then_exp} else {self.else_exp}"
 
 
 class SEQ(syntax.SEQ):
@@ -299,7 +301,7 @@ class SEQ(syntax.SEQ):
         """Sequenzielle Zusammensetzung: Führe links aus, dann rechts."""
         exp1 = self.exp1.code(rho, nl)
         exp2 = self.exp2.code(rho, nl)
-        return exp1 + pop + exp2
+        return exp1 + [pop()] + exp2
     
     def __str__(self):
         return f"({self.exp1} ; {self.exp2})"
