@@ -1,0 +1,38 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  n0 [label="LET"];
+  n1 [label="DECL\nfname=a"];
+  n2 [label="VAR\nname=x"];
+  n1 -> n2 [label="params[0]"];
+  n3 [label="VAR\nname=x"];
+  n1 -> n3 [label="body"];
+  n0 -> n1 [label="declarations[0]"];
+  n4 [label="DECL\nfname=b"];
+  n5 [label="VAR\nname=y"];
+  n4 -> n5 [label="params[0]"];
+  n6 [label="VAR\nname=y"];
+  n4 -> n6 [label="body"];
+  n0 -> n4 [label="declarations[1]"];
+  n7 [label="DECL\nfname=c"];
+  n8 [label="VAR\nname=z"];
+  n7 -> n8 [label="params[0]"];
+  n9 [label="VAR\nname=z"];
+  n7 -> n9 [label="body"];
+  n0 -> n7 [label="declarations[2]"];
+  n10 [label="SEQ"];
+  n11 [label="SEQ"];
+  n12 [label="CALL\nfname=a"];
+  n13 [label="CONST\nvalue=1"];
+  n12 -> n13 [label="arguments[0]"];
+  n11 -> n12 [label="left"];
+  n14 [label="CALL\nfname=b"];
+  n15 [label="CONST\nvalue=2"];
+  n14 -> n15 [label="arguments[0]"];
+  n11 -> n14 [label="right"];
+  n10 -> n11 [label="left"];
+  n16 [label="CALL\nfname=c"];
+  n17 [label="CONST\nvalue=3"];
+  n16 -> n17 [label="arguments[0]"];
+  n10 -> n16 [label="right"];
+  n0 -> n10 [label="body"];
+}
