@@ -1,0 +1,6 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  n0 [label="WHILE\ncondition=True"];
+  n1 [label="CONST\nvalue=3"];
+  n0 -> n1 [label="body"];
+}

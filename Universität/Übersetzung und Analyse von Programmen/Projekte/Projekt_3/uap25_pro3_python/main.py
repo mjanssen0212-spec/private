@@ -1,5 +1,6 @@
 #Matthias Janßen
 #1871808
+#Tram Programme werden in tram_out unter gleichem Namen gespeichert
 
 # This is a sample Python script for testing your TRIPLA parser.
 
@@ -7,6 +8,7 @@
 
 import os
 import argparse
+import sys
 
 from triplalex import lexer
 import triplayacc
@@ -66,12 +68,12 @@ def run(input_path: str, dot_out: str | None = None):
         traceback.print_exc()
 
 def main(src):
-    ap = argparse.ArgumentParser()
-    ap.add_argument('input', nargs='?', default=src)
-    ap.add_argument('--out', '-o')
-    args = ap.parse_args()
+    # ap = argparse.ArgumentParser()
+    # ap.add_argument('--input', '-i', nargs='?', default=src)
+    # ap.add_argument('--out', '-o')
+    # args = ap.parse_args()
 
-    run(src, args.out)
+    run(src)
 
 def test_parser(name):
     source = "\n".join(open(name).readlines())
@@ -106,7 +108,11 @@ def test_parser(name):
             traceback.print_exc()
 
 if __name__ == '__main__':
-    src='triplaprograms/defSemiExample.tripla'
+    src = sys.argv[1]
+
+    if src == '':
+        src='triplaprograms/complex.tripla'
+
     main(src)
     test_parser(src)
 

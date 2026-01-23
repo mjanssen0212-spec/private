@@ -1,3 +1,6 @@
+#Matthias Janßen
+#1871808
+from symtable import Class
 
 import syntax
 from vistram.tram import *
@@ -19,15 +22,15 @@ def assemble(tram_code,filename="./tram_out/out.tram"):
 def elab_def(declarations, rho, nl):
     """(E1) elab_def (d1 ... dk) ρ nl = ρk where ρ0 = ρ and ρi = elab_def di ρi-1 nl
     
-    Elaborates a list of function declarations and returns updated environment.
+    Erarbeitet eine Liste von Funktionsdeklarationen und gibt die aktualisierte Umgebung zurück.
     
     Args:
-        declarations: List of DECL nodes
-        rho: Current environment (list of bindings)
-        nl: Nesting level
+        declarations: Liste von DECL-Knoten
+        rho: Aktuelle Umgebung (Liste von Bindungen)
+        nl: Verschachtelungsebene
         
     Returns:
-        Updated environment with function definitions
+        Aktualisierte Umgebung mit Funktionsdefinitionen
     """
     if not isinstance(declarations, list):
         declarations = [declarations]
@@ -40,21 +43,21 @@ def elab_def(declarations, rho, nl):
 
 def elab_def_single(decl, rho, nl):
     r"""(E2) elab_def (id{id1,...,idk}{e}) ρ nl = ρ[(ℓ,nl)\id]
-    where ℓ is a new label
+    wobei ℓ ein neues Label ist
     
-    Elaborates a single function declaration.
+    Erarbeitet eine einzelne Funktionsdeklaration.
     
     Args:
-        decl: Single DECL node
-        rho: Current environment
-        nl: Nesting level
+        decl: Einzelner DECL-Knoten
+        rho: Aktuelle Umgebung
+        nl: Verschachtelungsebene
         
     Returns:
-        Updated environment with new function binding
+        Aktualisierte Umgebung mit neuer Funktionsbindung
     """
 
     l = Label()
-    # Add binding (label, nl) -> fname to environment
+    # Füge Bindung (label, nl) -> fname zur Umgebung hinzu
     rho = rho | {decl.fname:(l,nl)}
     return rho
 
@@ -69,7 +72,7 @@ class CONST(syntax.CONST):
     def code(self, rho, nl):
         """(K3) code (c) ρ nl = const(c)
         
-        Compiles a constant to a CONST instruction.
+        Kompiliert eine Konstante zu einer CONST-Anweisung.
         """
         return [const(self.value)]
 
@@ -81,16 +84,26 @@ class WHILE(syntax.WHILE):
         """(K5) code (while B do {E}) ρ nl = 
             ℓ1: code(B) ρ nl; IFZERO ℓ2; code(E) ρ nl; GOTO ℓ1; ℓ2: NOP
             
-        where ℓ1, ℓ2 are new labels
+        wobei ℓ1, ℓ2 neue Labels sind
         """
         l1 = Label()
         l2 = Label()
+        l3 = Label()
+        l4 = Label()
+
         code_condition = self.condition.code(rho, nl)
         code_body = self.body.code(rho, nl)
-        # Assign l1 to the first instruction of condition
-        if code_condition:
-            code_condition[0].assigned_labels += [l1]
-        return code_condition + [ifzero(l2)] + code_body + [goto(l1)] + [nop(assigned_label=l2)]
+
+        code_condition_unlabeled = code_condition
+
+        code_condition[0].assigned_labels += [l1]
+        code_body[0].assigned_labels += [l4]
+
+        return (code_condition_unlabeled + [ifzero(l3)] + [goto(l4)]
+                + code_condition + [ifzero(l2)] + [pop()]
+                + code_body + [goto(l1)]
+                + [const(0, assigned_label=l3)]
+                + [nop(assigned_label=l2)])
 
 
 class LET(syntax.LET):
@@ -103,19 +116,19 @@ class LET(syntax.LET):
             code(d) ρ' nl;
             ℓ: code(e) ρ' nl
             
-        where ℓ is a new label and ρ' = elab_def(d) ρ nl
+        wobei ℓ ein neues Label ist und ρ' = elab_def(d) ρ nl
         """
         l1 = Label()
 
         rho1 = elab_def(self.declarations, rho, nl)
 
-        # Generate code for body expression
+        # Generiere Code für den Body-Ausdruck
         code_body = self.body.code(rho1, nl)
 
         if code_body:
             code_body[0].assigned_labels += [l1]
 
-        # Generate code for declarations with updated environment
+        # Generiere Code für Deklarationen mit aktualisierter Umgebung
         code_declarations = []
 
         if isinstance(self.declarations, list):
@@ -136,24 +149,24 @@ class DECL(syntax.DECL):
             ℓ : code(e) ρ[(0,nl+1)\id1] ... [(k-1,nl+1)\idk] nl+1;
             return
             
-        where ℓ is a new label and ρ(id) = (ℓ, nl')
+        wobei ℓ ein neues Label ist und ρ(id) = (ℓ, nl')
         """
-        # Create a label for this function with its name
+        # Erstelle ein Label für diese Funktion mit ihrem Namen
         l1 = rho[self.fname][0]
         
-        # Create environment for function parameters
-        param_rho = rho  # Copy current environment
-        # Add parameter bindings: (offset, nl+1) -> param_id
+        # Erstelle Umgebung für Funktionsparameter
+        param_rho = rho  # Kopiere aktuelle Umgebung
+        # Füge Parameterbindungen hinzu: (offset, nl+1) -> param_id
         for i, param in enumerate(self.params):
             param_rho = param_rho | {param.name:(i, nl + 1)}
 
-        # Save method label
+        # Speichere Methoden-Label
         param_rho = param_rho | {self.fname:(l1, nl)}
 
-        # Generate code for function body with updated environment
+        # Generiere Code für Funktionsbody mit aktualisierter Umgebung
         code_body = self.body.code(param_rho, nl + 1)
         code_body[0].assigned_labels += [l1]
-        # Return code: ℓ : code_body ; return
+        # Return-Code: ℓ : code_body ; return
         return code_body + [ireturn()]
 
 
@@ -168,15 +181,15 @@ class CALL(syntax.CALL):
             code(ek) ρ nl;
             invoke k ℓ (nl - nl')
             
-        where ρ(id) = (ℓ, nl')
+        wobei ρ(id) = (ℓ, nl')
         """
-        # Find the function in environment
+        # Finde die Funktion in der Umgebung
         rho_value = rho[self.fname]
         label = rho_value[0]
         func_nl = rho_value[1]
 
         
-        # Generate code for arguments
+        # Generiere Code für Argumente
         code_args = []
         if isinstance(self.arguments, list):
             for arg in self.arguments:
@@ -184,10 +197,10 @@ class CALL(syntax.CALL):
         else:
             code_args = self.arguments.code(rho, nl)
         
-        # Calculate depth difference
+        # Berechne Tiefenunterschied
         depth = nl - func_nl
         
-        # Generate invoke instruction
+        # Generiere Invoke-Anweisung
         k = len(self.arguments)
 
         return code_args + [invoke(k, label, depth)]
@@ -198,33 +211,33 @@ class VAR(syntax.VAR):
         super().__init__(name)
     
     def code(self, rho, nl):
-        """Variable access: look up in environment and load value.
+        """Variablenzugriff: Nachschlag in der Umgebung und Wert laden.
         
-        Returns LOAD instruction with appropriate offset and depth.
+        Gibt LOAD-Anweisung mit angemessenem Offset und Tiefe zurück.
         """
-        # Find variable in environment
+        # Finde Variable in der Umgebung
         rho_value = rho[self.name]
         offset = rho_value[0]
         var_nl = rho_value[1]
-        depth = var_nl - offset
+        depth = nl - var_nl
 
         return [load(offset, depth)]
 
 
-class BINOP(syntax.EXPRESSION):
-    """Binary operation (arithmetic or boolean)."""
+class BINOP(syntax.BINOP):
+    """Binäroperation (arithmetisch oder boolean)."""
     def __init__(self, op, left, right):
-        super().__init__()
+        super().__init__(op, left, right)
         self.op = op
         self.left = left
         self.right = right
     
     def code(self, rho, nl):
-        """Binary operations: evaluate both operands and apply operation."""
+        """Binäroperationen: Beide Operanden auswerten und Operation anwenden."""
         code_left = self.left.code(rho, nl)
         code_right = self.right.code(rho, nl)
         
-        # Map operators to TRAM instructions
+        # Abbildung von Operatoren auf TRAM-Anweisungen
         op_map = {
             '+': add,
             '-': sub,
@@ -232,106 +245,95 @@ class BINOP(syntax.EXPRESSION):
             '/': div,
             '<': lt,
             '>': gt,
-            '=': None,
             '<>': neq,
             '!=': neq,
-            '==': eq,  # TODO: Implement logical AND
-            '||': 'or',   # TODO: Implement logical OR
+            '==': eq,
+            '||': lor,
+            '&&': land,
         }
         
         op_instruction = op_map.get(self.op)
-        if op_instruction is None:
-            raise RuntimeError(f"Unsupported operator: {self.op}")
-        
+
         return code_left + code_right + [op_instruction()]
     
     def __str__(self):
         return f"({self.left} {self.op} {self.right})"
 
 
-class IF(syntax.EXPRESSION):
-    """If-then-else expression."""
-    def __init__(self, condition, then_branch, else_branch):
-        super().__init__()
+class IF(syntax.IF):
+    """If-then-else Ausdruck."""
+    def __init__(self, condition, then_exp, else_exp):
+        super().__init__(condition, then_exp, else_exp)
         self.condition = condition
-        self.then_branch = then_branch
-        self.else_branch = else_branch
+        self.then_exp = then_exp
+        self.else_exp = else_exp
     
     def code(self, rho, nl):
         """(K6) code (if B then E1 else E2) ρ nl = 
             code(B) ρ nl; IFZERO ℓ2; code(E1) ρ nl; GOTO ℓ3;
             ℓ2: code(E2) ρ nl; ℓ3: NOP
             
-        where ℓ2, ℓ3 are new labels
+        wobei ℓ1, ℓ2 neue Labels sind
         """
+        l1 = Label()
         l2 = Label()
-        l3 = Label()
         
         code_cond = self.condition.code(rho, nl)
-        code_then = self.then_branch.code(rho, nl)
-        code_else = self.else_branch.code(rho, nl)
+        code_then = self.then_exp.code(rho, nl)
+        code_else = self.else_exp.code(rho, nl)
         
-        # Label for else branch
-        if code_else:
-            code_else[0].assigned_labels += [l2]
-        else:
-            code_else = [nop(assigned_label=l2)]
-        
-        # Label for end
-        code_end = [nop(assigned_label=l3)]
+        code_else[0].assigned_labels += [l1]
 
-
-        return code_cond + [ifzero(l2)] + code_then + [goto(l3)] + code_else + code_end
+        return code_cond + [ifzero(l1)] + code_then + [goto(l2)] + code_else + [nop(assigned_label=l2)]
     
     def __str__(self):
-        return f"if {self.condition} then {self.then_branch} else {self.else_branch}"
+        return f"if {self.condition} then {self.then_exp} else {self.else_exp}"
 
 
-class SEQ(syntax.EXPRESSION):
-    """Sequential composition of expressions."""
-    def __init__(self, left, right):
-        super().__init__()
-        self.left = left
-        self.right = right
+class SEQ(syntax.SEQ):
+    """Sequenzielle Zusammensetzung von Ausdrücken."""
+    def __init__(self, exp1, exp2):
+        super().__init__(exp1, exp2)
+        self.exp1 = exp1
+        self.exp2 = exp2
     
     def code(self, rho, nl):
-        """Sequential composition: execute left, then right."""
-        code_left = self.left.code(rho, nl)
-        code_right = self.right.code(rho, nl)
-        return code_left + code_right
+        """Sequenzielle Zusammensetzung: Führe links aus, dann rechts."""
+        exp1 = self.exp1.code(rho, nl)
+        exp2 = self.exp2.code(rho, nl)
+        return exp1 + [pop()] + exp2
     
     def __str__(self):
-        return f"({self.left} ; {self.right})"
+        return f"({self.exp1} ; {self.exp2})"
 
 
-class ASSIGN(syntax.EXPRESSION):
-    """Variable assignment."""
-    def __init__(self, var_name, value):
-        super().__init__()
-        self.var_name = var_name
-        self.value = value
+class ASSIGN(syntax.ASSIGN):
+    """Variablenzuweisung."""
+    def __init__(self, variable, expression):
+        super().__init__(variable, expression)
+        self.var_name = variable
+        self.value = expression
     
     def code(self, rho, nl):
-        """Assignment: evaluate value and store in variable."""
-        # Find variable in environment
-        for binding in rho:
-            if len(binding) == 3 and binding[2] == self.var_name:
-                offset = binding[0]
-                var_nl = binding[1]
-                depth = nl - var_nl
-                code_value = self.value.code(rho, nl)
-                return code_value + [store(offset, depth)]
-        
-        raise RuntimeError(f"Undefined variable: {self.var_name}")
+        """Zuweisung: Wert auswerten und in Variable speichern."""
+        # Finde Variable in der Umgebung
+        rho_value = rho[self.var_name]
+
+        offset = rho_value[0]
+        var_nl = rho_value[1]
+        depth = nl - var_nl
+
+        code_value = self.value.code(rho_value, nl)
+        return code_value + [store(offset, depth)] + load(offset, depth)
     
     def __str__(self):
         return f"({self.var_name} := {self.value})"
 
 
-class DO(syntax.EXPRESSION):
-    """Do-while expression."""
+class DO(syntax.DO):
+    """Do-while Ausdruck."""
     def __init__(self, body, condition):
-        super().__init__()
+        super().__init__(body, condition)
         self.body = body
         self.condition = condition
     
@@ -340,7 +342,7 @@ class DO(syntax.EXPRESSION):
             ℓ1: code(E) ρ nl; code(B) ρ nl; IFZERO ℓ2; GOTO ℓ1;
             ℓ2: NOP
             
-        where ℓ1, ℓ2 are new labels
+        wobei ℓ1, ℓ2 neue Labels sind
         """
         l1 = Label()
         l2 = Label()
@@ -348,13 +350,10 @@ class DO(syntax.EXPRESSION):
         code_body = self.body.code(rho, nl)
         code_cond = self.condition.code(rho, nl)
         
-        # Label for loop start
-        if code_body:
-            code_body[0].assigned_labels += [l1]
-        else:
-            code_body = [nop(assigned_label=l1)]
-        
+        # Label für Schleifenbeginn
+        code_body[0].assigned_labels += [l1]
+
         return code_body + code_cond + [ifzero(l2)] + [goto(l1)] + [nop(assigned_label=l2)]
-    
+
     def __str__(self):
         return f"do {{ {self.body} }} while {self.condition}"
