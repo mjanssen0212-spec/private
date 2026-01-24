@@ -27,14 +27,10 @@ def generate_tram(ast_root, input_path, tram_dir):
     base = os.path.splitext(os.path.basename(input_path))[0]
     tram_path = os.path.join(tram_dir, f'{base}.tram')
     
-    try:
-        tram_code = ast_root.code({}, 0)
-        compiler.assemble(tram_code, tram_path)
-        print(f'✓ TRAM code exported to: {tram_path}')
-        return True
-    except Exception as e:
-        print(f'✗ Failed to generate TRAM: {e}')
-        return False
+    tram_code = ast_root.code({}, 0)
+    compiler.assemble(tram_code, tram_path)
+    print(f'✓ TRAM code exported to: {tram_path}')
+    return True
 
 def generate_cfg(ast_root, input_path, cfg_dir):
     """Generate Control Flow Graph."""
@@ -141,7 +137,12 @@ def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True):
             generate_ast(ast_root, input_path, dot_dir)
         
         if gen_tram:
-            generate_tram(ast_root, input_path, tram_dir)
+            try:
+                generate_tram(ast_root, input_path, tram_dir)
+            except Exception as e:
+                print(f'✗ Failed to generate TRAM: {e}')
+                import traceback
+                traceback.print_exc()
     
     # Parse for CFG (uses graphbuilder module)
     if gen_cfg:
