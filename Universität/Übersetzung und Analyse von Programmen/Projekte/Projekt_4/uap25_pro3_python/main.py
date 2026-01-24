@@ -46,7 +46,6 @@ def run(input_path: str, dot_out: str | None = None):
         return
 
 
-    gb.build_graph(ast_root)
     # Export using the syntax node's built-in DOT export method
     try:
         ast_root.export_dot(out_path)

@@ -307,25 +307,17 @@ class SEQ(syntax.SEQ):
 
 class ASSIGN(syntax.ASSIGN):
     """Variablenzuweisung."""
-    def __init__(self, variable, expression):
-        super().__init__(variable, expression)
-        self.var_name = variable
-        self.value = expression
-    
     def code(self, rho, nl):
         """Zuweisung: Wert auswerten und in Variable speichern."""
         # Finde Variable in der Umgebung
-        rho_value = rho[self.var_name]
+        rho_value = rho[self.variable]
 
         offset = rho_value[0]
         var_nl = rho_value[1]
         depth = nl - var_nl
 
-        code_value = self.value.code(rho_value, nl)
+        code_value = self.expression.code(rho_value, nl)
         return code_value + [store(offset, depth)] + load(offset, depth)
-    
-    def __str__(self):
-        return f"({self.var_name} := {self.value})"
 
 
 class DO(syntax.DO):
