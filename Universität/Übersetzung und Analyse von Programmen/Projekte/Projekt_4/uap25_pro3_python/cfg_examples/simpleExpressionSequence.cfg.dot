@@ -1,0 +1,68 @@
+digraph CFG {
+  rankdir=TB;
+  node [fontname="Arial"];
+
+  n0 [shape=doublecircle, label="IN"];
+  n1 [shape=doublecircle, label="OUT"];
+
+  n2 [shape=diamond, label="<?>"];
+  n3 [shape=box, label="glue"];
+  n4 [shape=box, label="END f(x)"];
+  n5 [shape=diamond, label="<?>"];
+  n6 [shape=ellipse, label="x="];
+  n7 [shape=ellipse, label="x="];
+  n8 [shape=ellipse, label="3"];
+  n9 [shape=ellipse, label="x"];
+  n10 [shape=ellipse, label="x"];
+  n11 [shape=ellipse, label="0"];
+  n12 [shape=ellipse, label="x"];
+  n13 [shape=ellipse, label="1"];
+  n14 [shape=box, label="RET f(3)"];
+  n15 [shape=ellipse, label="x"];
+  n16 [shape=ellipse, label="x=-1"];
+  n17 [shape=ellipse, label="x"];
+  n18 [shape=ellipse, label="0"];
+  n19 [shape=ellipse, label="x>0"];
+  n20 [shape=ellipse, label="x>0"];
+  n21 [shape=ellipse, label="1"];
+  n22 [shape=ellipse, label="x=-1"];
+  n23 [shape=ellipse, label="2"];
+  n24 [shape=ellipse, label="x"];
+  n25 [shape=box, label="glue"];
+  n26 [shape=ellipse, label="x="];
+  n27 [shape=ellipse, label="x=*x"];
+  n28 [shape=box, label="CALL f(3)"];
+  n29 [shape=box, label="START f(x)"];
+
+  n0 -> n8;
+  n22 -> n9;
+  n13 -> n16;
+  n4 -> n14;
+  n27 -> n12;
+  n26 -> n10;
+  n19 -> n2;
+  n11 -> n20;
+  n7 -> n13;
+  n16 -> n4;
+  n12 -> n11;
+  n2 -> n24 [label="T"];
+  n28 -> n14;
+  n28 -> n29;
+  n10 -> n27;
+  n21 -> n22;
+  n5 -> n15 [label="T"];
+  n24 -> n6;
+  n29 -> n23;
+  n2 -> n3 [label="F"];
+  n15 -> n7;
+  n8 -> n28;
+  n25 -> n4;
+  n9 -> n18;
+  n18 -> n19;
+  n17 -> n9;
+  n23 -> n26;
+  n5 -> n17 [label="F"];
+  n20 -> n5;
+  n6 -> n21;
+  n14 -> n1;
+}

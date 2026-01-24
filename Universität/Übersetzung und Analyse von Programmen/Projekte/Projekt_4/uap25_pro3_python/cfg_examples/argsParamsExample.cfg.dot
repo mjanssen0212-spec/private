@@ -1,0 +1,27 @@
+digraph CFG {
+  rankdir=TB;
+  node [fontname="Arial"];
+
+  n0 [shape=doublecircle, label="IN"];
+  n1 [shape=doublecircle, label="OUT"];
+
+  n2 [shape=ellipse, label="3"];
+  n3 [shape=box, label="START a(x, y, z)"];
+  n4 [shape=box, label="RET a(1, 2, 3)"];
+  n5 [shape=ellipse, label="1"];
+  n6 [shape=box, label="CALL a(1, 2, 3)"];
+  n7 [shape=box, label="END a(x, y, z)"];
+  n8 [shape=ellipse, label="2"];
+  n9 [shape=ellipse, label="x"];
+
+  n0 -> n5;
+  n7 -> n4;
+  n9 -> n7;
+  n6 -> n3;
+  n8 -> n2;
+  n5 -> n8;
+  n2 -> n6;
+  n6 -> n4;
+  n3 -> n9;
+  n4 -> n1;
+}
