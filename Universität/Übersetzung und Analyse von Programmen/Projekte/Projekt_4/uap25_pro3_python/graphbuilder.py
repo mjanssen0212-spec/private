@@ -1,3 +1,6 @@
+# Matthias Janßen
+# 1871808
+
 import compiler
 
 class CONST(compiler.CONST):

@@ -56,7 +56,7 @@ Verarbeitung läuft...
 
 ✓ AST exported to: dotFiles/complex.ast.dot
 ✓ TRAM code exported to: tram_out/complex.tram
-✓ CFG exported to: cfg_examples/complex.cfg.dot
+✓ CFG exported to: cfg_out/complex.cfg.dot
 
 ✓ Verarbeitung abgeschlossen!
 ```

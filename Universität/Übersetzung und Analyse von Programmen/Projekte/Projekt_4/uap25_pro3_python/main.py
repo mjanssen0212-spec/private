@@ -110,7 +110,7 @@ def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True):
     proj_dir = os.path.dirname(__file__) or '.'
     dot_dir = os.path.join(proj_dir, 'dotFiles')
     tram_dir = os.path.join(proj_dir, 'tram_out')
-    cfg_dir = os.path.join(proj_dir, 'cfg_examples')
+    cfg_dir = os.path.join(proj_dir, 'cfg_out')
     
     os.makedirs(dot_dir, exist_ok=True)
     os.makedirs(tram_dir, exist_ok=True)

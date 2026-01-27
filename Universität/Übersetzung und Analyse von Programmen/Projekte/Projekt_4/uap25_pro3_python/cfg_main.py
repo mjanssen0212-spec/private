@@ -23,7 +23,7 @@ def generate_cfg(input_path: str, output_path: str = None):
     """
     
     proj_dir = os.path.dirname(__file__)
-    cfg_dir = os.path.join(proj_dir, 'cfg_examples')
+    cfg_dir = os.path.join(proj_dir, 'cfg_out')
     os.makedirs(cfg_dir, exist_ok=True)
     
     # Determine output path

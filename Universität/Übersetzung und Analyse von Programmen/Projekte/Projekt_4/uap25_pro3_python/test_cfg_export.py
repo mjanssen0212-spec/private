@@ -31,7 +31,7 @@ def test_cfg_export(input_path, output_path=None):
     # Ausgabepfad bestimmen
     if output_path is None:
         proj_dir = os.path.dirname(__file__)
-        cfg_dir = os.path.join(proj_dir, 'cfg_examples')
+        cfg_dir = os.path.join(proj_dir, 'cfg_out')
         os.makedirs(cfg_dir, exist_ok=True)
         
         base = os.path.splitext(os.path.basename(input_path))[0]
