@@ -245,9 +245,7 @@ class BINOP(syntax.BINOP):
             '>': gt,
             '<>': neq,
             '!=': neq,
-            '==': eq,
-            '||': lor,
-            '&&': land,
+            '==': eq
         }
         
         op_instruction = op_map.get(self.op)
@@ -282,7 +280,7 @@ class IF(syntax.IF):
         
         code_else[0].assigned_labels += [l1]
 
-        return code_cond + [ifzero(l1)] + code_then + [goto(l2)] + code_else + nop(assigned_label=l2)
+        return code_cond + [ifzero(l1)] + code_then + [goto(l2)] + code_else + [nop(assigned_label=l2)]
     
     def __str__(self):
         return f"if {self.condition} then {self.then_branch} else {self.else_branch}"
@@ -299,7 +297,7 @@ class SEQ(syntax.SEQ):
         """Sequenzielle Zusammensetzung: Führe links aus, dann rechts."""
         exp1 = self.exp1.code(rho, nl)
         exp2 = self.exp2.code(rho, nl)
-        return exp1 + pop + exp2
+        return exp1 + [pop()] + exp2
     
     def __str__(self):
         return f"({self.exp1} ; {self.exp2})"
@@ -307,25 +305,17 @@ class SEQ(syntax.SEQ):
 
 class ASSIGN(syntax.ASSIGN):
     """Variablenzuweisung."""
-    def __init__(self, variable, expression):
-        super().__init__(variable, expression)
-        self.var_name = variable
-        self.value = expression
-    
     def code(self, rho, nl):
         """Zuweisung: Wert auswerten und in Variable speichern."""
         # Finde Variable in der Umgebung
-        rho_value = rho[self.var_name]
+        rho_value = rho[self.variable]
 
         offset = rho_value[0]
         var_nl = rho_value[1]
         depth = nl - var_nl
 
-        code_value = self.value.code(rho_value, nl)
+        code_value = self.expression.code(rho_value, nl)
         return code_value + [store(offset, depth)] + load(offset, depth)
-    
-    def __str__(self):
-        return f"({self.var_name} := {self.value})"
 
 
 class DO(syntax.DO):
