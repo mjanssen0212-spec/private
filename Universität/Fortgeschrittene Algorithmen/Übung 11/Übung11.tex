@@ -1,0 +1,82 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem,setspace}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.eps,.jpg}
+\usepackage{algorithm2e}
+
+% --- math operators ---
+\usepackage{mathtools}
+\DeclarePairedDelimiter\set{\{}{\}} % use $\set{1, 2, 3}$
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter\ceils{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\def\then{\ensuremath{\Rightarrow}} % =>
+\def\iff{\ensuremath{\Leftrightarrow}} % if and only if <=>
+\def\to{\ensuremath{\rightarrow}} % ->
+\def\ot{\ensuremath{\leftarrow}} % ->
+\def\Oh{\ensuremath{\mathcal{O}}} % big O like $\Oh(n)$
+% ---
+\DeclareMathOperator{\preorder}{preorder}
+\DeclareMathOperator{\postorder}{postorder}
+\DeclareMathOperator{\depth}{depth}
+
+% --- FILL OUT THESE 3 FIELDS ---
+\def\sheetNumber{11}
+\def\names{Matthias Janßen, Raphael Thelen, Tillmann
+Faust} 
+\def\sumPoints{20} 
+
+% --- ### BEGIN DOCUMENT ### ---
+\begin{document} 
+
+\begin{doublespace} % header
+\noindent \textbf{\LARGE{Übungsblatt \sheetNumber}}
+\hfill  {\large Punkte: $\boxed{\qquad  /\; \sumPoints}$}\\
+{\Large \textbf{Fortgeschrittene Algorithmen (Wintersemester 2022/23)}\\
+Bearbeitet von: \textbf{\names}\\
+\today}
+\end{doublespace}
+
+
+\section*{Aufgabe 1}
+
+\section*{Aufgabe 2}
+    a)
+    \begin{verbatim}
+        inc() {
+            for all i in 0...k-1 do
+                if A[i] == 0
+                    A[i] = 1
+                    return
+                else
+                    if i == k-1
+                        set all to 0
+                        return
+                    A[i] = 0
+            return A
+        }
+    \end{verbatim}
+
+    b) Im worst case sind alle Bits 1 und es muss jedes Bit auf 0 gesetzt werden. Somit sind die worst-case Kosten $\Oh(k)$.
+\\\\
+    c) Wir zahlen für das setzen eines Bits von 0 auf 1 2 €. 1 € wird für den eigentlichen Setzvorgang verwendet, der andere € wird als Kredit gespeichert. Die tatsächlichen Kosten für das Setzen eines Bits auf 1 sind $\Oh(1)$, die amortisierten Kosten liegen bei $\Oh(1)+1$. 
+    Somit bleibt jedem Bit 1 Euro Kredit welcher verwendet werden kann, um das Bit später wieder auf 0 zu setzen. Jedes Bit zahlt die Operation selbst. Der Kontostand wird also nie negativ. Somit sind die amortisierten Kosten pro Inkrementierung $\Theta(1)$.
+\section*{Aufgabe 3}
+
+\section*{Aufgabe 4}
+
+
+% -- code for figures
+% \begin{figure}[htb]
+% \centering
+% \includegraphics{filename} % use option [width=\linewidth] to change size to linewidth (or 0.6\linewidth for example)
+% \label{fig:name}
+% \end{figure}
+
+
+\end{document}
+% --- ### END DOCUMENT ### ---
