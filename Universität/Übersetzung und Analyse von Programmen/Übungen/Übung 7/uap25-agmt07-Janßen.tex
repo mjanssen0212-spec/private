@@ -42,8 +42,137 @@
 
 \section{Aufgabe 1}
 % ...
+Annahme: b = 2\\
+Statische Variablen / Ausdrücke: 
 
+    b $\rightarrow$ 2
+
+    b > 0\\
+Dynamische Variablen / Ausdrücke:
+
+a, z
+
+a > 0
+
+a = a - b - z\\\\
+
+Loop Unfolding:
+Da b statisch 2 ist kann die while Schleife entfaltet werden. Im Schleifenrumpf wird b durch 2 ersetzt. Nach dem ersten Durchlauf
+wird b um 1 reduziert. Dadurch entsteht der Ausdruck a = a - 1 - z.
+\begin{verbatim}
+    while (a > 0) {
+        a = a - 2 - z
+    }
+    b = 2 - 1
+    while (a > 0) {
+        a = a - 1 - z
+    }
+\end{verbatim}
+
+Beide Schleifen haben die gleiche Abbruchbedingung $a > 0$. Nach Terminierung der ersten Schleife gilt $a \le 0$. Zwischen den beiden Schleifen wird $a$ nicht verändert, daher ist die Bedingung der zweiten Schleife sofort falsch und ihr Körper unerreichbar. Falls die erste Schleife nicht terminiert, wird die zweite Schleife ohnehin nie erreicht.\\
+Zur Optimierung kann die zweite Schleife entfernt werden, da ihr Körper in keinem Fall ausgeführt wird.\\
+Optimierte Version:
+\begin{verbatim}
+    while (a > 0) {
+        a = a - 2 - z
+    }
+\end{verbatim}
 \section{Aufgabe 2}
 % ...
+Annahme: a = 1\\
+Statische Variablen / Ausdrücke: 
+
+    a $\rightarrow$ 1
+
+    fib(4) $\rightarrow$ 5\\
+
+Dynamische Variablen / Ausdrücke:
+
+    x, y ,z, n
+
+    x > a
+
+    z = y
+
+    x = x - 1
+
+    y = y + z
+
+    n <= 1
+
+    n - 1
+
+    n - 2\\\\
+Code mit a = 1 eingesetzt:
+\begin{verbatim}
+    let fib(n) {if (n <= 1) then 1 else fib(n-1) + fib(n-2)}
+        f(x, y, z) {
+            z = y
+            while (x > 1) do {
+                x = x - 1
+                y = y + z
+            }
+        }
+    in fib(4) + fib(f(3, z, 1)) + f(z, 3, 1)
+\end{verbatim}
+Der Methodenaufruf fib(4) kann ausgewertet werden, da alle Argumente statisch sind. Es gilt fib(4) = 5.\\
+
+\begin{verbatim}
+    let fib(n) {if (n <= 1) then 1 else fib(n-1) + fib(n-2)}
+        f(x, y, z) {
+            z = y
+            while (x > 1) do {
+                x = x - 1
+                y = y + z
+            }
+        }
+    in 5 + fib(f(3, z, 1)) + f(z, 3, 1)
+\end{verbatim}
+Polyvariante Spezialisierung von f:
+Beim Aufruf f(3, z, 1) kann die Schleife entfaltet werden, da x und a statisch sind (2 Iterationen):
+
+\begin{verbatim}
+    f_x3(y) {
+        z = y
+        y = y + z
+        y = y + z
+    }
+\end{verbatim}
+
+Für f(z, 3, 1) ist das nicht möglich, da x dynamisch ist. y wird jedoch statisch auf 3 gesetzt:
+
+\begin{verbatim}
+    f_y3(x) {
+        y = 3
+        z = 3
+        while (x > 1) do {
+            x = x - 1
+            y = y + 3
+        }
+    }
+\end{verbatim}
+
+Gesamter partiell ausgewerteter Code:
+
+\begin{verbatim}
+    let fib(n) {if (n <= 1) then 1 else fib(n-1) + fib(n-2)}
+        f_x3(y) {
+            z = y
+            y = y + z
+            y = y + z
+        }
+
+        f_y3(x) {
+            y = 3
+            z = 3
+            while (x > 1) do {
+                x = x - 1
+                y = y + 3
+            }
+        }
+
+    in 5 + fib(f_x3(z)) + f_y3(z)
+
+\end{verbatim}
 
 \end{document}
