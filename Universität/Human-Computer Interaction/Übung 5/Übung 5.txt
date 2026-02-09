@@ -1,0 +1,33 @@
+Übung 5
+
+Problemstellung & Motivation
+- LLMs vermitteln keine Unsicherheiten -> in virtuellen Agenten mit übermitteln
+- verbale und non-verbale Ausdrücke der Unsicherheit werden besser verstanden als Zahlen
+
+Umsetzung
+- Step 1: Studie mit Trivia-Fragen um Unsicherheitsreaktionen aufzuzeichnen
+- Step 2: Bewertung der Reaktionen  
+- Step 3: Videodaten verarbeitet und als Input für die Darstellung des KI-Agenten 
+- Step 4 + 5: Generierung der Unsicherheits-Scores + Ausdruck davon und Evaluation von Nutzenden
+
+
+Ergebnisse & Diskussion
+
+Ergebnis der Studie: 
+- Unsicherheit-scores von Versuchspersonen zum Teil erkannt
+- Blick und Mimik besonders einflussreich
+- Individuelle Unterschiede der Versuchspersonen
+- Aussehen des Agenten hatte keinen Einfluss auf die Interpretation
+
+-> deckt nur bestimmten Bereich ab, nicht 100% Sicherheit
+-> Unsicherheiten werden von Versuchspersonen gut erkannt
+
+Limitationen: 
+- Videos von deutschen Personen -> gibt kulturelle Unterschiede in Ausdruck von Unsicherheit
+- geringe Stichprobengröße
+- Frage der Akzeptanz vs. Grundlagenforschung
+- Unsicherheits-Daten nur aus Trivia-Fragen generiert
+
+
+
+
