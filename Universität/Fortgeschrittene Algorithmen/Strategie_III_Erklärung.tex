@@ -1,0 +1,510 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+
+\geometry{margin=2.5cm}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{satz}{Satz}
+\newtheorem{beispiel}{Beispiel}
+
+\title{Strategie III: Ski-Rental Problem\\
+\large Detaillierte Erklärung}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Das Problem}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Ski-Rental Problem]
+\begin{itemize}
+    \item Leihen kostet \textbf{1 Euro/Tag}
+    \item Kaufen kostet \textbf{$M$ Euro}
+    \item Wir wissen nicht, wie viele Tage $T$ wir Ski brauchen
+\end{itemize}
+\textbf{Ziel:} Finde eine Strategie, die möglichst nah an der optimalen Lösung ist.
+\end{tcolorbox}
+
+\section{Strategie III}
+
+\begin{center}
+\colorbox{yellow!50}{\large \textbf{Kaufe am $M$-ten guten Tag}}
+\end{center}
+
+\subsection{Was bedeutet das?}
+
+\begin{itemize}[leftmargin=*]
+    \item Leihe die Ski für die ersten $M-1$ Tage
+    \item Am Tag $M$ kaufst du die Ski
+    \item Danach keine weiteren Kosten
+\end{itemize}
+
+\section{Analyse des Competitive Ratio}
+
+Die \textbf{optimale Lösung} zahlt:
+\[
+\text{OPT} = \min(M, T)
+\]
+
+\begin{itemize}
+    \item Wenn $T < M$: optimal ist nur leihen $\Rightarrow$ OPT $= T$
+    \item Wenn $T \geq M$: optimal ist am Tag 1 kaufen $\Rightarrow$ OPT $= M$
+\end{itemize}
+
+\subsection{Kosten von Strategie III}
+
+\[
+C_{\text{det}} = \underbrace{(M-1)}_{\text{Leihen}} + \underbrace{M}_{\text{Kaufen}} = 2M - 1
+\]
+
+\textbf{Erklärung:}
+\begin{enumerate}
+    \item Wir leihen für $M-1$ Tage $\Rightarrow$ Kosten: $M-1$
+    \item Am Tag $M$ kaufen wir $\Rightarrow$ Kosten: $M$
+    \item \textbf{Gesamt:} $(M-1) + M = 2M - 1$
+\end{enumerate}
+
+\section{Berechnung des Competitive Ratio}
+
+Das Competitive Ratio ist:
+\[
+\frac{C_{\text{det}}}{\text{OPT}}
+\]
+
+Wir müssen zwei Fälle betrachten:
+
+\subsection{Fall 1: $T < M$ (Wenige Tage)}
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
+\textbf{Annahme:} $T < M$ (wir brauchen die Ski nur kurz)
+
+\textbf{OPT:} Optimal wäre nur zu leihen $\Rightarrow$ OPT $= T$
+
+\textbf{Strategie III zahlt:} $2M - 1$ (haben schon gekauft, bevor wir aufhören)
+
+\textbf{Competitive Ratio:}
+\[
+\frac{C_{\text{det}}}{\text{OPT}} = \frac{2M-1}{T}
+\]
+
+\textbf{Worst-Case:} Wenn $T$ so klein wie möglich ist (aber $T \in \mathbb{N}^+$), ist das Ratio am größten.
+
+Sei $T = X$ mit $X < M$. Dann:
+\[
+\frac{C_{\text{det}}}{\text{OPT}} = \frac{2M-1}{X} \geq \frac{2M-1}{\min(X,M)} = \frac{2M-1}{X}
+\]
+
+Um eine obere Schranke zu finden, betrachten wir:
+\[
+\frac{X-1+M}{X} = \frac{X-1}{X} + \frac{M}{X} = 1 - \frac{1}{X} + \frac{M}{X}
+\]
+
+Für $X < M$ gilt: Die Strategie zahlt $(X-1)$ fürs Leihen + $M$ fürs Kaufen, aber OPT = $X$.
+
+\textbf{Alternative Betrachtung:}
+\[
+\frac{X-1+X+1}{X} = \frac{2X}{X} = 2
+\]
+
+Hier wird approximiert: Im worst-case (direkt vor dem Kaufen aufhören) zahlen wir ca. doppelt so viel wie OPT.
+\end{tcolorbox}
+
+\subsection{Fall 2: $T \geq M$ (Viele Tage)}
+
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
+\textbf{Annahme:} $T \geq M$ (wir brauchen die Ski lange)
+
+\textbf{OPT:} Optimal ist am Tag 1 zu kaufen $\Rightarrow$ OPT $= M$
+
+\textbf{Strategie III zahlt:} $2M - 1$
+
+\textbf{Competitive Ratio:}
+\[
+\frac{C_{\text{det}}}{\text{OPT}} = \frac{2M-1}{M} = \frac{2M}{M} - \frac{1}{M} = 2 - \frac{1}{M}
+\]
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item Wir zahlen fast doppelt so viel wie optimal
+    \item Für großes $M$: Ratio $\approx 2$
+    \item Für $M \to \infty$: Ratio $\to 2$
+\end{itemize}
+\end{tcolorbox}
+
+\section{Die Formel im Bild erklärt}
+
+Im Bild steht:
+\[
+\frac{C_{\text{det}}}{C_{\text{OPT}}} = \frac{X-1+M}{\min(X,M)} \geq \min\left(\frac{X-1+X+1}{X}, \frac{M-1+M}{M}\right)
+\]
+
+\subsection{Bedeutung der Terme}
+
+\begin{enumerate}
+    \item \textbf{$\displaystyle\frac{X-1+X+1}{X}$} (Fall $X < M$):
+    \begin{itemize}
+        \item Zähler: $(X-1)$ Leihen + $(X+1)$ annähernde Kaufkosten
+        \item Vereinfachung: $\displaystyle\frac{2X}{X} = 2$
+        \item Dies ist der worst-case, wenn man kurz vor dem Kaufzeitpunkt aufhört
+    \end{itemize}
+    
+    \item \textbf{$\displaystyle\frac{M-1+M}{M}$} (Fall $X \geq M$):
+    \begin{itemize}
+        \item Zähler: $(M-1)$ Tage Leihen + $M$ Kaufpreis = $2M-1$
+        \item Nenner: OPT $= M$ (hätte sofort kaufen sollen)
+        \item Ergebnis: $\displaystyle 2 - \frac{1}{M}$
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Das Minimum}
+
+\[
+\min\left(2, 2-\frac{1}{M}\right) = 2 - \frac{1}{M} < 2
+\]
+
+$\Rightarrow$ Das Competitive Ratio ist \textbf{höchstens} $2 - \frac{1}{M}$ für endliches $M$.
+
+Für $M \to \infty$: Competitive Ratio $\to 2$
+
+\section{Hauptsatz}
+
+\begin{satz}
+Strategie III ist \textbf{deterministisch} und \textbf{2-kompetitiv}.
+
+Keine deterministische Strategie kann besser als $2-\frac{1}{M}$-kompetitiv sein (für $M \to \infty$: nicht besser als 2-kompetitiv).
+\end{satz}
+
+\section{Beispiele}
+
+\begin{beispiel}[Kurze Nutzung: $T = 3$, $M = 10$]
+\begin{itemize}
+    \item \textbf{OPT:} Nur leihen $\Rightarrow$ Kosten $= 3$
+    \item \textbf{Strategie III:} Leihe 9 Tage, kaufe am Tag 10 $\Rightarrow$ Kosten $= 9 + 10 = 19$
+    \item \textbf{Ratio:} $\displaystyle\frac{19}{3} \approx 6.33$ (schlecht, weil $T \ll M$)
+\end{itemize}
+\end{beispiel}
+
+\begin{beispiel}[Mittlere Nutzung: $T = 10$, $M = 10$]
+\begin{itemize}
+    \item \textbf{OPT:} Sofort kaufen $\Rightarrow$ Kosten $= 10$
+    \item \textbf{Strategie III:} Leihe 9 Tage, kaufe am Tag 10 $\Rightarrow$ Kosten $= 9 + 10 = 19$
+    \item \textbf{Ratio:} $\displaystyle\frac{19}{10} = 1.9$
+\end{itemize}
+\end{beispiel}
+
+\begin{beispiel}[Lange Nutzung: $T = 100$, $M = 10$]
+\begin{itemize}
+    \item \textbf{OPT:} Sofort kaufen $\Rightarrow$ Kosten $= 10$
+    \item \textbf{Strategie III:} Leihe 9 Tage, kaufe am Tag 10 $\Rightarrow$ Kosten $= 9 + 10 = 19$
+    \item \textbf{Ratio:} $\displaystyle\frac{19}{10} = 1.9$
+\end{itemize}
+\end{beispiel}
+
+\begin{beispiel}[Großes $M$: $M = 1000$]
+\begin{itemize}
+    \item \textbf{Kosten Strategie III:} $2 \cdot 1000 - 1 = 1999$
+    \item \textbf{OPT (lange Nutzung):} $1000$
+    \item \textbf{Ratio:} $\displaystyle\frac{1999}{1000} = 1.999 \approx 2$
+\end{itemize}
+\end{beispiel}
+
+\section{Strategie IV: Randomisierte Strategie}
+
+\begin{center}
+\colorbox{orange!50}{\large \textbf{Können wir die 2-kompetitive Schranke brechen? Mit Randomisierung!}}
+\end{center}
+
+\subsection{Die Idee}
+
+Strategie III ist deterministisch und erreicht ein Competitive Ratio von $2 - \frac{1}{M} \approx 2$. Keine deterministische Strategie kann besser sein. Aber was ist mit \textbf{randomisierten} Strategien?
+
+\begin{tcolorbox}[colback=orange!5!white,colframe=orange!75!black,title=Strategie IV]
+\textbf{Werfe eine Münze:}
+\begin{itemize}
+    \item \textbf{Kopf:} Kaufe am $M$-ten guten Tag
+    \item \textbf{Zahl:} Kaufe am $\alpha M$-ten guten Tag (mit $\alpha \in (0,1)$)
+\end{itemize}
+
+Jede Option hat Wahrscheinlichkeit $\frac{1}{2}$.
+\end{tcolorbox}
+
+\subsection{Parameter $\alpha$}
+
+Der Parameter $\alpha$ bestimmt, wann wir im zweiten Fall kaufen:
+\begin{itemize}
+    \item Wenn $\alpha = \frac{1}{2}$: Kaufe am $\frac{M}{2}$-ten Tag (die Hälfte)
+    \item Wenn $\alpha$ kleiner ist: Kaufe früher
+    \item Wenn $\alpha$ größer ist: Kaufe später
+\end{itemize}
+
+Wir werden sehen, dass $\alpha = \frac{1}{2}$ eine gute Wahl ist!
+
+\subsection{Erwartete Kosten}
+
+Da die Strategie randomisiert ist, berechnen wir die \textbf{erwarteten Kosten}:
+
+\[
+E[c_{\text{Strategie IV}}] = \frac{1}{2} \cdot c_{\text{Kopf}} + \frac{1}{2} \cdot c_{\text{Zahl}}
+\]
+
+\textbf{Kosten bei Kopf (kaufe am Tag $M$):}
+\[
+c_{\text{Kopf}} = (M-1) + M = 2M - 1
+\]
+
+\textbf{Kosten bei Zahl (kaufe am Tag $\alpha M$):}
+\[
+c_{\text{Zahl}} = (\alpha M - 1) + M = (1+\alpha)M - 1
+\]
+
+\subsection{Analyse: Fall $T = M$}
+
+\textbf{Beobachtung:} Der schlechteste Fall für diese Strategie ist, wenn $T = M$ oder $T = \alpha M$.
+
+\begin{tcolorbox}[colback=purple!5!white,colframe=purple!75!black,title=Fall $T = M$]
+
+\textbf{OPT:} Optimal ist am Tag 1 kaufen $\Rightarrow$ OPT $= M$
+
+\textbf{Erwartete Kosten:}
+\begin{align*}
+E[c_{\text{Strategie IV}}] &= \frac{1}{2} \cdot (2M-1) + \frac{1}{2} \cdot ((1+\alpha)M-1) \\
+&= \frac{1}{2}(2M - 1 + (1+\alpha)M - 1) \\
+&= \frac{1}{2}(2M + (1+\alpha)M - 2) \\
+&= \frac{1}{2}(3M + \alpha M - 2) \\
+&= \frac{1}{2}((3+\alpha)M - 2) \\
+&= \frac{(3+\alpha)M - 2}{2}
+\end{align*}
+
+\textbf{Competitive Ratio:}
+\begin{align*}
+\frac{E[c_{\text{Strategie IV}}]}{c_{\text{OPT}}} &= \frac{\frac{1}{2}(2M-1) + \frac{1}{2}((1+\alpha)M-1)}{M} \\
+&= \frac{(3+\alpha)M - 2}{2M} \\
+&= \frac{3+\alpha}{2} - \frac{1}{M} \\
+&\xrightarrow{M \to \infty} \frac{3+\alpha}{2}
+\end{align*}
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item Das Ratio hängt von $\alpha$ ab!
+    \item Für $\alpha = \frac{1}{2}$: Ratio $= \frac{3+0.5}{2} = \frac{3.5}{2} = 1.75$
+    \item Dies ist besser als 2!
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Analyse: Fall $T = \alpha M$}
+
+\begin{tcolorbox}[colback=cyan!5!white,colframe=cyan!75!black,title=Fall $T = \alpha M$]
+
+\textbf{OPT:} Optimal ist am Tag 1 kaufen $\Rightarrow$ OPT $= M$
+
+Moment! Wenn $T = \alpha M < M$, dann ist optimal nur zu leihen:
+\[
+\text{OPT} = \alpha M
+\]
+
+\textbf{Erwartete Kosten:}
+\begin{itemize}
+    \item \textbf{Kopf} (kaufe am Tag $M$): Wir haben schon bei $T = \alpha M$ aufgehört, also: $c = \alpha M$ (nur Leihkosten)
+    \item \textbf{Zahl} (kaufe am Tag $\alpha M$): $c = (\alpha M - 1) + M = (1+\alpha)M - 1$
+\end{itemize}
+
+\begin{align*}
+E[c_{\text{Strategie IV}}] &= \frac{1}{2} \cdot \alpha M + \frac{1}{2} \cdot ((1+\alpha)M - 1) \\
+&= \frac{1}{2}(\alpha M + (1+\alpha)M - 1) \\
+&= \frac{1}{2}(2\alpha M + M - 1) \\
+&= \frac{(2\alpha + 1)M - 1}{2}
+\end{align*}
+
+\textbf{Competitive Ratio:}
+\begin{align*}
+\frac{E[c_{\text{Strategie IV}}]}{c_{\text{OPT}}} &= \frac{\frac{1}{2} \cdot \alpha M + \frac{1}{2} \cdot ((1+\alpha)M - 1)}{\alpha M} \\
+&= \frac{(2\alpha + 1)M - 1}{2\alpha M} \\
+&= \frac{2\alpha + 1}{2\alpha} - \frac{1}{2\alpha M} \\
+&= \frac{2\alpha}{2\alpha} + \frac{1}{2\alpha} - \frac{1}{2\alpha M} \\
+&= 1 + \frac{1}{2\alpha} - \frac{1}{2\alpha M} \\
+&\xrightarrow{M \to \infty} 1 + \frac{1}{2\alpha}
+\end{align*}
+
+\textbf{Interpretation:}
+\begin{itemize}
+    \item Das Ratio hängt von $\alpha$ ab!
+    \item Je kleiner $\alpha$, desto größer das Ratio!
+    \item Für $\alpha = \frac{1}{2}$: Ratio $= 1 + \frac{1}{2 \cdot 0.5} = 1 + 1 = 2$
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Optimale Wahl von $\alpha$}
+
+Wir haben zwei kritische Fälle:
+\begin{enumerate}
+    \item Fall $T = M$: Ratio $= \frac{3+\alpha}{2}$ (für $M \to \infty$)
+    \item Fall $T = \alpha M$: Ratio $= 1 + \frac{1}{2\alpha}$ (für $M \to \infty$)
+\end{enumerate}
+
+Um das \textbf{maximale Ratio zu minimieren}, setzen wir die beiden gleich:
+
+\[
+\frac{3+\alpha}{2} = 1 + \frac{1}{2\alpha}
+\]
+
+Lösen nach $\alpha$:
+\begin{align*}
+\frac{3+\alpha}{2} &= 1 + \frac{1}{2\alpha} \\
+3 + \alpha &= 2 + \frac{1}{\alpha} \\
+\alpha + 1 &= \frac{1}{\alpha} \\
+\alpha^2 + \alpha &= 1 \\
+\alpha^2 + \alpha - 1 &= 0
+\end{align*}
+
+Mit der quadratischen Formel:
+\[
+\alpha = \frac{-1 \pm \sqrt{1 + 4}}{2} = \frac{-1 \pm \sqrt{5}}{2}
+\]
+
+Da $\alpha \in (0,1)$:
+\[
+\alpha = \frac{-1 + \sqrt{5}}{2} \approx 0.618
+\]
+
+Dies ist der \textbf{goldene Schnitt} minus 1!
+
+\textbf{Competitive Ratio mit optimalem $\alpha$:}
+\[
+\frac{3+\alpha}{2} = \frac{3 + \frac{\sqrt{5}-1}{2}}{2} = \frac{\frac{6 + \sqrt{5} - 1}{2}}{2} = \frac{5 + \sqrt{5}}{4} \approx 1.809
+\]
+
+\subsection{Alternative: $\alpha = \frac{1}{2}$}
+
+Für einfachere Berechnungen kann man auch $\alpha = \frac{1}{2}$ wählen:
+
+\textbf{Fall $T = M$:}
+\[
+\text{Ratio} = \frac{3 + 0.5}{2} = 1.75
+\]
+
+\textbf{Fall $T = \alpha M = \frac{M}{2}$:}
+\[
+\text{Ratio} = 1 + \frac{1}{2 \cdot 0.5} = 1 + 1 = 2
+\]
+
+\textbf{Maximum:} $\max(1.75, 2) = 2$
+
+Also ist mit $\alpha = \frac{1}{2}$ die Strategie immer noch 2-kompetitiv, aber im Fall $T = M$ nur 1.75-kompetitiv!
+
+\subsection{Erklärung der Formeln aus dem Bild}
+
+\begin{enumerate}
+    \item \textbf{Fall $T = M$:}
+    \[
+    \frac{E[c_{\text{Strategie IV}}]}{c_{\text{OPT}}} = \frac{\frac{1}{2} \cdot (2M-1) + \frac{1}{2} \cdot ((1+\alpha)M-1)}{M} = \frac{3+\alpha}{2} - \frac{1}{M} \xrightarrow{M \to \infty} \frac{3+\alpha}{2}
+    \]
+    
+    \textbf{Woher kommt $(3+\alpha)$?}
+    \begin{align*}
+    \text{Zähler} &= \frac{1}{2}(2M - 1) + \frac{1}{2}((1+\alpha)M - 1) \\
+    &= \frac{1}{2}(2M + (1+\alpha)M - 2) \\
+    &= \frac{1}{2}((3+\alpha)M - 2)
+    \end{align*}
+    
+    Dividiert durch $M$:
+    \[
+    \frac{(3+\alpha)M - 2}{2M} = \frac{3+\alpha}{2} - \frac{1}{M}
+    \]
+    
+    \item \textbf{Fall $T = \alpha M$:}
+    \[
+    \frac{E[c_{\text{Strategie IV}}]}{c_{\text{OPT}}} = \frac{\frac{1}{2} \cdot \alpha M + \frac{1}{2} \cdot ((1+\alpha)M-1)}{\alpha M} = 1 + \frac{1}{2\alpha} - \frac{1}{2\alpha M} \xrightarrow{M \to \infty} 1 + \frac{1}{2\alpha}
+    \]
+    
+    \textbf{Woher kommt $1 + \frac{1}{2\alpha}$?}
+    \begin{align*}
+    \text{Zähler} &= \frac{1}{2} \alpha M + \frac{1}{2}((1+\alpha)M - 1) \\
+    &= \frac{1}{2}(\alpha M + (1+\alpha)M - 1) \\
+    &= \frac{1}{2}((2\alpha + 1)M - 1)
+    \end{align*}
+    
+    Dividiert durch $\alpha M$:
+    \begin{align*}
+    \frac{(2\alpha + 1)M - 1}{2\alpha M} &= \frac{(2\alpha + 1)M}{2\alpha M} - \frac{1}{2\alpha M} \\
+    &= \frac{2\alpha + 1}{2\alpha} - \frac{1}{2\alpha M} \\
+    &= \frac{2\alpha}{2\alpha} + \frac{1}{2\alpha} - \frac{1}{2\alpha M} \\
+    &= 1 + \frac{1}{2\alpha} - \frac{1}{2\alpha M}
+    \end{align*}
+\end{enumerate}
+
+\subsection{Beispiel: $\alpha = \frac{1}{2}$, $M = 100$}
+
+\begin{beispiel}[Randomisierte Strategie mit $\alpha = 0.5$, $M = 100$]
+
+\textbf{Fall 1: $T = M = 100$}
+\begin{itemize}
+    \item \textbf{OPT:} Kaufe sofort $\Rightarrow$ Kosten $= 100$
+    \item \textbf{Strategie IV:}
+    \begin{itemize}
+        \item Kopf (50\%): Leihe 99 Tage, kaufe am Tag 100 $\Rightarrow$ $99 + 100 = 199$
+        \item Zahl (50\%): Leihe 49 Tage, kaufe am Tag 50 $\Rightarrow$ $49 + 100 = 149$
+        \item Erwartete Kosten: $\frac{1}{2}(199) + \frac{1}{2}(149) = 174$
+    \end{itemize}
+    \item \textbf{Ratio:} $\frac{174}{100} = 1.74$ (besser als 2!)
+\end{itemize}
+
+\textbf{Fall 2: $T = \alpha M = 50$}
+\begin{itemize}
+    \item \textbf{OPT:} Nur leihen $\Rightarrow$ Kosten $= 50$
+    \item \textbf{Strategie IV:}
+    \begin{itemize}
+        \item Kopf (50\%): Nur leihen (haben noch nicht gekauft) $\Rightarrow$ $50$
+        \item Zahl (50\%): Leihe 49 Tage, kaufe am Tag 50 $\Rightarrow$ $49 + 100 = 149$
+        \item Erwartete Kosten: $\frac{1}{2}(50) + \frac{1}{2}(149) = 99.5$
+    \end{itemize}
+    \item \textbf{Ratio:} $\frac{99.5}{50} = 1.99$ (fast 2)
+\end{itemize}
+\end{beispiel}
+
+\section{Zusammenfassung}
+
+\subsection{Strategie III (Deterministisch)}
+\begin{itemize}
+    \item \textbf{Strategie:} Kaufe am $M$-ten Tag
+    \item \textbf{Kosten:} $2M - 1$ (unabhängig von $T$, solange $T \geq M$)
+    \item \textbf{Competitive Ratio:} Maximal $2 - \frac{1}{M}$ $\approx$ 2
+    \item \textbf{Optimal:} Keine deterministische Strategie kann besser sein
+\end{itemize}
+
+\subsection{Strategie IV (Randomisiert)}
+\begin{itemize}
+    \item \textbf{Strategie:} Mit Wahrscheinlichkeit $\frac{1}{2}$ kaufe am $M$-ten Tag, sonst am $\alpha M$-ten Tag
+    \item \textbf{Erwartete Kosten:} Hängt von $\alpha$ ab
+    \item \textbf{Competitive Ratio:} Mit optimalem $\alpha \approx 0.618$: ca. 1.809
+    \item \textbf{Mit $\alpha = \frac{1}{2}$:} Ratio zwischen 1.75 und 2
+    \item \textbf{Vorteil:} Randomisierung durchbricht die 2-kompetitive Schranke!
+\end{itemize}
+
+\subsection{Vergleich}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Strategie} & \textbf{Typ} & \textbf{Comp. Ratio} \\
+\hline
+Strategie III & Deterministisch & $\approx 2$ \\
+Strategie IV ($\alpha = 0.5$) & Randomisiert & $\leq 2$ (oft $\approx 1.75$) \\
+Strategie IV ($\alpha \approx 0.618$) & Randomisiert & $\approx 1.809$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Fazit:} Randomisierung kann deterministische untere Schranken durchbrechen!
+
+\end{document}
