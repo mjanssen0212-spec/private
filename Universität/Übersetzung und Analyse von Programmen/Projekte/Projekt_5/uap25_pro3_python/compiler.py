@@ -3,6 +3,13 @@
 import syntax
 from vistram.tram import *
 
+# Globaler Cache für DFA-Ergebnisse zur Optimierung
+_active_defs = None
+
+def set_active_definitions(defs):
+    global _active_defs
+    _active_defs = defs
+
 def assemble(tram_code,filename="./tram_out/out.tram"):
     assembly_code = ""
     Label.count = 0
@@ -61,6 +68,11 @@ def elab_def_single(decl, rho, nl):
 
 
 ##########################################
+
+class BOOL(syntax.BOOL):
+    def code(self, rho, nl):
+        """Kompiliert einen Boolean zu einer CONST-Anweisung (1 für true, 0 für false)."""
+        return [const(1 if self.value else 0)]
 
 class CONST(syntax.CONST):
     def __init__(self, value):
@@ -231,7 +243,20 @@ class BINOP(syntax.BINOP):
         self.right = right
     
     def code(self, rho, nl):
-        """Binäroperationen: Beide Operanden auswerten und Operation anwenden."""
+        """Binäroperationen: Beide Operanden auswerten und Operation anwenden.
+        Spezialbehandlung für logische Operatoren (nicht-strikte Auswertung).
+        """
+        if self.op == '&&':
+            # E1 && E2  =>  if E1 then E2 else false
+            # Wir verwenden die IF-Logik für nicht-strikte Auswertung
+            from compiler import IF, CONST
+            return IF(self.left, self.right, CONST(False)).code(rho, nl)
+        
+        if self.op == '||':
+            # E1 || E2  =>  if E1 then true else E2
+            from compiler import IF, CONST
+            return IF(self.left, CONST(True), self.right).code(rho, nl)
+
         code_left = self.left.code(rho, nl)
         code_right = self.right.code(rho, nl)
         
@@ -314,8 +339,17 @@ class ASSIGN(syntax.ASSIGN):
         var_nl = rho_value[1]
         depth = nl - var_nl
 
-        code_value = self.expression.code(rho_value, nl)
-        return code_value + [store(offset, depth)] + load(offset, depth)
+        code_value = self.expression.code(rho, nl)
+        
+        # Optimierung: Wenn die Zuweisung keine Verwendung erreicht,
+        # lassen wir den store/load Teil weg.
+        if _active_defs is not None:
+            var_name = self.variable.name if hasattr(self.variable, 'name') else str(self.variable)
+            if (self, var_name) not in _active_defs:
+                # print(f"DEBUG: Optimizing out assignment to {var_name} at {self}")
+                return code_value
+        
+        return code_value + [store(offset, depth)] + [load(offset, depth)]
 
 
 class DO(syntax.DO):

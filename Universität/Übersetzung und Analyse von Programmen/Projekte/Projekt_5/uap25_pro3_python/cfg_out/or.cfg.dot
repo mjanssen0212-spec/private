@@ -1,0 +1,29 @@
+digraph CFG {
+  rankdir=TB;
+  node [fontname="Arial"];
+
+  n0 [shape=doublecircle, label="IN"];
+  n1 [shape=doublecircle, label="OUT"];
+
+  n2 [shape=ellipse, label="BOOL==BOOL"];
+  n3 [shape=ellipse, label="0"];
+  n4 [shape=ellipse, label="BOOL"];
+  n5 [shape=ellipse, label="BOOL"];
+  n6 [shape=diamond, label="<?>"];
+  n7 [shape=ellipse, label="1"];
+  n8 [shape=ellipse, label="BOOL||BOOL==BOOL"];
+  n9 [shape=box, label="glue"];
+  n10 [shape=ellipse, label="BOOL"];
+
+  n0 -> n10;
+  n7 -> n9;
+  n8 -> n6;
+  n6 -> n7 [label="T"];
+  n4 -> n2;
+  n2 -> n8;
+  n10 -> n5;
+  n3 -> n9;
+  n5 -> n4;
+  n6 -> n3 [label="F"];
+  n9 -> n1;
+}

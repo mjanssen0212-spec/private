@@ -3,6 +3,19 @@
 
 import compiler
 
+class BOOL(compiler.CONST):
+    def cfg(self, psi):
+        """
+        Control Flow Graph für Booleans: Ein einzelner Knoten.
+        """
+        w = self
+        vertices = {w}
+        edges = set()
+        in_node = w
+        out_node = w
+
+        return vertices, edges, in_node, out_node
+
 class CONST(compiler.CONST):
     def cfg(self, psi):
         """
@@ -296,8 +309,8 @@ class IF(compiler.IF):
         w = self
 
         e1 = self.condition
-        e2 = self.exp1
-        e3 = self.exp2
+        e2 = self.then_exp
+        e3 = self.else_exp
 
         vertices_1, edges_1, in_node_1, out_node_1 = e1.cfg(psi)
         vertices_2, edges_2, in_node_2, out_node_2 = e2.cfg(psi)
@@ -489,7 +502,7 @@ def remove_glue_nodes(vertices, edges, in_node, out_node):
     return new_vertices, new_edges, new_in_node, new_out_node
 
 
-def export_cfg_to_dot(vertices, edges, in_node, out_node, filename):
+def export_cfg_to_dot(vertices, edges, in_node, out_node, filename, df_edges=None):
     """
     Exportiert einen Control Flow Graph im DOT-Format.
     
@@ -499,6 +512,7 @@ def export_cfg_to_dot(vertices, edges, in_node, out_node, filename):
         in_node: Eingangsknoten
         out_node: Ausgangsknoten
         filename: Pfad zur Ausgabedatei
+        df_edges: Menge der Datenflusskanten (Tupel: (from, to, var))
     """
     # Entferne glue-Knoten vor dem Export
     vertices, edges, in_node, out_node = remove_glue_nodes(vertices, edges, in_node, out_node)
@@ -699,6 +713,17 @@ def export_cfg_to_dot(vertices, edges, in_node, out_node, filename):
     # Kante vom Ausgangsknoten zu OUT
     out_node_id = get_node_id(out_node)
     lines.append(f'  {out_node_id} -> {out_id};')
+    
+    # Datenflusskanten (falls vorhanden)
+    if df_edges:
+        lines.append('')
+        lines.append('  # Datenflusskanten')
+        for from_node, to_node, var in df_edges:
+            # Nur Kanten für Knoten zeichnen, die noch im Graph sind (nach remove_glue_nodes)
+            if from_node in node_to_id and to_node in node_to_id:
+                from_id = node_to_id[from_node]
+                to_id = node_to_id[to_node]
+                lines.append(f'  {from_id} -> {to_id} [label="{var}", color=red, style=dashed, constraint=false];')
     
     lines.append('}')
     

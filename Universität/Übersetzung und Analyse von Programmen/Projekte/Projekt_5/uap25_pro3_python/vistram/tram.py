@@ -147,7 +147,7 @@ class const(Instruction):
     def toString(self): return super().toString()+"CONST "+str(self.k)
 
 class store(Instruction):
-    def __init__(self, k, assigned_label=None):
+    def __init__(self, k, d, assigned_label=None):
         super().__init__(assigned_label=assigned_label)
         self.k=k
         self.d=d
@@ -280,12 +280,15 @@ class land(Instruction):
         super().__init__(assigned_label=assigned_label)
 
     def execute(self,tram):
-        if tram.stack[tram.top-1] == 1 & tram.stack[tram.top] == 1:
+        # Strikte Auswertung (wird vom neuen Compiler nicht mehr für && genutzt)
+        if tram.stack[tram.top-1] == 1 and tram.stack[tram.top] == 1:
             tram.stack[tram.top-1]=1
         else:
             tram.stack[tram.top-1]=0
         tram.pop()
         tram.pc=tram.pc+1
+
+    def toString(self): return super().toString() + "LAND"
 
 
 class lor(Instruction):
@@ -293,12 +296,15 @@ class lor(Instruction):
         super().__init__(assigned_label=assigned_label)
 
     def execute(self,tram):
-        if tram.stack[tram.top-1] == 1 | tram.stack[tram.top] == 1:
+        # Strikte Auswertung (wird vom neuen Compiler nicht mehr für || genutzt)
+        if tram.stack[tram.top-1] == 1 or tram.stack[tram.top] == 1:
             tram.stack[tram.top-1]=1
         else:
             tram.stack[tram.top-1]=0
         tram.pop()
         tram.pc=tram.pc+1
+
+    def toString(self): return super().toString() + "LOR"
 
 class goto(Instruction):
     def __init__(self, label, assigned_label=None):

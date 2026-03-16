@@ -19,6 +19,9 @@ reserved = {
 
     'let' : 'LET',
     'in' : 'IN',
+    
+    'true': 'TRUE',
+    'false': 'FALSE'
 }
 
 # List of token names. This is always required
@@ -29,7 +32,6 @@ tokens = [
     'RELOP',
     'LOP',
     'EQOP',
-    'BOOL',
     'COMMA', 'SEMI',
     'LBRACE', 'RBRACE',
     'LPAREN', 'RPAREN',
@@ -49,13 +51,6 @@ t_COMMA   = r','
 t_SEMI    = r';'
 t_ASSIGN = r'='
 
-def t_BOOL(t):
-    r'true|false'
-    t.value = (t.value == 'true')
-    t.type = 'BOOL'
-    return t
-
-# A regular expression rule with some action code
 def t_CONST(t):
     r'\d+'
     t.value = int(t.value)

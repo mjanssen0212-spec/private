@@ -1,4 +1,6 @@
 
+# Matthias Janßen
+# 1871808
 # (c) Stephan Diehl, University of Trier, Germany, 2025
 
 import html
@@ -163,6 +165,9 @@ class CONST(EXPRESSION):
         self.value=value
 
     def __str__(self): return str(self.value)
+
+class BOOL(CONST):
+    pass
 
 class ASSIGN(EXPRESSION):
     def __init__(self, variable, expression):

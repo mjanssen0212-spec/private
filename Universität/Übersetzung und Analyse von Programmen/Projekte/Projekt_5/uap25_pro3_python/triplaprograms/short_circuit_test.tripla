@@ -1,0 +1,4 @@
+let 
+  side(x) { x = x + 1 ; 1 }
+in 
+  (side(0) == 1) || (side(0) == 1)

@@ -90,12 +90,12 @@ python main.py --file triplaprograms/complex.tripla
 Alternativ können Sie das separate CFG-Tool verwenden:
 
 ```bash
-python cfg_main.py <input.tripla> [--out <output.dot>]
+python dfa_main.py <input.tripla> [--out <output.dot>]
 ```
 
 Beispiel:
 ```bash
-python cfg_main.py cfg_examples/complex.tripla
+python dfa_main.py cfg_examples/complex.tripla
 ```
 
 

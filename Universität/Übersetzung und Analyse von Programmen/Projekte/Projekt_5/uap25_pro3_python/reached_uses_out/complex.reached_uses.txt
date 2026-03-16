@@ -1,0 +1,230 @@
+Reached-Uses-Analyse
+====================
+Knoten: CALL f2
+  IN : {}
+  OUT: {}
+
+Knoten: CALL g
+  IN : {(a, a), (b, b)}
+  OUT: {(a, a), (b, b)}
+
+Knoten: CALL f1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: CALL f1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: CALL max
+  IN : {}
+  OUT: {}
+
+Knoten: CALL f1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: CALL f1
+  IN : {(a, a), (a, a), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (b, b), (b, b)}
+
+Knoten: END max
+  IN : {}
+  OUT: {}
+
+Knoten: END f1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a), (b, b), (b, b)}
+
+Knoten: END g
+  IN : {}
+  OUT: {}
+
+Knoten: END f2
+  IN : {}
+  OUT: {}
+
+Knoten: RET f2
+  IN : {}
+  OUT: {}
+
+Knoten: RET g
+  IN : {}
+  OUT: {}
+
+Knoten: RET f1
+  IN : {}
+  OUT: {}
+
+Knoten: RET f1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: RET max
+  IN : {}
+  OUT: {}
+
+Knoten: RET f1
+  IN : {}
+  OUT: {}
+
+Knoten: RET f1
+  IN : {(a, a), (a, a), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (b, b), (b, b)}
+
+Knoten: START max
+  IN : {}
+  OUT: {(a, a), (a, a), (b, b), (b, b)}
+
+Knoten: START f1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a), (b, b), (b, b)}
+
+Knoten: START g
+  IN : {(a, a), (b, b)}
+  OUT: {(a, a), (b, b), (c, c)}
+
+Knoten: START f2
+  IN : {}
+  OUT: {(a, a), (a, a), (a, a), (a, a), (b, b), (b, b), (b, b), (b, b)}
+
+Knoten: ('diamond', <graphbuilder.IF object at 0x000001AFBB9C1D30>)
+  IN : {(a, a), (a, a), (b, b)}
+  OUT: {(a, a), (a, a), (b, b)}
+
+Knoten: ('diamond', <graphbuilder.IF object at 0x000001AFBBA51090>)
+  IN : {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b)}
+
+Knoten: ('diamond', <graphbuilder.IF object at 0x000001AFBBA51310>)
+  IN : {(a, a), (b, b)}
+  OUT: {(a, a), (b, b)}
+
+Knoten: ('glue', <graphbuilder.IF object at 0x000001AFBB9C1D30>)
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: ('glue', <graphbuilder.IF object at 0x000001AFBBA51090>)
+  IN : {}
+  OUT: {}
+
+Knoten: ('glue', <graphbuilder.IF object at 0x000001AFBBA51310>)
+  IN : {}
+  OUT: {}
+
+Knoten: ((a * b) * c)
+  IN : {}
+  OUT: {}
+
+Knoten: (a * b)
+  IN : {(c, c)}
+  OUT: {(c, c)}
+
+Knoten: (a * b)
+  IN : {(a, a), (b, b)}
+  OUT: {(a, a), (b, b)}
+
+Knoten: (a > b)
+  IN : {(a, a), (b, b)}
+  OUT: {(a, a), (b, b)}
+
+Knoten: (a > b)
+  IN : {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b)}
+
+Knoten: (b - 1)
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: (b == 0)
+  IN : {(a, a), (a, a), (b, b)}
+  OUT: {(a, a), (a, a), (b, b)}
+
+Knoten: 0
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: 0
+  IN : {(a, a), (a, a), (b, b)}
+  OUT: {(a, a), (a, a), (b, b)}
+
+Knoten: 1
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: 10
+  IN : {(a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: 10
+  IN : {}
+  OUT: {}
+
+Knoten: 20
+  IN : {}
+  OUT: {}
+
+Knoten: 30
+  IN : {}
+  OUT: {}
+
+Knoten: a
+  IN : {(a, a), (b, b), (c, c)}
+  OUT: {(b, b), (c, c)}
+
+Knoten: a
+  IN : {(a, a), (a, a), (a, a)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: a
+  IN : {(a, a), (a, a), (b, b), (b, b)}
+  OUT: {(a, a), (b, b), (b, b)}
+
+Knoten: a
+  IN : {(a, a), (a, a), (a, a), (a, a), (b, b), (b, b), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b), (b, b)}
+
+Knoten: a
+  IN : {(a, a)}
+  OUT: {}
+
+Knoten: a
+  IN : {(a, a), (a, a), (b, b), (b, b)}
+  OUT: {(a, a), (b, b), (b, b)}
+
+Knoten: b
+  IN : {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (a, a), (b, b), (b, b), (b, b)}
+
+Knoten: b
+  IN : {(a, a), (a, a), (b, b)}
+  OUT: {(a, a), (a, a)}
+
+Knoten: b
+  IN : {(a, a), (b, b), (b, b)}
+  OUT: {(a, a), (b, b)}
+
+Knoten: b
+  IN : {(a, a), (b, b), (b, b)}
+  OUT: {(a, a), (b, b)}
+
+Knoten: b
+  IN : {(b, b), (c, c)}
+  OUT: {(c, c)}
+
+Knoten: b
+  IN : {(b, b)}
+  OUT: {}
+
+Knoten: b
+  IN : {(a, a), (a, a), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (b, b)}
+
+Knoten: b
+  IN : {(a, a), (a, a), (b, b), (b, b), (b, b)}
+  OUT: {(a, a), (a, a), (b, b), (b, b)}
+
+Knoten: c
+  IN : {(c, c)}
+  OUT: {}
+

@@ -1,4 +1,6 @@
 
+# Matthias Janßen
+# 1871808
 # ------------------------------------------------------------
 # triplayacc.py
 #
@@ -36,9 +38,21 @@ def p_expression_id(p):
     'expression : ID'
     p[0] = ast.VAR(p[1])
 
+def p_expression_true(p):
+    'expression : TRUE'
+    p[0] = ast.BOOL(True)
+
+def p_expression_false(p):
+    'expression : FALSE'
+    p[0] = ast.BOOL(False)
+
 def p_expression_call(p):
     'expression : ID LPAREN aexpr RPAREN'
     p[0] = ast.CALL(p[1], p[3])
+
+def p_expression_call_empty(p):
+    'expression : ID LPAREN RPAREN'
+    p[0] = ast.CALL(p[1], [])
 
 def p_expression_aop(p):
     'expression : expression AOP expression'
@@ -82,6 +96,10 @@ def p_dexpr_decl(p):
     'dexpr : ID LPAREN vexpr RPAREN LBRACE expression RBRACE'
     p[0] = [ast.DECL(p[1], p[3], p[6])]
 
+def p_dexpr_empty_params(p):
+    'dexpr : ID LPAREN RPAREN LBRACE expression RBRACE'
+    p[0] = [ast.DECL(p[1], [], p[5])]
+
 def p_dexpr_concat(p):
     'dexpr : dexpr dexpr'
     p[0] = p[1] + p[2]
@@ -100,10 +118,6 @@ def p_bexpr_paren(p):
     'bexpr : LPAREN bexpr RPAREN'
     p[0] = p[2]
 
-def p_bexpr_bool(p):
-    'bexpr : BOOL'
-    p[0] = p[1]
-
 def p_bexpr_lop(p):
     'bexpr : bexpr LOP bexpr'
     p[0] = ast.BINOP(p[2], p[1], p[3])
@@ -111,6 +125,14 @@ def p_bexpr_lop(p):
 def p_bexpr_relop(p):
     'bexpr : expression RELOP expression'
     p[0] = ast.BINOP(p[2], p[1], p[3])
+
+def p_bexpr_true(p):
+    'bexpr : TRUE'
+    p[0] = ast.BOOL(True)
+
+def p_bexpr_false(p):
+    'bexpr : FALSE'
+    p[0] = ast.BOOL(False)
 
 def p_bexpr_eqop_bexpr(p):
     'bexpr : bexpr EQOP bexpr'
