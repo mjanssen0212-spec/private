@@ -4,22 +4,22 @@
 # ------------------------------------------------------------
 # triplayacc.py
 #
-# Yacc grammar of the TRIPLA language
-''' Here an initial grammar
+# Yacc-Grammatik der TRIPLA-Sprache
+''' Hier eine initiale Grammatik
     E ->  while E do { E }
        | CONST
 
-    CONST: Positive, integer numbers = 0 | [1-9][0-9]*
+    CONST: Positive, ganze Zahlen = 0 | [1-9][0-9]*
 
 '''
 
-# Note: For LALR(1) left recursion is preferred
+# Hinweis: Für LALR(1) wird Linksrekursion bevorzugt
 # ------------------------------------------------------------
 
 import ply.yacc as yacc
 import compiler as ast
 
-# Get the token map from the lexer.  This is required.
+# Die Token-Map vom Lexer abrufen. Dies ist erforderlich.
 from triplalex import tokens
 
 precedence = (
@@ -146,9 +146,9 @@ def p_bexpr_eqop_expression(p):
 #    'empty :'
 #    pass
 
-# Error rule for syntax errors
+# Fehlerregel für Syntaxfehler
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntaxfehler in der Eingabe!")
 
-# Build the parser
+# Den Parser erstellen
 parser = yacc.yacc()  # debug=True

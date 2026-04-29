@@ -4,7 +4,7 @@
 # ------------------------------------------------------------
 # triplalex.py
 #
-# tokenizer for the TRIPLA parser
+# Tokenizer für den TRIPLA-Parser
 # ------------------------------------------------------------
 import ply.lex as lex
 
@@ -24,7 +24,7 @@ reserved = {
     'false': 'FALSE'
 }
 
-# List of token names. This is always required
+# Liste der Token-Namen. Diese ist immer erforderlich.
 tokens = [
     'CONST',
     'ID',
@@ -38,7 +38,7 @@ tokens = [
     'ASSIGN'
 ]+list(reserved.values())
 
-# Regular expression rules for simple tokens
+# Reguläre Ausdrucksregeln für einfache Token
 t_LBRACE  = r'\{'
 t_RBRACE  = r'\}'
 t_RELOP = r'<=|>=|<|>'
@@ -58,22 +58,22 @@ def t_CONST(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    # Check for reserved words
+    # Auf reservierte Wörter prüfen
     t.type = reserved.get(t.value,'ID')
     return t
 
-# Define a rule so we can track line numbers
+# Regel zur Verfolgung von Zeilennummern definieren
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# A string containing ignored characters (spaces and tabs)
+# Ein String mit ignorierten Zeichen (Leerzeichen und Tabs)
 t_ignore  = ' \t'
 
-# Error handling rule
+# Fehlerbehandlungsregel
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Ungültiges Zeichen '%s'" % t.value[0])
     t.lexer.skip(1)
 
-# Build the lexer
+# Den Lexer erstellen
 lexer = lex.lex()

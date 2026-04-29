@@ -25,7 +25,7 @@ def assemble(tram_code,filename="./tram_out/out.tram"):
 
 
 def elab_def(declarations, rho, nl):
-    """(E1) elab_def (d1 ... dk) ρ nl = ρk where ρ0 = ρ and ρi = elab_def di ρi-1 nl
+    """(E1) elab_def (d1 ... dk) ρ nl = ρk wobei ρ0 = ρ und ρi = elab_def di ρi-1 nl
     
     Erarbeitet eine Liste von Funktionsdeklarationen und gibt die aktualisierte Umgebung zurück.
     
@@ -94,7 +94,7 @@ class WHILE(syntax.WHILE):
         """(K5) code (while B do {E}) ρ nl = 
             ℓ1: code(B) ρ nl; IFZERO ℓ2; code(E) ρ nl; GOTO ℓ1; ℓ2: NOP
             
-        wobei ℓ1, ℓ2 neue Labels sind
+            wobei ℓ1, ℓ2 neue Labels sind
         """
         l1 = Label()
         l2 = Label()
@@ -126,7 +126,7 @@ class LET(syntax.LET):
             code(d) ρ' nl;
             ℓ: code(e) ρ' nl
             
-        wobei ℓ ein neues Label ist und ρ' = elab_def(d) ρ nl
+            wobei ℓ ein neues Label ist und ρ' = elab_def(d) ρ nl
         """
         l1 = Label()
 
@@ -191,7 +191,7 @@ class CALL(syntax.CALL):
             code(ek) ρ nl;
             invoke k ℓ (nl - nl')
             
-        wobei ρ(id) = (ℓ, nl')
+            wobei ρ(id) = (ℓ, nl')
         """
         # Finde die Funktion in der Umgebung
         rho_value = rho[self.fname]
@@ -223,7 +223,7 @@ class VAR(syntax.VAR):
     def code(self, rho, nl):
         """Variablenzugriff: Nachschlag in der Umgebung und Wert laden.
         
-        Gibt LOAD-Anweisung mit angemessenem Offset und Tiefe zurück.
+        Gibt eine LOAD-Anweisung mit entsprechendem Offset und Tiefe zurück.
         """
         # Finde Variable in der Umgebung
         rho_value = rho[self.name]
@@ -294,7 +294,7 @@ class IF(syntax.IF):
             code(B) ρ nl; IFZERO ℓ2; code(E1) ρ nl; GOTO ℓ3;
             ℓ2: code(E2) ρ nl; ℓ3: NOP
             
-        wobei ℓ1, ℓ2 neue Labels sind
+            wobei ℓ2, ℓ3 neue Labels sind
         """
         l1 = Label()
         l2 = Label()
@@ -319,7 +319,7 @@ class SEQ(syntax.SEQ):
         self.exp2 = exp2
     
     def code(self, rho, nl):
-        """Sequenzielle Zusammensetzung: Führe links aus, dann rechts."""
+        """Sequenzielle Zusammensetzung: Führe den linken Ausdruck aus, dann den rechten."""
         exp1 = self.exp1.code(rho, nl)
         exp2 = self.exp2.code(rho, nl)
         return exp1 + [pop()] + exp2
@@ -331,7 +331,7 @@ class SEQ(syntax.SEQ):
 class ASSIGN(syntax.ASSIGN):
     """Variablenzuweisung."""
     def code(self, rho, nl):
-        """Zuweisung: Wert auswerten und in Variable speichern."""
+        """Zuweisung: Wert auswerten und in der Variable speichern."""
         # Finde Variable in der Umgebung
         rho_value = rho[self.variable]
 
@@ -364,7 +364,7 @@ class DO(syntax.DO):
             ℓ1: code(E) ρ nl; code(B) ρ nl; IFZERO ℓ2; GOTO ℓ1;
             ℓ2: NOP
             
-        wobei ℓ1, ℓ2 neue Labels sind
+            wobei ℓ1, ℓ2 neue Labels sind
         """
         l1 = Label()
         l2 = Label()

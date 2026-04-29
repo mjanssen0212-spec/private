@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug",
+  "command": "C:\\Users\\mjans\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -I\"C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/.\" -g -std=gnu++14 -fdiagnostics-color=always -o CMakeFiles\\uebungen.dir\\template.cpp.obj -c \"C:\\Users\\mjans\\Documents\\private\\Universität\\Algorithmen für Programmierwettbewerbe\\Übungen\\template.cpp\"",
+  "file": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/template.cpp",
+  "output": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug/CMakeFiles/uebungen.dir/template.cpp.obj"
+},
+{
+  "directory": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug",
+  "command": "C:\\Users\\mjans\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -I\"C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/.\" -g -std=gnu++14 -fdiagnostics-color=always -o CMakeFiles\\uebungen.dir\\Woche_2\\MyTwoCents.cpp.obj -c \"C:\\Users\\mjans\\Documents\\private\\Universität\\Algorithmen für Programmierwettbewerbe\\Übungen\\Woche 2\\MyTwoCents.cpp\"",
+  "file": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/Woche 2/MyTwoCents.cpp",
+  "output": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug/CMakeFiles/uebungen.dir/Woche_2/MyTwoCents.cpp.obj"
+},
+{
+  "directory": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug",
+  "command": "C:\\Users\\mjans\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -I\"C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/.\" -g -std=gnu++14 -fdiagnostics-color=always -o CMakeFiles\\uebungen.dir\\Woche_2\\snowflakes.cpp.obj -c \"C:\\Users\\mjans\\Documents\\private\\Universität\\Algorithmen für Programmierwettbewerbe\\Übungen\\Woche 2\\snowflakes.cpp\"",
+  "file": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/Woche 2/snowflakes.cpp",
+  "output": "C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug/CMakeFiles/uebungen.dir/Woche_2/snowflakes.cpp.obj"
+}
+]

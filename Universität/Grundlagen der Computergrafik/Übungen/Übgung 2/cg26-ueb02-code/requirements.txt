@@ -1,0 +1,2 @@
+# No external dependencies required for this project.
+# tkinter is part of the Python standard library.

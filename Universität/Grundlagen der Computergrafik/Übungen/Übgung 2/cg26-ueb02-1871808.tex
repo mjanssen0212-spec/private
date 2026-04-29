@@ -1,0 +1,103 @@
+% solution-template.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman, english]{babel}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+\geometry{margin=25mm}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\textbf{Name:} \studentname}
+\rhead{\textbf{Matr.-Nr.:} \studentnumber}
+\cfoot{\thepage}
+
+% User info - bitte anpassen
+\newcommand{\studentname}{Matthias Janßen}
+\newcommand{\studentnumber}{1871808}
+\newcommand{\course}{Grundlagen der Computergrafik}
+\newcommand{\institute}{Universität Trier}
+\newcommand{\sheetnumber}{02}
+\newcommand{\tutor}{Jan Niclas Ruppenthal\\Prof. Dr. Stephan Diehl}
+
+\title{\course}
+\author{\studentname\\Matrikelnummer: \studentnumber\\\institute}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+    \textbf{Abgabe:} Übungsblatt \sheetnumber \\
+    \vspace{4mm}
+    \textbf{Tutor:} \tutor
+\end{center}
+
+\bigskip
+
+\section*{Aufgaben}
+% Hier beginnen deine Lösungen.
+
+\section{Aufgabe 1}
+Für den zweiten Oktanten gilt
+\[
+\Delta x = x_n-x_0>0,\qquad \Delta y = y_n-y_0>0,\qquad \Delta y>\Delta x
+\]
+und damit $a=\Delta y/\Delta x>1$.
+
+Da die Steigung größer als 1 ist, wird in jedem Iterationsschritt $y$ erhöht.
+Zwischen zwei Schritten wird entschieden, ob $x$ unverändert bleibt oder um 1
+erhöht wird. Mit einer Entscheidungsvariablen $d_i$ ergibt sich die Regel
+\[
+d_i<0 \Rightarrow x_{i+1}=x_i,
+\qquad
+d_i\ge 0 \Rightarrow x_{i+1}=x_i+1.
+\]
+
+Für die rekursive Aktualisierung folgt damit
+\[
+d_{i+1}=
+\begin{cases}
+d_i+2\Delta x, & d_i<0,\\
+d_i+2(\Delta x-\Delta y), & d_i\ge 0.
+\end{cases}
+\]
+
+Durch Skalierung auf ganzzahlige Arithmetik erhält man als Startwert
+\[
+d'_0=2\Delta x-\Delta y.
+\]
+
+\textbf{Algorithmus (Bresenham, 2. Oktant):}
+\begin{verbatim}
+bresenham_2_oktant(x0, y0, xn, yn)
+{
+    dx = xn - x0;
+    dy = yn - y0;
+
+    d  = 2*dx - dy;      // Startwert d'
+    x  = x0;
+
+    for (y = y0; y <= yn; y++) {
+        drawPoint(x, y);
+
+        if (d < 0) {
+            d = d + 2*dx;
+        } else {
+            d = d + 2*(dx - dy);
+            x = x + 1;
+        }
+    }
+}
+\end{verbatim}
+
+\section{Aufgabe 2}
+% ...
+
+\end{document}

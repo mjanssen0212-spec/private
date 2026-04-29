@@ -88,7 +88,7 @@ class LET(compiler.LET):
         in = in'
         out = out'
 
-        where ψ' = ψ[(in1,out1)/f1]···[(ink, outk)/fk]
+        wobei ψ' = ψ[(in1,out1)/f1]···[(ink, outk)/fk]
         mit ini = (START, fi(v1ⁱ,...,vniⁱ)), outi = (END, fi(v1ⁱ,...,vniⁱ)),
         und (V', E', in', out') = cfg(e, ψ')
         und (Vi, Ei, ini, outi) = cfg(fi(v1ⁱ,...,viⁱ){ei}, ψ')
@@ -137,7 +137,7 @@ class DECL(compiler.DECL):
         in = in_f
         out = out_f
 
-        where V', E', in', out' = cfg(e, ψ) und (in_f, out_f) = ψ(f)
+        wobei V', E', in', out' = cfg(e, ψ) und (in_f, out_f) = ψ(f)
 
         Returns:
             Tupel (V, E, in, out) mit:
@@ -176,8 +176,8 @@ class CALL(compiler.CALL):
         in = in1
         out = ret
 
-        where (Vi, Ei, ini, outi) = cfg(ei, ψ),
-        (inf, outf) = ψ(f) and call = (CALL, w), ret = (RET, w).
+        wobei (Vi, Ei, ini, outi) = cfg(ei, ψ),
+        (inf, outf) = ψ(f) und call = (CALL, w), ret = (RET, w).
 
         Returns:
             Tupel (V, E, in, out) mit:

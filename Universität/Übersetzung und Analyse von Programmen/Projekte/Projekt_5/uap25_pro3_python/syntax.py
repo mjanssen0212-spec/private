@@ -27,34 +27,34 @@ class EXPRESSION:
         return ret
 
     def _escape_label(self, s: str) -> str:
-        """Escape label for DOT format."""
+        """Label für das DOT-Format maskieren."""
         return html.escape(s).replace('\n', '\\n').replace('"', '\\"')
 
     def _to_dot(self, idmap, counter):
-        """Generate DOT representation for this node and return its node ID.
+        """Erzeugt eine DOT-Repräsentation für diesen Knoten und gibt seine Knoten-ID zurück.
         
         Args:
-            idmap: Dictionary mapping Python object ids to DOT node IDs
-            counter: List with a single integer to track node count
+            idmap: Dictionary, das Python-Objekt-IDs auf DOT-Knoten-IDs abbildet
+            counter: Liste mit einer einzelnen Ganzzahl zur Verfolgung der Knotenanzahl
             
         Returns:
-            Tuple of (node_id, list of DOT lines for this subtree)
+            Tupel aus (node_id, Liste von DOT-Zeilen für diesen Teilbaum)
         """
         nid = f'n{counter[0]}'
         counter[0] += 1
         idmap[id(self)] = nid
         
-        # Build label: class name with any leaf values
+        # Label erstellen: Klassenname mit allen Blattwerten
         label = self.__class__.__name__
         
-        # Add leaf values to the label for certain node types
+        # Blattwerte zum Label für bestimmte Knotentypen hinzufügen
         leaf_values = []
         for attr_name in self.__dict__:
-            if attr_name == 'pp':  # Skip internal counter
+            if attr_name == 'pp':  # Internen Zähler überspringen
                 continue
             attr_val = getattr(self, attr_name)
             
-            # Add simple leaf values to label (not EXPRESSION or list)
+            # Einfache Blattwerte zum Label hinzufügen (nicht EXPRESSION oder Liste)
             if not isinstance(attr_val, EXPRESSION) and not isinstance(attr_val, list):
                 leaf_values.append(f"{attr_name}={attr_val}")
         
@@ -63,22 +63,22 @@ class EXPRESSION:
         
         label = self._escape_label(label)
         
-        # Generate DOT node definition
+        # DOT-Knotendefinition generieren
         lines = [f'  {nid} [label="{label}"];']
         
-        # Process child attributes
+        # Kind-Attribute verarbeiten
         for attr_name in self.__dict__:
-            if attr_name == 'pp':  # Skip internal counter
+            if attr_name == 'pp':  # Internen Zähler überspringen
                 continue
             attr_val = getattr(self, attr_name)
             
             if isinstance(attr_val, EXPRESSION):
-                # Single child node
+                # Einzelner Kindknoten
                 child_nid, child_lines = attr_val._to_dot(idmap, counter)
                 lines.extend(child_lines)
                 lines.append(f'  {nid} -> {child_nid} [label="{attr_name}"];')
             elif isinstance(attr_val, list):
-                # List of children (e.g., declarations, arguments)
+                # Liste von Kindern (z.B. Deklarationen, Argumente)
                 for i, item in enumerate(attr_val):
                     if isinstance(item, EXPRESSION):
                         child_nid, child_lines = item._to_dot(idmap, counter)
@@ -88,10 +88,10 @@ class EXPRESSION:
         return nid, lines
 
     def to_dot(self):
-        """Generate complete DOT representation of the AST.
+        """Generiert die vollständige DOT-Repräsentation des AST.
         
         Returns:
-            A string containing the complete DOT graph
+            Ein String, der den vollständigen DOT-Graphen enthält
         """
         idmap = {}
         counter = [0]
@@ -104,10 +104,10 @@ class EXPRESSION:
         return '\n'.join(lines)
 
     def export_dot(self, filename: str):
-        """Export AST as DOT file.
+        """Exportiert den AST als DOT-Datei.
         
         Args:
-            filename: Path to output DOT file
+            filename: Pfad zur Ausgabe-DOT-Datei
         """
         dot_content = self.to_dot()
         with open(filename, 'w', encoding='utf-8') as f:
@@ -175,7 +175,9 @@ class ASSIGN(EXPRESSION):
         self.variable=variable
         self.expression=expression
 
-    def __str__(self): return self.variable.name+"="+str(self.expression)
+    def __str__(self):
+        var_name = self.variable.name if hasattr(self.variable, 'name') else str(self.variable)
+        return var_name+"="+str(self.expression)
 
 class SEQ(EXPRESSION):
     def __init__(self, exp1, exp2):

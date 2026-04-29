@@ -11,20 +11,20 @@ import compiler
 import dfa_main
 
 def generate_ast(ast_root, input_path, dot_dir):
-    """Generate AST DOT file."""
+    """Generiert die AST-DOT-Datei."""
     base = os.path.splitext(os.path.basename(input_path))[0]
     ast_path = os.path.join(dot_dir, f'{base}.ast.dot')
     
     try:
         ast_root.export_dot(ast_path)
-        print(f'✓ AST exported to: {ast_path}')
+        print(f'✓ AST exportiert nach: {ast_path}')
         return True
     except Exception as e:
-        print(f'✗ Failed to export AST: {e}')
+        print(f'✗ Fehler beim Exportieren des AST: {e}')
         return False
 
 def generate_tram(ast_root, input_path, tram_dir, optimize=False):
-    """Generate TRAM code."""
+    """Generiert TRAM-Code."""
     base = os.path.splitext(os.path.basename(input_path))[0]
     tram_path = os.path.join(tram_dir, f'{base}.tram')
     
@@ -37,11 +37,11 @@ def generate_tram(ast_root, input_path, tram_dir, optimize=False):
     
     tram_code = ast_root.code({}, 0)
     compiler.assemble(tram_code, tram_path)
-    print(f'✓ TRAM code exported to: {tram_path}')
+    print(f'✓ TRAM-Code exportiert nach: {tram_path}')
     return True
 
 def generate_cfg(ast_root, input_path, cfg_dir):
-    """Generate Control Flow Graph."""
+    """Generiert den Kontrollflussgraphen (CFG)."""
     import graphbuilder
     
     base = os.path.splitext(os.path.basename(input_path))[0]
@@ -50,14 +50,14 @@ def generate_cfg(ast_root, input_path, cfg_dir):
     try:
         vertices, edges, in_node, out_node = ast_root.cfg({})
         graphbuilder.export_cfg_to_dot(vertices, edges, in_node, out_node, cfg_path)
-        print(f'✓ CFG exported to: {cfg_path}')
+        print(f'✓ CFG exportiert nach: {cfg_path}')
         return True
     except Exception as e:
-        print(f'✗ Failed to generate CFG: {e}')
+        print(f'✗ Fehler beim Generieren des CFG: {e}')
         return False
 
 def interactive_mode():
-    """Interactive mode: ask user what to generate."""
+    """Interaktiver Modus: Benutzer fragen, was generiert werden soll."""
     print("TRIPLA Compiler und CFG Generator")
     print("=" * 50)
     print()
@@ -87,10 +87,10 @@ def interactive_mode():
     
     print("Was soll generiert werden?")
     print("  1. AST (Abstract Syntax Tree)")
-    print("  2. TRAM Code")
+    print("  2. TRAM-Code")
     print("  3. CFG (Control Flow Graph)")
-    print("  4. Live Variables")
-    print("  5. Reached Uses")
+    print("  4. Lebendige Variablen (Live Variables)")
+    print("  5. Erreichte Verwendungen (Reached Uses)")
     print("  6. Alles (AST + TRAM + CFG + Live Variables + Reached Uses)")
     print()
     
@@ -126,7 +126,7 @@ def interactive_mode():
     )
 
 def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True, gen_live=False, gen_reached=False, optimize=False):
-    """Process TRIPLA file and generate requested outputs."""
+    """Verarbeitet TRIPLA-Datei und generiert die angeforderten Ausgaben."""
     
     proj_dir = os.path.dirname(__file__) or '.'
     dot_dir = os.path.join(proj_dir, 'dotFiles')
@@ -145,11 +145,11 @@ def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True, gen_live
         try:
             ast_root = triplayacc.parser.parse(source, lexer=lexer)
         except Exception as e:
-            print(f'✗ Parse failed: {e}')
+            print(f'✗ Parsen fehlgeschlagen: {e}')
             return
         
         if ast_root is None:
-            print('✗ Parsing produced no AST.')
+            print('✗ Parsen ergab keinen AST.')
             return
         
         if gen_ast:
@@ -159,7 +159,7 @@ def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True, gen_live
             try:
                 generate_tram(ast_root, input_path, tram_dir, optimize)
             except Exception as e:
-                print(f'✗ Failed to generate TRAM: {e}')
+                print(f'✗ Fehler beim Generieren von TRAM: {e}')
                 import traceback
                 traceback.print_exc()
     
@@ -173,9 +173,9 @@ def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True, gen_live
             cfg_path = os.path.join(cfg_dir, f'{base}.cfg.dot')
             import graphbuilder
             graphbuilder.export_cfg_to_dot(vertices, edges, in_node, out_node, cfg_path)
-            print(f'✓ CFG exported to: {cfg_path}')
+            print(f'✓ CFG exportiert nach: {cfg_path}')
         else:
-            print('✗ CFG parsing produced no AST.')
+            print('✗ CFG-Parsen ergab keinen AST.')
 
     if gen_live:
         dfa_main.live_variables(input_path)
@@ -193,26 +193,26 @@ def process_file(input_path, gen_ast=True, gen_tram=True, gen_cfg=True, gen_live
 
 def main():
     parser = argparse.ArgumentParser(
-        description='TRIPLA Compiler und CFG Generator',
+        description='TRIPLA-Compiler und CFG-Generator',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Beispiele:
   python main.py                                    # Interaktiver Modus
-  python main.py --file prog.tripla --all          # Alles generieren
-  python main.py --file prog.tripla --ast --tram   # Nur AST und TRAM
-  python main.py --file prog.tripla --cfg          # Nur CFG
-  python main.py --file prog.tripla --live         # Nur Live Variables
-  python main.py --file prog.tripla --reached      # Nur Reached Uses
+  python main.py --file prog.tripla --all           # Alles generieren
+  python main.py --file prog.tripla --ast --tram    # Nur AST und TRAM
+  python main.py --file prog.tripla --cfg           # Nur CFG
+  python main.py --file prog.tripla --live          # Nur lebendige Variablen (Live Variables)
+  python main.py --file prog.tripla --reached       # Nur erreichte Verwendungen (Reached Uses)
         """
     )
-    parser.add_argument('--file', '-f', help='Input TRIPLA source file')
-    parser.add_argument('--ast', action='store_true', help='Generate AST')
-    parser.add_argument('--tram', action='store_true', help='Generate TRAM code')
-    parser.add_argument('--cfg', action='store_true', help='Generate CFG')
-    parser.add_argument('--live', action='store_true', help='Run live-variables analysis')
-    parser.add_argument('--reached', action='store_true', help='Run reached-uses analysis')
-    parser.add_argument('--optimize', action='store_true', help='Enable DFA-based optimization for TRAM code')
-    parser.add_argument('--all', '-a', action='store_true', help='Generate all outputs')
+    parser.add_argument('--file', '-f', help='Eingabe-TRIPLA-Quelldatei')
+    parser.add_argument('--ast', action='store_true', help='AST generieren')
+    parser.add_argument('--tram', action='store_true', help='TRAM-Code generieren')
+    parser.add_argument('--cfg', action='store_true', help='CFG generieren')
+    parser.add_argument('--live', action='store_true', help='Analyse der lebendigen Variablen ausführen')
+    parser.add_argument('--reached', action='store_true', help='Analyse der erreichten Verwendungen ausführen')
+    parser.add_argument('--optimize', action='store_true', help='DFA-basierte Optimierung für TRAM-Code aktivieren')
+    parser.add_argument('--all', '-a', action='store_true', help='Alle Ausgaben generieren')
     
     args = parser.parse_args()
     

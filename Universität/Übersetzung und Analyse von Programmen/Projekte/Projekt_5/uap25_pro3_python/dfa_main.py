@@ -37,7 +37,7 @@ def format_node(node):
     if name == 'ASSIGN': return f"{node.variable.name if hasattr(node.variable, 'name') else node.variable}="
     return str(node)
 
-# --- CFG & Datenfluss-Infrastruktur ---
+# --- CFG- & Datenfluss-Infrastruktur ---
 
 def build_cfg(input_path):
     """Parst TRIPLA und liefert den CFG (mit Caching)."""
@@ -182,7 +182,7 @@ def export_dfg(input_path):
     
     vertices, edges, in_node, out_node = cfg
     graphbuilder.export_cfg_to_dot(vertices, edges, in_node, out_node, cfg_path, df_edges=df_edges)
-    print(f"✓ DFG exported to: {cfg_path}")
+    print(f"✓ DFG exportiert nach: {cfg_path}")
 
 def main():
     parser = argparse.ArgumentParser(description='TRIPLA DFA Tool')
@@ -201,7 +201,7 @@ def main():
             if not os.path.exists(out_dir): os.makedirs(out_dir)
             cfg_path = os.path.join(out_dir, f'{base}.cfg.dot')
             graphbuilder.export_cfg_to_dot(vertices, edges, in_node, out_node, cfg_path)
-            print(f"✓ CFG exported to: {cfg_path}")
+            print(f"✓ CFG exportiert nach: {cfg_path}")
 
 if __name__ == '__main__':
     main()

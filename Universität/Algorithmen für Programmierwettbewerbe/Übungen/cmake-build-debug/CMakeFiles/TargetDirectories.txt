@@ -1,0 +1,3 @@
+C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug/CMakeFiles/uebungen.dir
+C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/mjans/Documents/private/Universität/Algorithmen für Programmierwettbewerbe/Übungen/cmake-build-debug/CMakeFiles/rebuild_cache.dir

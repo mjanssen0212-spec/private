@@ -1,0 +1,50 @@
+digraph CFG {
+  rankdir=TB;
+  node [fontname="Arial"];
+
+  n0 [shape=doublecircle, label="IN"];
+  n1 [shape=doublecircle, label="OUT"];
+
+  n2 [shape=box, label="START g(x)"];
+  n3 [shape=ellipse, label="7"];
+  n4 [shape=ellipse, label="x"];
+  n5 [shape=ellipse, label="1"];
+  n6 [shape=box, label="RET f(1, 2)"];
+  n7 [shape=ellipse, label="5"];
+  n8 [shape=box, label="END f(x, y)"];
+  n9 [shape=box, label="CALL f(1, 2)"];
+  n10 [shape=ellipse, label="y=+7"];
+  n11 [shape=box, label="START f(x, y)"];
+  n12 [shape=ellipse, label="y="];
+  n13 [shape=ellipse, label="x="];
+  n14 [shape=ellipse, label="y"];
+  n15 [shape=box, label="RET g(5)"];
+  n16 [shape=box, label="CALL g(5)"];
+  n17 [shape=box, label="END g(x)"];
+  n18 [shape=ellipse, label="2"];
+
+  n0 -> n5;
+  n11 -> n7;
+  n18 -> n9;
+  n12 -> n3;
+  n16 -> n2;
+  n7 -> n16;
+  n9 -> n6;
+  n15 -> n13;
+  n16 -> n15;
+  n3 -> n10;
+  n2 -> n4;
+  n8 -> n6;
+  n4 -> n12;
+  n14 -> n8;
+  n5 -> n18;
+  n17 -> n15;
+  n13 -> n14;
+  n10 -> n17;
+  n9 -> n11;
+  n6 -> n1;
+
+  # Datenflusskanten
+  n2 -> n4 [label="x", color=red, style=dashed, constraint=false];
+  n11 -> n14 [label="y", color=red, style=dashed, constraint=false];
+}
