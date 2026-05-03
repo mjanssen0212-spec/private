@@ -80,3 +80,4 @@ crashlytics-build.properties
 /.ai/
 /.utmp/
 *.zip
+*.iml
