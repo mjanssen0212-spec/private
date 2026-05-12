@@ -35,3 +35,8 @@ Used Assets
 Invector Third Person Controller (Basic Locomotion): Used for the human scale models. Link
 
 Low Poly Street Pack: Used for ground textures and environmental materials.
+
+
+Source Code: https://github.com/mjanssen0212-spec/private/tree/ea4aebc6423f2bf8b218da6a37d15410d9d0206c/Universit%C3%A4t/VR/Uebung
+
+APK located in Aufgabe 2/APK, too large to be uploaded in Moodle

@@ -1,0 +1,74 @@
+<!--
+Matthias Janßen
+1871808
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="854" height="480">
+
+    <!--  Stein wird bei 0,0 erstellt  -->
+    <defs>
+        <path id="fels" d="M0 0 L0 -3 L15 10 L10 15 L2 21 L-2 10 L0 0" fill="black" stroke="black"/>
+    </defs>
+
+    <line id="boden" x1="0" y1="480" x2="854" y2="480" style="stroke:#5c0e0e;stroke-width:12"/>
+
+    <path id="vulkan" d="M250 475
+        C300 350 330 250 380 250
+        H474
+        C524 250 554 350 604 475
+         Z" stroke="#5c0e0e" fill="#5c0e0e"/>
+
+
+    <path id="animPath" d="M427 250
+        C427 250 300 0 200 475
+        C200 475 175 400 150 475
+        C150 475 125 425 100 475
+        C100 475 75 450 50 475" stroke="grey" stroke-dasharray="5" fill="none"/>
+
+
+<!--  Spiegeln des Pfades durch neue X Koordinaten x = 854 - xAlt, Y koordinaten bleiben gleich  -->
+    <path id="animPathMirror" d="M427 250
+        C427 250 554 0 654 475
+        C654 475 670 400 704 475
+        C704 475 720 425 754 475
+        C754 475 779 450 804 475"
+          stroke="grey" stroke-dasharray="5" fill="none"/>
+
+
+<!--  Verwenden einer Referenz um erneutes Erstellen eines Steins überflüssig zu machen, ursprüngliches Objekt
+  bleibt allerdings sichtbar, Animationen werden über begin versetzt gestartet und unendlich oft
+  wiederholt-->
+    <use href="#fels">
+        <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+            <mpath xlink:href="#animPath"/>
+        </animateMotion>
+    </use>
+    <use href="#fels">
+        <animateMotion dur="6s" begin="2s" repeatCount="indefinite" rotate="auto">
+            <mpath xlink:href="#animPath"/>
+        </animateMotion>
+    </use>
+    <use href="#fels">
+        <animateMotion dur="6s" begin="4s" repeatCount="indefinite" rotate="auto">
+            <mpath xlink:href="#animPath"/>
+        </animateMotion>
+    </use>
+    <use href="#fels">
+        <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+            <mpath xlink:href="#animPathMirror"/>
+        </animateMotion>
+    </use>
+    <use href="#fels">
+        <animateMotion dur="6s" begin="2s" repeatCount="indefinite" rotate="auto">
+            <mpath xlink:href="#animPathMirror"/>
+        </animateMotion>
+    </use>
+    <use href="#fels">
+        <animateMotion dur="6s" begin="4s" repeatCount="indefinite" rotate="auto">
+            <mpath xlink:href="#animPathMirror"/>
+        </animateMotion>
+    </use>
+
+
+</svg>

@@ -1,3 +1,5 @@
 # ninja log v7
 2	778	7991638217701039	CMakeFiles/uebungen.dir/template.cpp.obj	b81a98d7fcac0f3d
-6	802	7991638217740209	CMakeFiles/uebungen.dir/Woche_2/MyTwoCents.cpp.obj	3e9301b82334dc7c
+5	1046	7999746606927811	CMakeFiles/uebungen.dir/Woche_2/MyTwoCents.cpp.obj	3e9301b82334dc7c
+12	1049	7999746607001768	CMakeFiles/uebungen.dir/Woche_3/safetyInNumbers.cpp.obj	a965312343237ca4
+9	1064	7999746606971677	CMakeFiles/uebungen.dir/Woche_2/snowflakes.cpp.obj	eeb714f2e11e44b0
