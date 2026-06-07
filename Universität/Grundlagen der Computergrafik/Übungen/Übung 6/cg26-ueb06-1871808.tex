@@ -1,0 +1,121 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\geometry{margin=25mm}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\lhead{\textbf{Name:} \studentname}
+\rhead{\textbf{Matr.-Nr.:} \studentnumber}
+\cfoot{\thepage}
+
+\newcommand{\studentname}{Matthias Jan\ss{}en}
+\newcommand{\studentnumber}{1871808}
+\newcommand{\course}{Grundlagen der Computergrafik}
+\newcommand{\institute}{Universit\"at Trier}
+\newcommand{\sheetnumber}{06}
+\newcommand{\tutor}{Jan Niclas Ruppenthal\\Prof. Dr. Stephan Diehl}
+
+\title{\course}
+\author{\studentname\\Matrikelnummer: \studentnumber\\\institute}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+    \textbf{Abgabe:} \"Ubungsblatt \sheetnumber \\
+    \vspace{4mm}
+    \textbf{Tutor:} \tutor
+\end{center}
+
+\bigskip
+
+\section*{Aufgaben}
+
+% ----------------------------------------------------------------
+\section{Aufgabe 1 -- Triangle Strips/Fans}
+
+Der K\"orper ist eine pentagonale Pyramide mit Spitze $F$ und
+Grundfl\"ache $ABCDE$, bestehend aus den 5 Seitenfacetten:
+$(E,A,F)$, $(A,B,F)$, $(B,C,F)$, $(C,D,F)$, $(D,E,F)$.
+
+\subsection*{a) Triangle Strips}
+
+Je zwei benachbarte Seitendreiecke teilen ausschlie\ss{}lich Kanten,
+die $F$ enthalten. Daher kann ein Strip maximal 2 aufeinanderfolgende
+Dreiecke abdecken, z.\,B.\ $(E,A,F,B)$ liefert $(E,A,F)$ und $(A,F,B)$.
+F\"ur 5 Dreiecke werden mindestens \textbf{3 Triangle Strips} ben\"otigt:
+
+\medskip
+\noindent\textbf{Strip 1} (2 Dreiecke):
+\[
+  (E,\; A,\; F,\; B)
+\]
+Dreiecke: $(E,A,F)$,\; $(A,F,B)$
+
+\noindent\textbf{Strip 2} (2 Dreiecke):
+\[
+  (B,\; C,\; F,\; D)
+\]
+Dreiecke: $(B,C,F)$,\; $(C,F,D)$
+
+\noindent\textbf{Strip 3} (1 Dreieck):
+\[
+  (D,\; E,\; F)
+\]
+Dreiecke: $(D,E,F)$
+
+\subsection*{b) Triangle Fans}
+
+Minimale Anzahl: \textbf{1 Triangle Fan}
+
+\medskip
+\noindent\textbf{Fan} mit Zentrum $F$ (5 Dreiecke):
+\[
+  (F,\; E,\; A,\; B,\; C,\; D,\; E)
+\]
+Dreiecke: $(F,E,A)$,\; $(F,A,B)$,\; $(F,B,C)$,\; $(F,C,D)$,\; $(F,D,E)$
+
+% ----------------------------------------------------------------
+\section{Aufgabe 2 -- Polygon}
+
+\subsection*{a) Innenwinkelsumme eines $n$-seitigen konvexen Polygons}
+
+\textbf{Beh.:} $\displaystyle\sum_{i=1}^{n} \beta_i = (n-2)\cdot\pi$
+
+\medskip
+\noindent\textbf{I.A.} ($n=3$): $\quad\pi = (3-2)\cdot\pi$ \checkmark
+
+\medskip
+\noindent\textbf{I.V.}: F\"ur ein $n$-seitiges Polygon gilt $\sum \beta_i = (n-2)\cdot\pi$.
+
+\medskip
+\noindent\textbf{I.S.} ($n \to n+1$): Eine Diagonale zerlegt das $(n{+}1)$-seitige
+Polygon in zwei Polygone mit $n_L$ und $n_R$ Ecken, wobei $n_L + n_R = n + 3$.
+Mit der I.V. folgt:
+\[
+  \sum \beta_i
+  = (n_L - 2)\pi + (n_R - 2)\pi
+  = (n_L + n_R - 4)\pi
+  = (n - 1)\pi
+  = \bigl((n+1)-2\bigr)\pi. \qquad\square
+\]
+
+\subsection*{b) Summe der Au\ss{}enwinkel}
+
+Da $\alpha_i = \pi - \beta_i$ an jedem Eckpunkt:
+\[
+  \sum_{i=1}^{n} \alpha_i
+  = n\pi - (n-2)\pi
+  = 2\pi. \qquad\square
+\]
+
+\end{document}
