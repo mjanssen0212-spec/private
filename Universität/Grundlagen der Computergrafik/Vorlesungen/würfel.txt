@@ -1,0 +1,139 @@
+
+	var renderer = null, 
+	    scene = null, 
+	    camera = null,
+	    cube = null,
+	    animating = false,
+	    yrot = false;
+	
+	function initScene()
+	{
+		// Grab our container div
+        var container = document.getElementById("container");
+
+        // Create the Three.js renderer, add it to our div
+	    renderer = new THREE.WebGLRenderer( { antialias: true } );
+	    renderer.setSize(container.offsetWidth, container.offsetHeight);
+	    console.log(container.childNodes);
+	    if (container.hasChildNodes())
+              container.childNodes[0].replaceWith(renderer.domElement);
+	     else
+              container.appendChild( renderer.domElement );
+
+	    // Create a new Three.js scene
+	    scene = new THREE.Scene();
+
+	    // Put in a camera
+        camera = new THREE.PerspectiveCamera( 45, 
+              container.offsetWidth / container.offsetHeight, 1, 4000 );
+        camera.position.set( 0, 0, 5 );
+
+        // Create a directional light to show off the object
+		var light = new THREE.DirectionalLight( 0xffffff, 1.5);
+		light.position.set(0, 0, 1);
+		scene.add( light );
+
+        // Create a colored cube and add it to the scene
+        
+        // First, create a MeshFaceMaterial for coloring each face
+        var mats = [];
+        mats.push(new THREE.MeshBasicMaterial({ color: 0x009e60  }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0x0051ba  }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xffd500  }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xff5800  }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xC41E3A }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xffffff  }));
+        
+
+        // Create the cube geometry by hand
+ 
+        var geometry = new THREE.Geometry(); 
+           
+        geometry.vertices.push(new THREE.Vector3( 1.0,  1.0, -1.0));
+        geometry.vertices.push(new THREE.Vector3(-1.0,  1.0, -1.0));
+        geometry.vertices.push(new THREE.Vector3(-1.0, -1.0, -1.0));
+        geometry.vertices.push(new THREE.Vector3(1.0, -1.0, -1.0));
+        
+        geometry.vertices.push(new THREE.Vector3( 1.0,  1.0, 1.0));
+        geometry.vertices.push(new THREE.Vector3(-1.0,  1.0, 1.0));
+        geometry.vertices.push(new THREE.Vector3(-1.0, -1.0, 1.0));
+        geometry.vertices.push(new THREE.Vector3(1.0, -1.0, 1.0));
+        // ...
+
+        // Note: Face3( a, b, c, normal, color, materialIndex )
+        // ACHTUNG DAS FOLGENDE DREIECK HAT FALSCHE ECKEN !!!
+        geometry.faces.push(new THREE.Face3(0,2,1,null,null,0)); 
+        geometry.faces.push(new THREE.Face3(0,3,2,null,null,0)); 
+
+        geometry.faces.push(new THREE.Face3(7,3,0,null,null,1));
+        geometry.faces.push(new THREE.Face3(0,4,7,null,null,1));
+
+        geometry.faces.push(new THREE.Face3(4,5,6,null,null,2));
+        geometry.faces.push(new THREE.Face3(4,6,7,null,null,2));
+
+        geometry.faces.push(new THREE.Face3(5,1,2,null,null,3));
+        geometry.faces.push(new THREE.Face3(2,6,5,null,null,3));
+
+        geometry.faces.push(new THREE.Face3(4,0,1,null,null,4));
+        geometry.faces.push(new THREE.Face3(1,5,4,null,null,4));
+
+        geometry.faces.push(new THREE.Face3(6,2,3,null,null,5));
+        geometry.faces.push(new THREE.Face3(3,7,6,null,null,5)); 
+        // ...
+
+        // And put the geometry and material together into a mesh
+        cube = new THREE.Mesh(geometry, mats);
+
+        // Turn it toward the scene, or we won't see the cube shape!
+        cube.rotation.x = Math.PI / 5;
+        cube.rotation.y = Math.PI / 5;
+        
+
+        // Add the cube to our scene
+        scene.add( cube );
+
+        // Add a mouse up handler to toggle the animation
+        addMouseHandler();
+
+        // Run our render loop
+        myClearAnimationFrame();
+        run();
+	}
+
+	function run()
+	{
+		// Render the scene
+		renderer.render( scene, camera );
+
+		// Spin the cube for next frame
+		if (animating)
+		{
+			if (yrot) cube.rotation.y -= 0.01; else cube.rotation.x -= 0.01;
+		}
+			
+		// Ask for another frame
+    	myRequestAnimationFrame(run);	
+	}
+
+	function addMouseHandler()
+	{
+		var dom = renderer.domElement;
+		
+		dom.addEventListener( 'mouseup', onMouseUp, false);
+	}
+	
+	function onMouseUp	(event)
+	{
+	    event.preventDefault();
+
+	    animating = !animating;
+            
+            if (animating) yrot = !yrot;
+	}	
+
+    initScene();
+
+
+
+
+

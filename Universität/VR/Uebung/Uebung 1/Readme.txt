@@ -1,4 +1,8 @@
 README.txt
+Matthias Janßen
+1871808
+
+
 Exercise 1: Depth Perception in 2D
 Step 1: Added Cylinder between spheres. This creates a visual overlap where one object partially hides another, confirming their relative order in space (Depth Cue: Occlusion).
 

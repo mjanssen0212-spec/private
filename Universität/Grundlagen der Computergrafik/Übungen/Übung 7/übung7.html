@@ -1,0 +1,166 @@
+
+	var renderer = null, 
+	    scene = null, 
+	    camera = null,
+	    cylinder = null,
+	    animating = false,
+	    yrot = false;
+	
+	function initScene()
+	{
+		// Grab our container div
+        var container = document.getElementById("container");
+
+        // Create the Three.js renderer, add it to our div
+	    renderer = new THREE.WebGLRenderer( { antialias: true } );
+	    renderer.setSize(container.offsetWidth, container.offsetHeight);
+	    console.log(container.childNodes);
+	    if (container.hasChildNodes())
+              container.childNodes[0].replaceWith(renderer.domElement);
+	     else
+              container.appendChild( renderer.domElement );
+
+	    // Create a new Three.js scene
+	    scene = new THREE.Scene();
+
+	    // Put in a camera
+        camera = new THREE.PerspectiveCamera( 45, 
+              container.offsetWidth / container.offsetHeight, 1, 4000 );
+        camera.position.set( 0, 0, 5 );
+
+        // Create a directional light to show off the object
+		var light = new THREE.DirectionalLight( 0xffffff, 1.5);
+		light.position.set(0, 0, 1);
+		scene.add( light );
+
+        // Create a colored cylinder and add it to the scene
+        
+        // First, create a MeshFaceMaterial for coloring each face
+        var mats = [];
+        mats.push(new THREE.MeshBasicMaterial({ color: 0x009e60 }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0x0051ba }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xffd500 }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xff5800 }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xC41E3A }));
+        mats.push(new THREE.MeshBasicMaterial({ color: 0xffffff }));
+        
+
+        // Create the cylinder geometry by hand
+ 
+        var radius = 1;
+        var hoehe = 2; 
+        var knotenpunkte = 16;
+        var schichten = 4;
+        
+        var geometry = new THREE.Geometry();
+        
+        // Bottom center
+        geometry.vertices.push(new THREE.Vector3(0, -hoehe / 2, 0));
+        
+        var winkelJeDreieck = (2 * Math.PI) / knotenpunkte;
+        
+        // Ringe
+        for (var i = 0; i < schichten; i++) {
+            var y = -hoehe / 2 + i * (hoehe / (schichten - 1));
+            for (var j = 0; j < knotenpunkte; j++) {
+                var winkel = j * winkelJeDreieck;
+                var x = radius * Math.cos(winkel);
+                var z = radius * Math.sin(winkel);
+                geometry.vertices.push(new THREE.Vector3(x, y, z));
+            }
+        }
+        
+        // Top center
+        geometry.vertices.push(new THREE.Vector3(0, hoehe / 2, 0));
+        
+        // Build bottom cap
+        for (var i = 0; i < knotenpunkte; i++) {
+            if (i == knotenpunkte - 1) {
+                geometry.faces.push(new THREE.Face3(0, i + 1, 1, null, null, 0));
+            } else {
+                geometry.faces.push(new THREE.Face3(0, (i + 1), (i + 2), null, null, 0));
+            }
+        }
+        
+        // Build walls
+        for (var i = 0; i < schichten - 1; i++) {
+            for (var j = 0; j < knotenpunkte; j++) {
+                var v0 = 1 + i * knotenpunkte + j;
+                var v1 = 1 + i * knotenpunkte + (j + 1) % knotenpunkte;
+                var v2 = 1 + (i + 1) * knotenpunkte + j;
+                var v3 = 1 + (i + 1) * knotenpunkte + (j + 1) % knotenpunkte;
+                geometry.faces.push(new THREE.Face3(v0, v2, v3, null, null, 1));
+                geometry.faces.push(new THREE.Face3(v0, v3, v1, null, null, 1));
+            }
+        }
+        
+        // Build top cap
+        for (var i = 0; i < knotenpunkte; i++) {
+            if (i == knotenpunkte - 1) {
+                geometry.faces.push(new THREE.Face3(
+                    schichten * knotenpunkte,
+                    schichten * knotenpunkte + 1,
+                    1 + (schichten - 1) * knotenpunkte,
+                    null, null, 0));
+            } else {
+                geometry.faces.push(new THREE.Face3(
+                    schichten * knotenpunkte + 1,
+                    i + 2 + (schichten - 1) * knotenpunkte,
+                    i + 1 + (schichten - 1) * knotenpunkte,
+                    null, null, 0));
+            }
+        }
+        
+        
+
+        // And put the geometry and material together into a mesh
+        cylinder = new THREE.Mesh(geometry, mats);
+
+        // Turn it toward the scene, or we won't see the cylinder shape!
+        cylinder.rotation.x = Math.PI / 5;
+        cylinder.rotation.y = Math.PI / 5;
+        
+
+        // Add the cylinder to our scene
+        scene.add( cylinder );
+
+        // Add a mouse up handler to toggle the animation
+        addMouseHandler();
+
+        // Run our render loop
+        myClearAnimationFrame();
+        run();
+	}
+
+	function run()
+	{
+		// Render the scene
+		renderer.render( scene, camera );
+
+		// Spin the cylinder for next frame
+		if (animating)
+		{
+			if (yrot) cylinder.rotation.y -= 0.01; else cylinder.rotation.x -= 0.01;
+		}
+			
+		// Ask for another frame
+    	myRequestAnimationFrame(run);	
+	}
+
+	function addMouseHandler()
+	{
+		var dom = renderer.domElement;
+		
+		dom.addEventListener( 'mouseup', onMouseUp, false);
+	}
+	
+	function onMouseUp	(event)
+	{
+	    event.preventDefault();
+
+	    animating = !animating;
+            
+            if (animating) yrot = !yrot;
+	}	
+
+    initScene();
