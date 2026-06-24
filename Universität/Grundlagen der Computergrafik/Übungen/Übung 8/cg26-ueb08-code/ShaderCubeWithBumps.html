@@ -1,0 +1,255 @@
+//Matthias Janßen
+//1871808
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shader in Three.js: Cube with bumps</title>
+    <style>
+        body {
+            text-align: center;
+            margin: auto;
+        }
+    </style>
+    <script src="vendor/three-v0.153.0/build/three.min.js"></script>
+    <script>
+        let renderer = null,
+            scene = null,
+            camera = null,
+            myMesh = null,
+            animating = false,
+            yrot = false,
+            material = null,
+            pmaterial = null;
+
+        function onLoad() {
+            // Get the canvas element
+            const canvas = document.getElementById("canvas");
+
+            // Create a Three.js renderer and register the canvas
+            renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas});
+            let width = window.innerWidth * 0.97;
+            let height = window.innerHeight * 0.90;
+            renderer.setSize(width, height);
+
+            // Create a new Three.js scene
+            scene = new THREE.Scene();
+
+            // Add a camera
+            let aspect = width / height;
+            camera = new THREE.PerspectiveCamera(45, aspect, 1, 4000);
+            camera.position.set(0, 0, 5);
+
+            // Create a directional light to show off the object
+            const light = new THREE.DirectionalLight(0xffffff, 1.5);
+            light.position.set(0, 0, 1);
+            scene.add(light);
+
+            // The vertex shader for both, the fore and background.
+            const vertexShader = document.getElementById('position-shader-vs').textContent;
+
+            // ShaderMaterial for cube (foreground) and plane (background)
+            material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: {type: "f", value: 1.0},
+                    aspectRatio: {
+                        type: "f",
+                        value: aspect
+                    }
+                },
+                vertexShader: vertexShader,
+                fragmentShader: document.getElementById('cube-shader-fs').textContent
+            });
+
+            pmaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: {type: "f", value: 1.0},
+                    aspectRatio: {
+                        type: "f",
+                        value: aspect
+                    }
+                },
+                vertexShader: vertexShader,
+                fragmentShader: document.getElementById('plane-shader-fs').textContent
+            });
+
+            // Create the foreground geometry (cube)
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+
+            // And put the geometry and material together into a mesh
+            myMesh = new THREE.Mesh(geometry, material);
+
+            // Turn it toward the scene, or we won't see the cube shape!
+            myMesh.rotation.x = Math.PI / 5;
+            myMesh.rotation.y = Math.PI / 5;
+
+            // Add the cube to the scene
+            scene.add(myMesh);
+
+            // Create  a background (plane) and add it to the scene
+            const planeGeometry = new THREE.PlaneGeometry(5, 5, 1, 1);
+            const plane = new THREE.Mesh(planeGeometry, pmaterial);
+            plane.position.z = -8;
+            scene.add(plane);
+
+            // Add a mouse up handler to toggle the animation
+            addMouseHandler();
+            // Run the render loop
+            run();
+        }
+
+        function run() {
+            // As time goes by ...
+            material.uniforms.time.value += 0.1;
+            pmaterial.uniforms.time.value += 0.1;
+
+            // Render the scene
+            renderer.render(scene, camera);
+
+            // Spin the cube for the next frame
+            if (animating) {
+                if (yrot) {
+                    myMesh.rotation.y -= 0.03;
+                } else {
+                    myMesh.rotation.x -= 0.03;
+                }
+            }
+
+            // Ask for another frame
+            requestAnimationFrame(run);
+        }
+
+        function addMouseHandler() {
+            const dom = renderer.domElement;
+            dom.addEventListener('mouseup', onMouseUp, false);
+        }
+
+        function onMouseUp(event) {
+            event.preventDefault();
+            animating = !animating;
+            if (animating) {
+                yrot = !yrot;
+            }
+        }
+
+    </script>
+
+    <!--
+     TODO: edit the fragment shader to create holes. Note, the command 'discard' prevents pixels from being drawn.
+    -->
+
+    <!-- ################ FRAGMENT SHADER FOR THE CUBE ######################## -->
+
+    <script id="cube-shader-fs" type="x-shader/x-fragment">
+        uniform float time;
+        uniform float aspectRatio;
+
+        varying vec3 posLocal;
+        varying vec4 pos3D;
+        varying vec4 pos2D;
+        varying vec3 vertex_normal;
+
+        void main(void)
+        {
+            float x = posLocal.x;
+            float y = posLocal.y;
+            float z = posLocal.z;
+
+            vec4 color = vec4(0.7, 0.7, 0.6, 1.0);
+            vec3 light = normalize(vec3(0.0, 2.0, 5.0));
+
+            float ax = abs(x), ay = abs(y), az = abs(z);
+            float u, v;
+            vec3 faceNormal, tanU, tanV;
+
+            if (ax >= ay && ax >= az) {
+                u = y; v = z;
+                faceNormal = vec3(sign(x), 0.0, 0.0);
+                tanU = vec3(0.0, 1.0, 0.0); tanV = vec3(0.0, 0.0, 1.0);
+            } else if (ay >= ax && ay >= az) {
+                u = x; v = z;
+                faceNormal = vec3(0.0, sign(y), 0.0);
+                tanU = vec3(1.0, 0.0, 0.0); tanV = vec3(0.0, 0.0, 1.0);
+            } else {
+                u = x; v = y;
+                faceNormal = vec3(0.0, 0.0, sign(z));
+                tanU = vec3(1.0, 0.0, 0.0); tanV = vec3(0.0, 1.0, 0.0);
+            }
+
+            vec3 N = normalize(faceNormal);
+            float R = 0.22;
+            float r = length(vec2(u, v));
+            if (r < R) {
+                float h = sqrt(R * R - r * r);
+                vec3 dentNormal = normalize(faceNormal + (u / h) * tanU + (v / h) * tanV);
+                N = dentNormal;
+            }
+
+            // Two-sided Lambert + ambient keeps all faces readable.
+            float lambert = abs(dot(normalize(N), light));
+            vec3 col3 = color.rgb * (0.25 + 0.75 * lambert);
+
+            gl_FragColor = vec4(col3.r, col3.g, col3.b, 1.0);
+        }
+
+    </script>
+
+    <!--
+    You don't need to edit the following shaders
+    -->
+
+    <!-- ################ FRAGMENT SHADER FOR THE PLANE ######################## -->
+
+    <script id="plane-shader-fs" type="x-shader/x-fragment">
+        uniform float time;
+
+        varying vec3 posLocal;
+        varying vec4 pos3D;
+        varying vec4 pos2D;// After the projection, the coordinates are in the closed interval [-1,1]
+
+        void main(void) {
+            float freq = 160.0;
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            //gl_FragColor = vec4(sin(freq * pos2D.x + time), cos(freq * pos2D.y + time), sin(freq * pos2D.x * pos2D.y * pos2D.z), 1.0);
+        }
+
+
+    </script>
+
+    <!-- ################ VERTEX SHADER FOR BOTH, THE CUBE AND THE PLANE ######################## -->
+
+    <script id="position-shader-vs" type="x-shader/x-vertex">
+        uniform float time;
+
+        varying vec3 posLocal;
+        varying vec4 pos2D;
+        varying vec4 pos3D;
+        varying vec3 vertex_normal;
+
+        void main(void) {
+            posLocal = position;
+            pos3D = modelViewMatrix * vec4(position, 1.0);
+            pos2D = projectionMatrix * pos3D;
+            gl_Position = pos2D;
+            pos3D = pos3D / pos3D.w;// homogeneous coordinates back to regular coordinates
+            pos2D = pos2D / pos2D.w;// homogeneous coordinates back to regular coordinates
+
+            vertex_normal = normalMatrix * normal;
+        }
+
+    </script>
+</head>
+
+<body onLoad="onLoad()">
+<div>
+    <h1> Shader in Three.js: Cube with bumps</h1>
+    <div>
+        <canvas id="canvas"></canvas>
+    </div>
+    <div>
+        Left-click to animate the cube.
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+//Matthias Janßen
+//1871808
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Shader in Three.js: Cube with holes</title>
+    <style>
+        body {
+            text-align: center;
+            margin: auto;
+        }
+    </style>
+    <script src="vendor/three-v0.153.0/build/three.min.js"></script>
+    <script>
+        let renderer = null,
+            scene = null,
+            camera = null,
+            myMesh = null,
+            animating = false,
+            yrot = false,
+            material = null,
+            pmaterial = null;
+
+        function onLoad() {
+            // Get the canvas element
+            const canvas = document.getElementById("canvas");
+
+            // Create a Three.js renderer and register the canvas
+            renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas});
+            let width = window.innerWidth * 0.97;
+            let height = window.innerHeight * 0.90;
+            renderer.setSize(width, height);
+
+            // Create a new Three.js scene
+            scene = new THREE.Scene();
+
+            // Add a camera
+            let aspect = width / height;
+            camera = new THREE.PerspectiveCamera(45, aspect, 1, 4000);
+            camera.position.set(0, 0, 5);
+
+            // Create a directional light to show off the object
+            const light = new THREE.DirectionalLight(0xffffff, 1.5);
+            light.position.set(0, 0, 1);
+            scene.add(light);
+
+            // ShaderMaterial for the cube (foreground) and the plane (background)
+            material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: {type: "f", value: 1.0},
+                    aspectRatio: {
+                        type: "f",
+                        value: aspect
+                    }
+                },
+                vertexShader: document.getElementById('shader-vs').textContent,
+                fragmentShader: document.getElementById('shader-fs').textContent
+            });
+            material.transparent = true;
+
+            pmaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: {type: "f", value: 1.0},
+                    aspectRatio: {
+                        type: "f",
+                        value: aspect
+                    }
+                },
+                vertexShader: document.getElementById('p-shader-vs').textContent,
+                fragmentShader: document.getElementById('p-shader-fs').textContent
+            });
+
+            // Create the foreground geometry (cube)
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            //const geometry = new THREE.SphereGeometry(1,32,32);
+
+            // And put the geometry and material together into a mesh
+            myMesh = new THREE.Mesh(geometry, material);
+
+            // Turn it toward the scene, or we won't see the cube shape!
+            myMesh.rotation.x = Math.PI / 5;
+            myMesh.rotation.y = Math.PI / 5;
+
+            // Add the cube to our scene
+            scene.add(myMesh);
+
+            // Create the background (plane) and add it to the scene
+
+            const planeGeometry = new THREE.PlaneGeometry(5, 5, 1, 1);
+            const plane = new THREE.Mesh(planeGeometry, pmaterial);
+            plane.position.z = -8;
+            scene.add(plane);
+
+            // Add a mouse up handler to toggle the animation
+            addMouseHandler();
+            // Run our render loop
+            run();
+        }
+
+        function run() {
+            // As time goes by ...
+            material.uniforms.time.value += 0.1;
+            pmaterial.uniforms.time.value += 0.1;
+
+            // Render the scene
+            renderer.render(scene, camera);
+
+            // Spin the cube for next frame
+            if (animating) {
+                if (yrot) {
+                    myMesh.rotation.y -= 0.03;
+                } else {
+                    myMesh.rotation.x -= 0.03;
+                }
+            }
+
+            // Ask for another frame
+            requestAnimationFrame(run);
+        }
+
+        function addMouseHandler() {
+            const dom = renderer.domElement;
+            dom.addEventListener('mouseup', onMouseUp, false);
+        }
+
+        function onMouseUp(event) {
+            event.preventDefault();
+            animating = !animating;
+            if (animating) {
+                yrot = !yrot;
+            }
+        }
+
+    </script>
+
+    <!-- ################ SHADER FOR THE CUBE ######################## -->
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform float time;
+        uniform float aspectRatio;
+        varying vec3 posLocal;
+        varying vec4 pos2D;
+
+        void main(void)
+        {
+            float u = pos2D.x * aspectRatio;
+            float v = pos2D.y;
+
+            if (sqrt(u*u + v*v) < 0.15) discard;
+
+            gl_FragColor = vec4(posLocal.x * 5.0, posLocal.y * 5.0, posLocal.z * 5.0, 1.0);
+        }
+
+    </script>
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        precision mediump float;
+        uniform float time;
+        uniform float aspectRatio;
+        varying vec3 posLocal;
+        varying vec4 pos2D;
+
+        void main(void)
+        {
+            vec4 pos3D = modelViewMatrix * vec4(position, 1.0);
+            pos2D = projectionMatrix * pos3D;
+            gl_Position = pos2D;
+            pos2D = pos2D / pos2D.w; // homogeneous coordinates back to regular coordinates
+            posLocal = position;
+        }
+
+    </script>
+
+    <!-- ################ SHADER FOR THE PLANE ######################## -->
+
+    <script id="p-shader-fs" type="x-shader/x-fragment">
+        varying vec3 vColor;
+        varying vec4 pos3D;
+        varying vec4 pos2D;// After the projection, the coordinates are in the closed interval [-1,1]
+        uniform float time;
+        uniform float aspectRatio;
+
+        void main(void)
+        {
+            gl_FragColor = vec4(sin(6.0 * pos2D.x + time), cos(6.0 * pos2D.y + time), sin(6.0 * pos2D.x * pos2D.y * pos2D.z), 1.0);
+        }
+
+    </script>
+
+    <script id="p-shader-vs" type="x-shader/x-vertex">
+        varying vec3 vColor;
+        varying vec4 pos2D;
+        varying vec4 pos3D;
+        uniform float time;
+        uniform float aspectRatio;
+
+        void main(void)
+        {
+            pos3D = modelViewMatrix * vec4(position, 1.0);
+            pos2D = projectionMatrix * pos3D;
+            gl_Position = pos2D;
+            vColor = position.xyz;
+        }
+
+    </script>
+
+</head>
+<body onLoad="onLoad()">
+<div>
+    <h1>Shader in Three.js: Cube with holes (1b – projection coordinates)</h1>
+    <div>
+        <canvas id="canvas"></canvas>
+    </div>
+    <div>
+        Left-click to animate the cube.
+    </div>
+</div>
+</body>
+</html>
