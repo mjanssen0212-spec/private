@@ -23,5 +23,5 @@ int main() {
         cin >> votes[i].first >> votes[i].second;
     }
 
-    
+
 }
