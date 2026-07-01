@@ -17,6 +17,12 @@ struct Edge {
     i32 v;
 };
 
+using Graph = vector<vector<i64>>;
+
+i64 counter = 0;
+
+
+
 void dfs1(i64 u, Graph& adjList, vector<bool>& visited,
 stack<i64>& s) {
     if (visited[u])
@@ -36,27 +42,77 @@ vector<i64>& component) {
     component[u] = counter;
 }
 
+void addEdge(i64 a, i64 b, i64 n, Graph& adjList) {
+    // map a literal to its node index in the implication graph
+    i64 u = (a > 0) ? a : n - a;
+    i64 v = (b > 0) ? b : n - b;
+    adjList[u].push_back(v);
+}
+
+vector<i64> kosaraju(i64 n, Graph& adjList) {
+    vector<bool> visited(n, false);
+    vector<bool> visitedInv(n, false);
+    Graph adjInv(n);
+    stack <i64> s;
+    vector<i64> component(n);
+
+    // Create inverted graph
+    for (i64 u = 0; u < n; u++)
+        for (i64 v : adjList[u])
+            adjInv[v].push_back(u);
+    // first traverse the graph
+    for (int i = 0; i < n; i++)
+        if (!visited[i])
+            dfs1(i, adjList, visited, s);
+    // then traverse the inverted graph
+    while (!s.empty()) {
+        i64 u = s.top();
+        s.pop();
+        if (!visitedInv[u]) {
+            dfs2(u, adjInv, visitedInv, component);
+            counter++;
+        }
+    }
+    return component;
+}
+
+bool solve(i64 n, vector<pair<i64,i64>>& clauses) {
+    // Create graph
+    Graph adjList = Graph(2*n+1);
+    for (auto& [x,y] : clauses) {
+        // variable −x is mapped to n+x = n−(−x)
+        addEdge(-x, y, n, adjList);
+        addEdge(-y, x, n, adjList);
+
+    }
+    vector<i64> component = kosaraju(2*n+1, adjList);
+    for (i64 i = 1; i <= n; i++) {
+        // check whether 2 variables lie in the same component
+        if (component[i] == component[i + n]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 int main() {
     i32 noOfContestants;
     i32 noOfJudges;
-    cin >> noOfContestants >> noOfJudges;
 
-    vector<Edge> edges;
+    while (cin >> noOfContestants >> noOfJudges) {
+        vector<pair<i64, i64>> votes(noOfJudges+1);
 
-    vector<pair<i32, i32>> votes(noOfJudges);
+        votes[0] = {1,1};
 
-    for (int i = 0; i < noOfJudges; i++) {
-        cin >> votes[i].first >> votes[i].second;
-    }
+        for (int i = 1; i <= noOfJudges; i++) {
+            cin >> votes[i].first >> votes[i].second;
+        }
 
-    for (auto vote : votes) {
-        i32 first = vote.first;
-        i32 second = vote.second;
 
-        Edge a = {first * -1, second};
-        Edge b = {first, second * -1};
-
-        edges.push_back(a);
-        edges.push_back(b);
+        if (solve(noOfContestants, votes)) {
+            cout << "yes" << endl;
+        } else {
+            cout << "no" << endl;
+        }
     }
 }
