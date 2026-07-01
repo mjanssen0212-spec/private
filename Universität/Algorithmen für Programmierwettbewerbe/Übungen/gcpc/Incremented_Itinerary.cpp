@@ -18,7 +18,7 @@ int main() {
 
     cin >> noOfIntersections >> noOfStreets;
 
-    vector<vector<i32>> matrix(noOfIntersections, vector<i32>(noOfIntersections));
+    vector<vector<i32>> matrix(noOfIntersections, vector<i32>(noOfIntersections, 0));
 
     for (int i = 0; i < noOfStreets; i++) {
         i32 from;
