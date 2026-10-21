@@ -1,0 +1,16 @@
+EMAIL
+
+Sobald ein funktionierendes Pattern gefunden wurde, weichen folgende Versuche kaum ab. Das erste und letzte Zeichen
+bleiben weitgehend gleich, veränderungen eher in der Mitte. Wenige Ausreiser die deutlich länger sind als der Rest,
+tendenziell eher nminimal. Viele sich wiederholende Zeichen, wenig vielfalt.
+
+
+USER REGISTRATION
+
+Ähnlich zu Email Adresse, da für die Email deutlich mehr Zeichen erlaubt sind, deutlich länger als username und passwort.
+Überraschenderweise Username tendenziell minimal (3 Zeichen), Passwort Maximal (20 Zeichen) und Email auch sehr
+lang.
+
+
+
+Gründe für "komische" Namen/Adressen/Passwörter: Fuzzer sucht nicht nach Wörtern sondern nach Mustern.

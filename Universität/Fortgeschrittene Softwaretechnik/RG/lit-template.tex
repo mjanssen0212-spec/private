@@ -1,0 +1,71 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{a4wide}
+\usepackage{boxedminipage}
+\usepackage{background}
+\usepackage{comment}
+
+% Fuellen Sie die nachfolgenden Platzhalter entsprechend aus.
+\newcommand{\semester}{Wintersemester 2026/27}
+
+\newcommand{\studname}{Name } % Ihr Vor- und Zuname
+
+\newcommand{\matr}{Matr.Nr. } % Ihre Matrikelnummer
+
+\newcommand{\nr}{ \hspace{.5cm}  } % Nummer des Themenblocks der Vorlesung
+
+\newcommand{\papertitle}{ } % Titel des Papiers
+
+\backgroundsetup{
+	scale=.9,
+	angle=0,
+	opacity=.9,
+	position=current page.north west,
+	nodeanchor=north west,
+	hshift=3.4cm,
+	vshift=-1cm,
+	contents={
+		\noindent\parbox[t]{.68\textwidth}{
+			{\large \em Fortgeschrittene Softwaretechnik}\\
+			{\large \em \semester }\\\large
+			\begin{tabular}{|p{.4\textwidth}|p{.6\textwidth}|}
+			      \hline
+				\bf \studname & \\\hline 
+			      \bf \matr & \\\hline
+			      \bf Inhaltsskizze zu Block & \\\hline	
+                   \end{tabular}		
+		}\hfill
+		\parbox[t]{.3\textwidth}{\flushleft\vspace*{-20pt}
+			%{\large \em Datum: \today} \\
+			{\large \em Reading Group Session} 			
+		}
+	},
+	color=black
+}
+
+\begin{document}
+	
+\subsection*{Titel des Papiers:}
+
+\begin{boxedminipage}[t][1cm][c]{\textwidth}
+%\papertitle
+\ \\
+\end{boxedminipage}
+	
+\subsection*{Kurzzusammenfassung:}
+\begin{boxedminipage}[t][15cm][t]{\textwidth}
+	
+\ \\
+			
+\end{boxedminipage}
+
+\subsection*{Eigene (offene) Diskussionspunkte:}	
+\begin{boxedminipage}[t][12cm][t]{\textwidth}
+	
+\ \\
+
+	
+\end{boxedminipage}
+	
+\end{document}
