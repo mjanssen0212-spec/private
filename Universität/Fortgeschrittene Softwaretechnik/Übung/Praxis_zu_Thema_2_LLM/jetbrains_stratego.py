@@ -1,70 +1,607 @@
-def random_setup(color: Color, rng: random.Random) -> Dict[Position, Piece]:
-    """Erzeugt eine halbwegs sinnvolle zufällige Aufstellung.
+import random
+import tkinter as tk
+from dataclasses import dataclass
+from tkinter import messagebox
+from typing import Optional
 
-    Strategie:
-    - Fahne bevorzugt in die hinterste Reihe, häufig in eine Ecke oder nahe am Rand.
-    - Bomben bevorzugt um die Fahne und ebenfalls eher hinten.
-    - Bewegliche Figuren werden zufällig auf die restlichen Felder verteilt.
-    """
-    rows = list(color.setup_rows)
-    back_row = rows[-1] if color is Color.BLUE else rows[0]
 
-    setup_squares = [(row, col) for row in rows for col in range(BOARD_SIZE)]
-    board: Dict[Position, Piece] = {}
+BOARD_SIZE = 10
 
-    # Fahne eher geschützt hinten platzieren.
-    preferred_flag_cols = [0, 9, 1, 8, 2, 7]
-    flag_col = rng.choice(preferred_flag_cols)
-    flag_pos = (back_row, flag_col)
-    board[flag_pos] = Piece(color, Rank.FLAG)
+LAKES = {
+    (4, 2), (4, 3), (5, 2), (5, 3),
+    (4, 6), (4, 7), (5, 6), (5, 7),
+}
 
-    # Bomben bevorzugt um die Fahne herum platzieren.
-    neighbour_candidates = []
-    for dr, dc in DIRECTIONS:
-        candidate = (flag_pos[0] + dr, flag_pos[1] + dc)
-        if candidate in setup_squares and candidate not in board:
-            neighbour_candidates.append(candidate)
+RED = "Rot"
+BLUE = "Blau"
 
-    # Zusätzliche Bombenfelder hinten priorisieren.
-    back_row_candidates = [
-        (back_row, col)
-        for col in range(BOARD_SIZE)
-        if (back_row, col) in setup_squares and (back_row, col) not in board
-    ]
+PIECE_COUNTS = {
+    "10": 1,  # Feldmarschall
+    "9": 1,   # General
+    "8": 2,   # Oberst
+    "7": 3,   # Major
+    "6": 4,   # Hauptmann
+    "5": 4,   # Leutnant
+    "4": 4,   # Unteroffizier
+    "3": 5,   # Mineur
+    "2": 8,   # Aufklärer
+    "1": 1,   # Spion
+    "B": 6,   # Bombe
+    "F": 1,   # Fahne
+}
 
-    remaining_candidates = [
-        pos for pos in setup_squares if pos not in board
-    ]
+PIECE_NAMES = {
+    "10": "Feldmarschall",
+    "9": "General",
+    "8": "Oberst",
+    "7": "Major",
+    "6": "Hauptmann",
+    "5": "Leutnant",
+    "4": "Unteroffizier",
+    "3": "Mineur",
+    "2": "Aufklärer",
+    "1": "Spion",
+    "B": "Bombe",
+    "F": "Fahne",
+}
 
-    bomb_positions: List[Position] = []
 
-    rng.shuffle(neighbour_candidates)
-    rng.shuffle(back_row_candidates)
-    rng.shuffle(remaining_candidates)
+@dataclass
+class Piece:
+    owner: str
+    rank: str
 
-    for candidate_list in (neighbour_candidates, back_row_candidates, remaining_candidates):
-        for pos in candidate_list:
-            if len(bomb_positions) >= Rank.BOMB.count:
+    @property
+    def movable(self) -> bool:
+        return self.rank not in {"B", "F"}
+
+    @property
+    def name(self) -> str:
+        return PIECE_NAMES[self.rank]
+
+
+class StrategoGame:
+    def __init__(self) -> None:
+        self.board: list[list[Optional[Piece]]] = [
+            [None for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)
+        ]
+        self.current_player = RED
+        self.game_over = False
+        self.winner: Optional[str] = None
+        self.setup_board()
+
+    def setup_board(self) -> None:
+        self.board = [[None for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
+        self._place_strategic_army(RED)
+        self._place_strategic_army(BLUE)
+
+    def _place_strategic_army(self, owner: str) -> None:
+        rows = list(range(6, 10)) if owner == RED else list(range(0, 4))
+        back_row = 9 if owner == RED else 0
+
+        all_positions = [(row, col) for row in rows for col in range(BOARD_SIZE)]
+        random.shuffle(all_positions)
+
+        flag_col = random.randint(0, BOARD_SIZE - 1)
+        flag_pos = (back_row, flag_col)
+
+        self.board[flag_pos[0]][flag_pos[1]] = Piece(owner, "F")
+
+        bomb_positions = self._strategic_bomb_positions(flag_pos, rows)
+        random.shuffle(bomb_positions)
+
+        placed_bombs = 0
+        for row, col in bomb_positions:
+            if placed_bombs >= PIECE_COUNTS["B"]:
                 break
-            if pos not in board and pos not in bomb_positions:
-                bomb_positions.append(pos)
+            if self.board[row][col] is None:
+                self.board[row][col] = Piece(owner, "B")
+                placed_bombs += 1
 
-    for pos in bomb_positions:
-        board[pos] = Piece(color, Rank.BOMB)
+        free_positions = [
+            position
+            for position in all_positions
+            if self.board[position[0]][position[1]] is None
+        ]
+        random.shuffle(free_positions)
 
-    # Restliche Figuren zufällig verteilen.
-    remaining_ranks = [
-        rank
-        for rank in Rank
-        if rank not in (Rank.FLAG, Rank.BOMB)
-        for _ in range(rank.count)
-    ]
-    rng.shuffle(remaining_ranks)
+        while placed_bombs < PIECE_COUNTS["B"]:
+            row, col = free_positions.pop()
+            self.board[row][col] = Piece(owner, "B")
+            placed_bombs += 1
 
-    free_squares = [pos for pos in setup_squares if pos not in board]
-    rng.shuffle(free_squares)
+        remaining_pieces: list[Piece] = []
+        for rank, count in PIECE_COUNTS.items():
+            if rank in {"F", "B"}:
+                continue
+            for _ in range(count):
+                remaining_pieces.append(Piece(owner, rank))
 
-    for pos, rank in zip(free_squares, remaining_ranks):
-        board[pos] = Piece(color, rank)
+        random.shuffle(remaining_pieces)
 
-    return board
+        free_positions = [
+            position
+            for position in all_positions
+            if self.board[position[0]][position[1]] is None
+        ]
+        random.shuffle(free_positions)
+
+        for piece, (row, col) in zip(remaining_pieces, free_positions):
+            self.board[row][col] = piece
+
+    def _strategic_bomb_positions(
+        self,
+        flag_pos: tuple[int, int],
+        setup_rows: list[int],
+    ) -> list[tuple[int, int]]:
+        flag_row, flag_col = flag_pos
+        candidates = []
+
+        for dr, dc in (
+            (-1, 0), (1, 0), (0, -1), (0, 1),
+            (-1, -1), (-1, 1), (1, -1), (1, 1),
+        ):
+            row = flag_row + dr
+            col = flag_col + dc
+            if row in setup_rows and 0 <= col < BOARD_SIZE:
+                candidates.append((row, col))
+
+        unique_candidates = []
+        for position in candidates:
+            if position not in unique_candidates and position != flag_pos:
+                unique_candidates.append(position)
+
+        return unique_candidates
+
+    @staticmethod
+    def _create_piece_set(owner: str) -> list[Piece]:
+        pieces: list[Piece] = []
+        for rank, count in PIECE_COUNTS.items():
+            for _ in range(count):
+                pieces.append(Piece(owner, rank))
+        return pieces
+
+    def valid_moves_for(self, row: int, col: int) -> list[tuple[int, int]]:
+        piece = self.board[row][col]
+        if piece is None or piece.owner != self.current_player or not piece.movable:
+            return []
+
+        if piece.rank == "2":
+            return self._scout_moves(row, col)
+
+        moves = []
+        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            target = row + dr, col + dc
+            if self.is_legal_move((row, col), target):
+                moves.append(target)
+        return moves
+
+    def _scout_moves(self, row: int, col: int) -> list[tuple[int, int]]:
+        moves = []
+
+        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            current_row = row + dr
+            current_col = col + dc
+
+            while self._inside_board(current_row, current_col):
+                if (current_row, current_col) in LAKES:
+                    break
+
+                target = self.board[current_row][current_col]
+
+                if target is None:
+                    moves.append((current_row, current_col))
+                else:
+                    if target.owner != self.current_player:
+                        moves.append((current_row, current_col))
+                    break
+
+                current_row += dr
+                current_col += dc
+
+        return moves
+
+    def is_legal_move(self, source: tuple[int, int], target: tuple[int, int]) -> bool:
+        source_row, source_col = source
+        target_row, target_col = target
+
+        if not self._inside_board(target_row, target_col):
+            return False
+
+        if target in LAKES:
+            return False
+
+        piece = self.board[source_row][source_col]
+        if piece is None:
+            return False
+
+        if piece.owner != self.current_player:
+            return False
+
+        if not piece.movable:
+            return False
+
+        target_piece = self.board[target_row][target_col]
+        if target_piece is not None and target_piece.owner == piece.owner:
+            return False
+
+        row_distance = abs(target_row - source_row)
+        col_distance = abs(target_col - source_col)
+
+        if row_distance > 0 and col_distance > 0:
+            return False
+
+        if piece.rank != "2":
+            return row_distance + col_distance == 1
+
+        return self._is_clear_straight_line(source, target)
+
+    def _is_clear_straight_line(
+        self,
+        source: tuple[int, int],
+        target: tuple[int, int],
+    ) -> bool:
+        source_row, source_col = source
+        target_row, target_col = target
+
+        row_step = 0
+        col_step = 0
+
+        if target_row > source_row:
+            row_step = 1
+        elif target_row < source_row:
+            row_step = -1
+
+        if target_col > source_col:
+            col_step = 1
+        elif target_col < source_col:
+            col_step = -1
+
+        current_row = source_row + row_step
+        current_col = source_col + col_step
+
+        while (current_row, current_col) != (target_row, target_col):
+            if (current_row, current_col) in LAKES:
+                return False
+            if self.board[current_row][current_col] is not None:
+                return False
+            current_row += row_step
+            current_col += col_step
+
+        return True
+
+    def move(self, source: tuple[int, int], target: tuple[int, int]) -> str:
+        if not self.is_legal_move(source, target):
+            return "Ungültiger Zug."
+
+        source_row, source_col = source
+        target_row, target_col = target
+
+        attacker = self.board[source_row][source_col]
+        defender = self.board[target_row][target_col]
+
+        if attacker is None:
+            return "Ungültiger Zug."
+
+        if defender is None:
+            self.board[target_row][target_col] = attacker
+            self.board[source_row][source_col] = None
+            result = f"{attacker.name} wurde bewegt."
+        else:
+            result = self._resolve_attack(source, target, attacker, defender)
+
+        if not self.game_over:
+            self.current_player = BLUE if self.current_player == RED else RED
+            self._check_no_moves_available()
+
+        return result
+
+    def _resolve_attack(
+        self,
+        source: tuple[int, int],
+        target: tuple[int, int],
+        attacker: Piece,
+        defender: Piece,
+    ) -> str:
+        source_row, source_col = source
+        target_row, target_col = target
+
+        if defender.rank == "F":
+            self.board[target_row][target_col] = attacker
+            self.board[source_row][source_col] = None
+            self.game_over = True
+            self.winner = attacker.owner
+            return f"{attacker.owner} gewinnt! Die Fahne wurde erobert."
+
+        attacker_wins = False
+        both_removed = False
+
+        if defender.rank == "B":
+            if attacker.rank == "3":
+                attacker_wins = True
+            else:
+                attacker_wins = False
+        elif attacker.rank == "1" and defender.rank == "10":
+            attacker_wins = True
+        elif attacker.rank == defender.rank:
+            both_removed = True
+        else:
+            attacker_wins = int(attacker.rank) > int(defender.rank)
+
+        if both_removed:
+            self.board[source_row][source_col] = None
+            self.board[target_row][target_col] = None
+            return (
+                f"Beide Figuren wurden geschlagen: "
+                f"{attacker.name} gegen {defender.name}."
+            )
+
+        if attacker_wins:
+            self.board[target_row][target_col] = attacker
+            self.board[source_row][source_col] = None
+            return f"{attacker.name} schlägt {defender.name}."
+
+        self.board[source_row][source_col] = None
+        return f"{attacker.name} verliert gegen {defender.name}."
+
+    def _check_no_moves_available(self) -> None:
+        if self.has_any_legal_move(self.current_player):
+            return
+
+        self.game_over = True
+        self.winner = BLUE if self.current_player == RED else RED
+
+    def has_any_legal_move(self, player: str) -> bool:
+        original_player = self.current_player
+        self.current_player = player
+
+        try:
+            for row in range(BOARD_SIZE):
+                for col in range(BOARD_SIZE):
+                    piece = self.board[row][col]
+                    if piece is not None and piece.owner == player and piece.movable:
+                        if self.valid_moves_for(row, col):
+                            return True
+            return False
+        finally:
+            self.current_player = original_player
+
+    @staticmethod
+    def _inside_board(row: int, col: int) -> bool:
+        return 0 <= row < BOARD_SIZE and 0 <= col < BOARD_SIZE
+
+
+class StrategoApp:
+    def __init__(self, root: tk.Tk) -> None:
+        self.root = root
+        self.root.title("Stratego - 2 Spieler")
+        self.root.resizable(False, False)
+
+        self.game = StrategoGame()
+        self.selected: Optional[tuple[int, int]] = None
+        self.valid_targets: list[tuple[int, int]] = []
+
+        self.status_var = tk.StringVar()
+        self.buttons: list[list[tk.Button]] = []
+
+        self._build_ui()
+        self._refresh_board()
+        self._show_cover_window(initial=True)
+
+    def _build_ui(self) -> None:
+        status = tk.Label(
+            self.root,
+            textvariable=self.status_var,
+            font=("Arial", 13, "bold"),
+            bg="#222222",
+            fg="white",
+            padx=10,
+            pady=8,
+        )
+        status.pack(fill=tk.X)
+
+        self.board_frame = tk.Frame(self.root, bg="#222222")
+        self.board_frame.pack(padx=10, pady=10)
+
+        for row in range(BOARD_SIZE):
+            button_row = []
+            for col in range(BOARD_SIZE):
+                button = tk.Button(
+                    self.board_frame,
+                    width=5,
+                    height=2,
+                    font=("Arial", 11, "bold"),
+                    command=lambda r=row, c=col: self._on_cell_clicked(r, c),
+                )
+                button.grid(row=row, column=col, padx=1, pady=1)
+                button_row.append(button)
+            self.buttons.append(button_row)
+
+        controls = tk.Frame(self.root)
+        controls.pack(pady=(0, 10))
+
+        tk.Button(
+            controls,
+            text="Neues Spiel",
+            font=("Arial", 11),
+            command=self._restart,
+        ).pack(side=tk.LEFT, padx=5)
+
+        tk.Button(
+            controls,
+            text="Beenden",
+            font=("Arial", 11),
+            command=self.root.destroy,
+        ).pack(side=tk.LEFT, padx=5)
+
+    def _refresh_board(self) -> None:
+        self.status_var.set(f"{self.game.current_player} ist am Zug.")
+
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                button = self.buttons[row][col]
+
+                if (row, col) in LAKES:
+                    button.config(
+                        text="≈",
+                        bg="#2563eb",
+                        fg="white",
+                        state=tk.DISABLED,
+                    )
+                    continue
+
+                piece = self.game.board[row][col]
+                bg = "#d6d3d1"
+
+                if row < 4:
+                    bg = "#dbeafe"
+                elif row > 5:
+                    bg = "#fee2e2"
+
+                if (row, col) == self.selected:
+                    bg = "#facc15"
+                elif (row, col) in self.valid_targets:
+                    bg = "#86efac"
+
+                if piece is None:
+                    text = ""
+                    fg = "black"
+                elif piece.owner == self.game.current_player:
+                    text = piece.rank
+                    fg = "#b91c1c" if piece.owner == RED else "#1d4ed8"
+                else:
+                    text = "?"
+                    fg = "#111827"
+
+                button.config(
+                    text=text,
+                    bg=bg,
+                    fg=fg,
+                    state=tk.NORMAL,
+                )
+
+    def _on_cell_clicked(self, row: int, col: int) -> None:
+        if self.game.game_over:
+            return
+
+        if self.selected is not None and (row, col) in self.valid_targets:
+            result = self.game.move(self.selected, (row, col))
+            self.selected = None
+            self.valid_targets = []
+            self._refresh_board()
+
+            if self.game.game_over:
+                self._show_game_over(result)
+            else:
+                messagebox.showinfo("Zug Ergebnis", result)
+                self._show_cover_window()
+                self._refresh_board()
+            return
+
+        piece = self.game.board[row][col]
+
+        if piece is not None and piece.owner == self.game.current_player:
+            if not piece.movable:
+                messagebox.showinfo(
+                    "Nicht bewegbar",
+                    f"{piece.name} kann nicht bewegt werden.",
+                )
+                return
+
+            self.selected = (row, col)
+            self.valid_targets = self.game.valid_moves_for(row, col)
+
+            if not self.valid_targets:
+                messagebox.showinfo(
+                    "Keine Züge",
+                    f"{piece.name} hat aktuell keinen gültigen Zug.",
+                )
+
+            self._refresh_board()
+            return
+
+        self.selected = None
+        self.valid_targets = []
+        self._refresh_board()
+
+    def _show_cover_window(self, initial: bool = False) -> None:
+        self.root.update_idletasks()
+
+        x = self.root.winfo_rootx()
+        y = self.root.winfo_rooty()
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+
+        cover = tk.Toplevel(self.root)
+        cover.title("Spielerwechsel")
+        cover.geometry(f"{width}x{height}+{x}+{y}")
+        cover.resizable(False, False)
+        cover.transient(self.root)
+        cover.grab_set()
+        cover.configure(bg="#111827")
+
+        title = "Spielbeginn" if initial else "Spielerwechsel"
+        next_player = self.game.current_player
+
+        tk.Label(
+            cover,
+            text=title,
+            font=("Arial", 28, "bold"),
+            bg="#111827",
+            fg="#facc15",
+        ).pack(pady=(90, 20))
+
+        tk.Label(
+            cover,
+            text=(
+                f"{next_player} ist am Zug.\n\n"
+                "Bitte den Bildschirm verdecken und das Gerät weitergeben.\n"
+                "Der nächste Spieler klickt auf Bereit, sobald er allein schaut."
+            ),
+            font=("Arial", 15),
+            bg="#111827",
+            fg="white",
+            justify=tk.CENTER,
+        ).pack(pady=20)
+
+        ready_button = tk.Button(
+            cover,
+            text="Bereit - Zug starten",
+            font=("Arial", 16, "bold"),
+            bg="#16a34a",
+            fg="white",
+            padx=30,
+            pady=12,
+            command=cover.destroy,
+        )
+        ready_button.pack(pady=30)
+
+        cover.protocol("WM_DELETE_WINDOW", lambda: None)
+        cover.wait_window()
+
+    def _show_game_over(self, result: str) -> None:
+        self._refresh_board()
+
+        if self.game.winner is None:
+            message = result
+        else:
+            message = f"{result}\n\nGewinner: {self.game.winner}"
+
+        messagebox.showinfo("Spiel beendet", message)
+
+    def _restart(self) -> None:
+        self.game = StrategoGame()
+        self.selected = None
+        self.valid_targets = []
+        self._refresh_board()
+        self._show_cover_window(initial=True)
+
+
+def main() -> None:
+    root = tk.Tk()
+    StrategoApp(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

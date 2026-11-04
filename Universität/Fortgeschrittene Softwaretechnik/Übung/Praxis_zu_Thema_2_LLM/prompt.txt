@@ -1,0 +1,11 @@
+Du bist professioneller Python Entwickler.
+
+Entwickle das Spiel Stratego in Python mit folgenden Requirements:
+
+- 2 Spieler
+- Bewegungen nur innerhalb der Regeln
+- Figuren werden am Anfang für beide Seiten zufällig aufgestellt
+- Nach dem Zug des Spielers erscheint ein zwischen Fenster um den Bildschirm zu verdecken bis der andere Spieler akzeptiert um seinen Zug zu machen
+
+Die Regeln des Spiels sind als PDF der Anfrage hinzugefügt.
+Speichere Code in einer Datei mit Namen
