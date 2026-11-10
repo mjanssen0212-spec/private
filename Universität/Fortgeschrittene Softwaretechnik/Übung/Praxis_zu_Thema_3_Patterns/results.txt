@@ -5,6 +5,8 @@ Unangebrachte Intimität GamePanel + Pipe, canAwardPoints varbiable; Bird Color 
 Code Duplizierung in if-else branches (topPipe.canAwardPoints = true)
 GamePanel Blob?
 
+Hohe Kopplung GamePanel Bird
+
 GamePanel verantwortlich für zeichnen, Kollision in Methode überprüft -> weitergeleitet an Pipe??
 Klasse Texture nicht verwendet??
 Sprites nicht verwendet?? -> Funktionalität in GamePanel??
