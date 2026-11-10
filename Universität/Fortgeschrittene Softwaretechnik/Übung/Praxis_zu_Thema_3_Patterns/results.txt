@@ -10,3 +10,5 @@ Klasse Texture nicht verwendet??
 Sprites nicht verwendet?? -> Funktionalität in GamePanel??
 
 bestScore / Highscore??????????
+
+kein poltergeist
