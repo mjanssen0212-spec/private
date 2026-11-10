@@ -1,0 +1,12 @@
+switch Statement ob menü oder game gezeichnet wird
+Ausgeschlagenes erbe maus / Tastatur Handler
+"Helper" Funktionale Zerlegung?
+Unangebrachte Intimität GamePanel + Pipe, canAwardPoints varbiable; Bird Color public
+Code Duplizierung in if-else branches (topPipe.canAwardPoints = true)
+GamePanel Blob?
+
+GamePanel verantwortlich für zeichnen, Kollision in Methode überprüft -> weitergeleitet an Pipe??
+Klasse Texture nicht verwendet??
+Sprites nicht verwendet?? -> Funktionalität in GamePanel??
+
+bestScore / Highscore??????????
