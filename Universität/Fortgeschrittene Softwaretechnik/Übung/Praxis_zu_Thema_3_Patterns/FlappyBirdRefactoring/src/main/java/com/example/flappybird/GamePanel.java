@@ -33,7 +33,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				 flappyMiniFont = null;
 
 	// Textures
-	public static HashMap<String, Texture> textures = new Sprites().getGameTextures();	
+	private Sprites sprites;
+	public static HashMap<String, Texture> textures;
 	
 	// Moving base effect
 	private static int baseSpeed    = 2;
@@ -82,6 +83,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			System.err.println("Could not load Flappy Font!");
 			System.exit(-1);
 		}
+		this.sprites = new Sprites();
+		this.textures = sprites.getGameTextures();
 
 		restart(); // Reset game variables
 
