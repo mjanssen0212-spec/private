@@ -1,5 +1,7 @@
 package com.example.flappybird;
 
+import java.awt.*;
+
 /**
  * Pipe.java
  * Handles collisions and rendering for pipes
@@ -51,24 +53,18 @@ public class Pipe {
 
 	/**
 	 * Checks for bird colliding with pipe
-	 * 
-	 * @param  nX     Bird x-coordinate
-	 * @param  nY     Bird y-coordinate
-	 * @param  nW     Bird width
-	 * @param  nH     Bird height
+	 *
+	 * @param  rectangle     Bird's hitbox
 	 * @return        If bird is colliding with the pipe
 	 */
-	public boolean collide (int nX, int nY, int nW, int nH) {
+	public boolean collide (Rectangle rectangle) {
 
 		// Do not allow bird to jump over pipe
-		if (nX > x && nY < 0 && canAwardPoint) {
+		if (rectangle.x > x && rectangle.y < 0 && canAwardPoint) {
 			return true;
 		}
 
-		return nX < x + WIDTH && 
-				nX + nW > x &&
-				nY < y + HEIGHT &&
-				nY + nH > y;
+		return rectangle.intersects(new Rectangle(x, y, WIDTH, HEIGHT));
 
 	}
 

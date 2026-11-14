@@ -6,8 +6,8 @@ package com.example.flappybird; /**
  */
 
 import javax.swing.JPanel;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics;
 
 public class Bird {
 
@@ -144,7 +144,7 @@ public class Bird {
 		rotation /= 2;
 
 		// Handle rotation offset
-		rotation = rotation > Math.PI / 2 ? Math.PI / 2 : rotation;
+		rotation = Math.min(rotation, Math.PI / 2);
 
 		if (!isAlive()) {
 
@@ -159,6 +159,10 @@ public class Bird {
 		// Create bird animation and pass in rotation angle
 		Animation.animate(g, sprites, x, y, .09, rotation);
 
+	}
+
+	public Rectangle getHitbox () {
+		return new Rectangle(x, y, BIRD_WIDTH, BIRD_HEIGHT);
 	}
 
 }

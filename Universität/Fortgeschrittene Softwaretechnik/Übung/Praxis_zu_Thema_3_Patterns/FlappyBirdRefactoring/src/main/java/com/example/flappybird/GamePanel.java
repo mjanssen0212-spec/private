@@ -422,10 +422,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			// Check if bird hits pipes
 			if (gameBird.isAlive()) {
 				if (p.collide(
-					gameBird.getX(), 
-					gameBird.getY(),
-					gameBird.BIRD_WIDTH,
-					gameBird.BIRD_HEIGHT
+					gameBird.getHitbox()
 				)) {
 					// Kill bird and play sound
 					gameBird.kill();

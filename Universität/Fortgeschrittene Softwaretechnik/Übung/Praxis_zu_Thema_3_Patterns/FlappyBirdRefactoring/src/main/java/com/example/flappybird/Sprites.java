@@ -36,69 +36,73 @@ public class Sprites {
 		}
 
 		// Backgrounds
-		textures.put("background1", new Texture(resize(spriteSheet.getSubimage(0, 0, 144, 256)),   0, 0));
-		textures.put("background2", new Texture(resize(spriteSheet.getSubimage(146, 0, 144, 256)), 0, 0));
+		putTexture("background1", 0, 0, 144, 256, 0, 0);
+		putTexture("background2", 146, 0, 144, 256, 0, 0);
 
 		// Pipes
-		textures.put("pipe-top",    new Texture(resize(spriteSheet.getSubimage(56, 323, 26, 160)), 0, 0));
-		textures.put("pipe-bottom", new Texture(resize(spriteSheet.getSubimage(84, 323, 26, 160)), 0, 0));
+		putTexture("pipe-top", 56, 323, 26, 160, 0, 0);
+		putTexture("pipe-bottom", 84, 323, 26, 160, 0, 0);
 
 		// Birds
-		textures.put("yellowBird1", new Texture(resize(spriteSheet.getSubimage(31, 491, 17, 12)), 172, 250));
-		textures.put("yellowBird2", new Texture(resize(spriteSheet.getSubimage(59, 491, 17, 12)), 172, 250));
-		textures.put("yellowBird3", new Texture(resize(spriteSheet.getSubimage(3, 491, 17, 12)),  172, 250));
+		putTexture("yellowBird1", 31, 491, 17, 12, 172, 250);
+		putTexture("yellowBird2", 59, 491, 17, 12, 172, 250);
+		putTexture("yellowBird3", 3, 491, 17, 12, 172, 250);
 
-		textures.put("blueBird1",   new Texture(resize(spriteSheet.getSubimage(115, 329, 17, 12)), 172, 250));
-		textures.put("blueBird2",   new Texture(resize(spriteSheet.getSubimage(115, 355, 17, 12)), 172, 250));
-		textures.put("blueBird3",   new Texture(resize(spriteSheet.getSubimage(87, 491, 17, 12)), 172, 250));
+		putTexture("blueBird1", 115, 329, 17, 12, 172, 250);
+		putTexture("blueBird2", 115, 355, 17, 12, 172, 250);
+		putTexture("blueBird3", 87, 491, 17, 12, 172, 250);
 
-		textures.put("redBird1",    new Texture(resize(spriteSheet.getSubimage(115, 407, 17, 12)), 172, 250));
-		textures.put("redBird2",    new Texture(resize(spriteSheet.getSubimage(115, 433, 17, 12)), 172, 250));
-		textures.put("redBird3",    new Texture(resize(spriteSheet.getSubimage(115, 381, 17, 12)), 172, 250));
+		putTexture("redBird1", 115, 407, 17, 12, 172, 250);
+		putTexture("redBird2", 115, 433, 17, 12, 172, 250);
+		putTexture("redBird3", 115, 381, 17, 12, 172, 250);
 
 		// Buttons
-		textures.put("playButton",   new Texture(resize(spriteSheet.getSubimage(354, 118, 52, 29)), 34, 448));
-		textures.put("leaderboard",  new Texture(resize(spriteSheet.getSubimage(414, 118, 52, 29)), 203, 448));
-		textures.put("rateButton",   new Texture(resize(spriteSheet.getSubimage(465, 1, 31, 18)),   147, 355));
+		putTexture("playButton", 354, 118, 52, 29, 34, 448);
+		putTexture("leaderboard", 414, 118, 52, 29, 203, 448);
+		putTexture("rateButton", 465, 1, 31, 18, 147, 355);
 		
 		// Helpful / Text
-		textures.put("newHighscore", new Texture(resize(spriteSheet.getSubimage(112, 501, 16, 7)),  210, 305));
-		textures.put("titleText",    new Texture(resize(spriteSheet.getSubimage(351, 91, 89, 24)),  72, 100));
-		textures.put("getReadyText", new Texture(resize(spriteSheet.getSubimage(295, 59, 92, 25)),  68, 180));
-		textures.put("gameOverText", new Texture(resize(spriteSheet.getSubimage(395, 59, 96, 21)),  62, 100));
-		textures.put("instructions", new Texture(resize(spriteSheet.getSubimage(292, 91, 57, 49)),  113, 300));
+		putTexture("newHighscore", 112, 501, 16, 7, 210, 305);
+		putTexture("titleText", 351, 91, 89, 24, 72, 100);
+		putTexture("getReadyText", 295, 59, 92, 25, 68, 180);
+		putTexture("gameOverText", 395, 59, 96, 21, 62, 100);
+		putTexture("instructions", 292, 91, 57, 49, 113, 300);
 
 		// SCORE IMAGES
 		
 		// Large numbers
-		textures.put("score-0", new Texture(resize(spriteSheet.getSubimage(496, 60, 12, 18)), 0, 0));
-		textures.put("score-1", new Texture(resize(spriteSheet.getSubimage(136, 455, 8, 18)), 0, 0));
+		putTexture("score-0", 496, 60, 12, 18, 0, 0);
+		putTexture("score-1", 136, 455, 8, 18, 0, 0);
 		
 		int score = 2;
 		for (int i = 292; i < 335; i += 14) {
-			textures.put("score-" + score,       new Texture(resize(spriteSheet.getSubimage(i, 160, 12, 18)), 0, 0));
-			textures.put("score-" + (score + 4), new Texture(resize(spriteSheet.getSubimage(i, 184, 12, 18)), 0, 0));
+			putTexture("score-" + score,  i, 160, 12, 18, 0, 0);
+			putTexture("score-" + (score + 4), i, 184, 12, 18, 0, 0);
 			score++;
 		}
 
 		// Mini numbers
 		score = 0;
 		for (int i = 323; score < 10; i += 9) {
-			textures.put("mini-score-" + score, new Texture(resize(spriteSheet.getSubimage(138, i, 10, 7)), 0, 0));
+			putTexture("mini-score-" + score, 138, i, 10, 7, 0, 0);
 			score ++;
 			if (score % 2 == 0) { i += 8; }
 		}
 
 		// Medals
-		textures.put("bronze",   new Texture(resize(spriteSheet.getSubimage(112, 477, 22, 22)),  73, 285));
-		textures.put("silver",   new Texture(resize(spriteSheet.getSubimage(112, 453, 22, 22)),  73, 285));
-		textures.put("gold",     new Texture(resize(spriteSheet.getSubimage(121, 282, 22, 22)),  73, 285));
-		textures.put("platinum", new Texture(resize(spriteSheet.getSubimage(121, 258, 22, 22)),  73, 285));
+		putTexture("bronze", 112, 477, 22, 22, 73, 285);
+		putTexture("silver", 112, 453, 22, 22, 73, 285);
+		putTexture("gold", 121, 282, 22, 22, 73, 285);
+		putTexture("platinum", 121, 258, 22, 22, 73, 285);
 
 		// Other assets
-		textures.put("base",      new Texture(resize(spriteSheet.getSubimage(292, 0, 168, 56)),  0, 521));
-		textures.put("scoreCard", new Texture(resize(spriteSheet.getSubimage(3, 259, 113, 57)),  40, 230));
+		putTexture("base", 292, 0, 168, 56, 0, 521);
+		putTexture("scoreCard", 3, 259, 113, 57, 40, 230);
 
+	}
+
+	private void putTexture(String name, int x, int y, int width, int height, int resizeX, int resizeY) {
+    	textures.put(name, new Texture(resize(spriteSheet.getSubimage(x, y, width, height)), resizeX, resizeY));
 	}
 
 	/**
