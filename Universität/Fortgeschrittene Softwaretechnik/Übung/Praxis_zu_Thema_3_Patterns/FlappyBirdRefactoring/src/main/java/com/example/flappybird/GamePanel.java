@@ -26,15 +26,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	private Renderer renderer;
 
-
+	Ground ground;
 
 	// Textures
 	private Sprites sprites;
 	public static HashMap<String, Texture> textures;
 	
 	// Moving base effect
-	private static int baseSpeed    = 2;
-	private static int[] baseCoords = { 0, 435 };
+	private final static int baseSpeed    = 2;
+	private final static int[] baseCoords = { 0, 435 };
 
 	// Game states
 	final static int MENU = 0;
@@ -58,6 +58,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		this.textures = sprites.getGameTextures();
 
 		this.renderer = new Renderer(textures);
+
+		this.ground = new Ground(baseCoords, renderer, baseSpeed);
 
 		this.gameSession = new GameSession(textures);
 		restart(); // Reset game variables
@@ -116,8 +118,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		if (gameBird.isAlive()) {
 
 			// Move base
-			moveGround(0);
-			moveGround(1);
+			ground.move(0);
+			ground.move(1);
 
 		}
 
@@ -131,7 +133,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 			case MENU:
 
-				drawBase(g);
+				ground.render(g);
 
 				drawMenu(g);
 
@@ -153,15 +155,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 						gameBird.inGame();
 					}
 
-					drawBase(g);
+					ground.render(g);
 
-					drawScore(g, gameSession.getScore(), false, 0, 0); // Draw player score
+					renderer.drawScore(g, gameSession.getScore(), false, 0, 0); // Draw player score
 
 				} else {
 
 					pipeHandler(g);
 
-					drawBase(g);
+					ground.render(g);
 
 					// Draw game over assets
 					gameOver(g);
@@ -173,34 +175,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	}
 
-	private void moveGround(int index) {
-		baseCoords[index] = baseCoords[index] - baseSpeed < -435 ? 435 : baseCoords[index] - baseSpeed;
-	}
+
 
 	/////////////////////////
 	// All drawing methods //
 	/////////////////////////
 
-	/**
-	 * Draws a string centered based on given restrictions
-	 * 
-	 * @param s     String to be drawn
-	 * @param w     Constraining width
-	 * @param h     Constraining height
-	 * @param y     Fixed y-coordiate
-	 */
 
-
-	/**
-	 * Needs to be called differently based on screen
-	 */
-	public void drawBase (Graphics g) {
-
-		// Moving base effect
-		renderer.drawComponent("base", baseCoords[0], g);
-		renderer.drawComponent("base", baseCoords[1], g);
-
-	}
 
 	////////////////
 	// Menuscreen //
@@ -239,47 +220,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	}
 
-	/**
-	 * Aligns and draws score using image textures
-	 * 
-	 * @param mini     Boolean for drawing small or large numbers
-	 * @param x        X-coordinate to draw for mini numbers
-	 */
-	public void drawScore (Graphics g, int drawNum, boolean mini, int x, int y) {
-	
-		// Char array of digits
-		char[] digits = ("" + drawNum).toCharArray();
-		
-		int digitCount = digits.length;
 
-		// Calculate width for numeric textures
-		int takeUp = 0;
-		for (char digit : digits) {
 
-			// Size to add varies based on texture
-			takeUp += digitSize(digit, mini);
-		}
 
-		// Calculate x-coordinate
-		int drawScoreX = mini ? (x - takeUp) : (FlappyBird.WIDTH / 2 - takeUp / 2);
-
-		// Draw every digit
-		for (int i = 0; i < digitCount; i++) {
-			renderer.drawComponent((mini ? "mini-score-" : "score-") + digits[i], drawScoreX, mini ? y : 60, g);
-			
-			// Size to add varies based on texture
-			drawScoreX += digitSize(digits[i], mini);
-		}
-
-	}
-
-	private int digitSize(char digit, boolean mini) {
-		if (mini) {
-			return 18;
-		} else {
-			return digit == '1' ? 25 : 35;
-		}
-	}
 
 	/**
 	 * Moves and repositions pipes
@@ -396,8 +339,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		}
 
 		// Draw mini fonts for current and best scores
-		drawScore(g, score, true, 303, 276);
-		drawScore(g, highscore.bestScore(), true, 303, 330);
+		renderer.drawScore(g, score, true, 303, 276);
+		renderer.drawScore(g, highscore.bestScore(), true, 303, 330);
 
 		// Handle highscore
 		if (score > highscore.bestScore()) {

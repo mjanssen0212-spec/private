@@ -64,6 +64,48 @@ public class Renderer {
         g.drawString(s, x, y);
     }
 
+    /**
+     * Aligns and draws score using image textures
+     *
+     * @param mini     Boolean for drawing small or large numbers
+     * @param x        X-coordinate to draw for mini numbers
+     */
+    public void drawScore (Graphics g, int drawNum, boolean mini, int x, int y) {
+
+        // Char array of digits
+        char[] digits = ("" + drawNum).toCharArray();
+
+        int digitCount = digits.length;
+
+        // Calculate width for numeric textures
+        int takeUp = 0;
+        for (char digit : digits) {
+
+            // Size to add varies based on texture
+            takeUp += digitSize(digit, mini);
+        }
+
+        // Calculate x-coordinate
+        int drawScoreX = mini ? (x - takeUp) : (FlappyBird.WIDTH / 2 - takeUp / 2);
+
+        // Draw every digit
+        for (int i = 0; i < digitCount; i++) {
+            drawComponent((mini ? "mini-score-" : "score-") + digits[i], drawScoreX, mini ? y : 60, g);
+
+            // Size to add varies based on texture
+            drawScoreX += digitSize(digits[i], mini);
+        }
+
+    }
+
+    private int digitSize(char digit, boolean mini) {
+        if (mini) {
+            return 18;
+        } else {
+            return digit == '1' ? 25 : 35;
+        }
+    }
+
     public Map<String, Texture> getTextures() {
         return textures;
     }
