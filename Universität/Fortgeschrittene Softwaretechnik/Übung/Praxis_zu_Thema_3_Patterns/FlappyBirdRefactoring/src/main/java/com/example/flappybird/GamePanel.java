@@ -170,8 +170,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		if (gameBird.isAlive()) {
 
 			// Move base
-			baseCoords[0] = baseCoords[0] - baseSpeed < -435 ? 435 : baseCoords[0] - baseSpeed;
-			baseCoords[1] = baseCoords[1] - baseSpeed < -435 ? 435 : baseCoords[1] - baseSpeed;
+			moveGround(0);
+			moveGround(1);
 
 		}
 
@@ -181,11 +181,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		// Draw bird
 		gameBird.renderBird(g);
 
-		drawBase(g);
-
 		switch (gameState) {
 
 			case MENU:
+
+				drawBase(g);
 
 				drawMenu(g);
 
@@ -207,11 +207,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 						gameBird.inGame();
 					}
 
+					drawBase(g);
+
 					drawScore(g, score, false, 0, 0); // Draw player score
 
 				} else {
 
 					pipeHandler(g);
+
+					drawBase(g);
 
 					// Draw game over assets
 					gameOver(g);
@@ -221,6 +225,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				break;
 		}
 
+	}
+
+	private void moveGround(int index) {
+		baseCoords[index] = baseCoords[index] - baseSpeed < -435 ? 435 : baseCoords[index] - baseSpeed;
 	}
 
 	/////////////////////////
@@ -273,21 +281,16 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	}
 
 	private void drawComponent(String component, Graphics g) {
-		g.drawImage(textures.get(component).getImage(),
-				textures.get(component).getX(),
-				textures.get(component).getY(), null);
+		Texture texture = textures.get(component);
+		drawComponent(component, texture.getX(), texture.getY(), g);
 	}
 
 	private void drawComponent(String component, int x, Graphics g) {
-		g.drawImage(textures.get(component).getImage(),
-				x,
-				textures.get(component).getY(), null);
+		drawComponent(component, x, textures.get(component).getY(), g);
 	}
 
 	private void drawComponent(String component, int x, int y, Graphics g) {
-		g.drawImage(textures.get(component).getImage(),
-				x,
-				y, null);
+		g.drawImage(textures.get(component).getImage(), x, y, null);
 	}
 
 	private void drawCredits(String s1, String s2, Graphics g) {
@@ -332,11 +335,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		for (char digit : digits) {
 
 			// Size to add varies based on texture
-			if (mini) {
-				takeUp += 18;
-			} else {
-				takeUp += digit == '1' ? 25 : 35;
-			}
+			takeUp += digitSize(digit, mini);
 		}
 
 		// Calculate x-coordinate
@@ -344,16 +343,20 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		// Draw every digit
 		for (int i = 0; i < digitCount; i++) {
-			drawComponent(mini ? "mini-score-" : "score-" + digits[i], drawScoreX, mini ? y : 60, g);
+			drawComponent((mini ? "mini-score-" : "score-") + digits[i], drawScoreX, mini ? y : 60, g);
 			
 			// Size to add varies based on texture
-			if (mini) {
-				drawScoreX += 18;
-			} else {
-				drawScoreX += digits[i] == '1' ? 25 : 35;
-			}
+			drawScoreX += digitSize(digits[i], mini);
 		}
 
+	}
+
+	private int digitSize(char digit, boolean mini) {
+		if (mini) {
+			return 18;
+		} else {
+			return digit == '1' ? 25 : 35;
+		}
 	}
 
 	/**
@@ -383,37 +386,20 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				if (p.getX() < 0) {
 					if (topPipe == null) { 
 						topPipe = p;
-						topPipe.setCanAwardPoint(true);
 					}
 					else if (bottomPipe == null) {
 						bottomPipe = p; 
-						topPipe.setCanAwardPoint(true);;
 					}
+					topPipe.setCanAwardPoint(true);
 				}
 			}
 
-			Pipe currentPipe; // New pipe object for top and bottom pipes
-
 			// Move and handle initial creation of top and bottom pipes
 
-			if (topPipe == null) {
-				currentPipe = new Pipe("top");
-				topPipe = currentPipe;
-				pipes.add(topPipe);
-			} else {
-				topPipe.reset();
-			}
+			topPipe = addOrReset(topPipe, "top");
 
-			if (bottomPipe == null) {
-				currentPipe = new Pipe("bottom");
-				bottomPipe = currentPipe;
-				pipes.add(bottomPipe);
-
-				// Avoid doubling points when passing initial pipes
-				bottomPipe.setCanAwardPoint(false);
-			} else {
-				bottomPipe.reset();
-			}
+			bottomPipe = addOrReset(bottomPipe, "bottom");
+			bottomPipe.setCanAwardPoint(false);
 
 			// Set y-coordinate of bottom pipe based on 
 			// y-coordinate of top pipe
@@ -431,11 +417,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			}
 
 			// Draw the top and bottom pipes
-			if (p.getY() <= 0) {
-				drawComponent("pipe-top", p.getX(), p.getY(), g);
-			} else {
-				drawComponent("pipe-bottom", p.getX(), p.getY(), g);
-			}
+			drawComponent(p.getY() <= 0 ? "pipe-top" : "pipe-bottom", p.getX(), p.getY(), g);
 
 			// Check if bird hits pipes
 			if (gameBird.isAlive()) {
@@ -463,6 +445,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				}
 			}
 		}
+	}
+
+	private Pipe addOrReset(Pipe p, String pipeType) {
+		if (p == null) {
+			p = new Pipe(pipeType);
+			pipes.add(p);
+		} else {
+			p.reset();
+		}
+
+		return p;
 	}
 
 	public void gameOver (Graphics g) {
@@ -523,8 +516,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 			// Start game on 'enter' key
 			if (keyCode == KeyEvent.VK_ENTER) {
-				gameState = GAME;
-				inStartGameState = true;
+				startGame();
 			}
 
 		} else if (gameState == GAME && gameBird.isAlive()) {
@@ -532,13 +524,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			if (keyCode == KeyEvent.VK_SPACE) {
 
 				// Exit instructions state
-				if (inStartGameState) {
-					inStartGameState = false;
-				}
+				inStartGameState = false;
 
 				// Jump and play audio even if in instructions state
-				gameBird.jump();
-				audio.jump();
+				flap();
 			}
 		}
 	}
@@ -559,22 +548,18 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		if (gameState == MENU) {
 
-			if (isTouching(textures.get("playButton").getRect())) {
-				gameState = GAME;
-				inStartGameState = true;
+			if (isTouching(getTextureRect("playButton"))) {
+				startGame();
 
-			} else if (isTouching(textures.get("leaderboard").getRect())) {
+			} else if (isTouching(getTextureRect("leaderboard"))) {
 
 				// Dummy message
-				JOptionPane.showMessageDialog(this, 
-					"We can't access the leaderboard right now!",
-					"Oops!",
-					JOptionPane.ERROR_MESSAGE);
+				showErrorMessage();
 			}
 
 			if (gameBird.isAlive()) {
 
-				if (isTouching(textures.get("rateButton").getRect())) {
+				if (isTouching(getTextureRect("rateButton"))) {
 					Helper.openURL("http://paulkr.com"); // Open website
 				}
 
@@ -585,36 +570,50 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			if (gameBird.isAlive()) {
 
 				// Allow jump with clicks
-				if (inStartGameState) {
-					inStartGameState = false;
-				}
+				inStartGameState = false;
 
 				// Jump and play sound
-				gameBird.jump();
-				audio.jump();
+				flap();
 
 			} else {
 
 				// On game over screen, allow restart and leaderboard buttons
-				if (isTouching(textures.get("playButton").getRect())) {
-					inStartGameState = true;
-					gameState = GAME;
+				if (isTouching(getTextureRect("playButton"))) {
+					startGame();
 					restart();
 					gameBird.setGameStartPos();
 
-				} else if (isTouching(textures.get("leaderboard").getRect())) {
+				} else if (isTouching(getTextureRect("leaderboard"))) {
 
 					// Dummy message
-					JOptionPane.showMessageDialog(this, 
-						"We can't access the leaderboard right now!",
-						"Oops!",
-						JOptionPane.ERROR_MESSAGE);
+					showErrorMessage();
 				}
 
 			}
 			
 		}
 
+	}
+
+	private void startGame() {
+		gameState = GAME;
+		inStartGameState = true;
+	}
+
+	private void flap() {
+		gameBird.jump();
+		audio.jump();
+	}
+
+	public Rectangle getTextureRect(String textureName) {
+		return textures.get(textureName).getRect();
+	}
+
+	public void showErrorMessage() {
+		JOptionPane.showMessageDialog(this,
+	"We can't access the leaderboard right now!",
+		"Oops!",
+			JOptionPane.ERROR_MESSAGE);
 	}
 
 
