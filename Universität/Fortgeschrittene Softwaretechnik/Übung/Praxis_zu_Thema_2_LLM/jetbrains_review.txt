@@ -1,0 +1,79 @@
+Du bist professioneller Software Entwickler und Code Reviewer.
+
+Bewerte den folgenden Code anhand üblicher Kriterien. Dazu gehören:
+-Code smells
+-Code duplikate
+-Code Readability
+-Code Comments
+
+Gib eine detaillierte aber nicht zu ausschweifende Bewertung von 0-10 zu den jeweiligen Aspekten ab.
+
+
+---------------------------------------------------------
+
+
+Code Review: jetbrains_stratego.py
+Aspekt	Bewertung
+Code Smells	6/10
+Code-Duplikate	6/10
+Readability	8/10
+Code Comments	3/10
+Gesamt	ca. 6/10
+Die Struktur ist solide: Spiellogik und UI sind getrennt, die Methoden überwiegend klein und die Typannotationen konsequent. Schwächen gibt es vor allem bei den Kommentaren, bei totem Code und bei der Modellierung von Rängen und Spielern als Strings.
+
+Code Smells: 6/10
+Toter Code: _create_piece_set wird nirgends aufgerufen.
+Wirkungslose Logik: Da die Fahne in der hintersten Reihe steht, liefert _strategic_bomb_positions höchstens fünf Felder. Das break bei sechs Bomben greift daher nie. Auch die Prüfung auf freie Felder und die gesamte Deduplizierung sind überflüssig.
+Unnötiges Mischen: all_positions und bomb_positions werden ohne Effekt auf das Ergebnis gemischt. Für die übrigen Figuren würde es außerdem reichen, entweder die Figuren oder die Felder zu mischen.
+Primitive Obsession: Ränge wie "1", "3" und "B" sind Strings, die für Vergleiche per int() umgewandelt werden. RED = "Rot" vermischt Identität und Anzeigetext. Besser wären ein Enum und benannte Konstanten.
+Temporäre Zustandsänderung: has_any_legal_move ändert kurzzeitig current_player, um ihn per finally zurückzusetzen. Sauberer wäre es, den Spieler als Parameter an valid_moves_for zu übergeben.
+Vermischte Verantwortung: move() und _resolve_attack() geben deutsche UI-Texte zurück, und auch Fehler werden nur als String gemeldet. Ein Ergebnisobjekt wäre testbarer und würde die Logik von der Darstellung trennen.
+Zu lange Methoden: _place_strategic_army übernimmt Fahne, Bomben und Restfiguren zugleich. _on_cell_clicked und _refresh_board mischen ebenfalls mehrere Aufgaben.
+Magic Values: Die Zeilengrenzen und Hex-Farben sind fest im Code verteilt.
+Umständliche Verzweigung: Der if/else-Block bei Bomben lässt sich zu attacker_wins = attacker.rank == "3" kürzen.
+Code-Duplikate: 6/10
+Größtes Problem, doppelte Zugregeln: _scout_moves sowie is_legal_move mit _is_clear_straight_line prüfen dieselben Regeln getrennt. Regeländerungen müssen also an zwei Stellen erfolgen. Besser ist eine einzige Quelle, etwa is_legal_move als Prüfung auf target in valid_moves_for(...).
+Doppelte Vorprüfungen: valid_moves_for und is_legal_move prüfen beide Besitzer und Beweglichkeit der Figur.
+Kleinere Wiederholungen:
+Die vier Bewegungsrichtungen stehen mehrfach im Code und sollten eine Konstante DIRECTIONS werden.
+Der Spielerwechsel BLUE if ... else RED kommt doppelt vor und passt in eine Hilfsmethode opponent().
+Das Bewegen einer Figur kommt dreimal vor, die Berechnung von free_positions zweimal.
+Das Zurücksetzen der Auswahl wiederholt sich in _on_cell_clicked und _restart.
+Die Initialisierung des Boards steht in __init__ und setup_board.
+PIECE_NAMES und die Kommentare in PIECE_COUNTS enthalten dieselben Namen.
+Readability: 8/10
+Positiv:
+
+Namen wie _resolve_attack und valid_moves_for sind sprechend.
+Formatierung und Typannotationen sind einheitlich.
+Early Returns halten die Verschachtelung meist niedrig.
+Verbesserungsfähig:
+
+_refresh_board wäre mit einer Hilfsmethode für Text und Farben einer Zelle deutlich kompakter.
+_is_clear_straight_line ist für die Richtungsberechnung unnötig lang.
+Die Bedeutung von rank == "1" oder "3" erschließt sich nur mit Blick in die Tabelle.
+Ein Typalias wie Position = tuple[int, int] würde die Signaturen kürzen.
+Code Comments: 3/10
+Es gibt keine Docstrings für Modul, Klassen oder Methoden.
+Die einzigen Kommentare stehen in PIECE_COUNTS und wiederholen PIECE_NAMES.
+Die gute Benennung fängt einiges auf, aber nicht die Stellen, an denen das „Warum“ fehlt:
+Sonderregeln wie Spion gegen Feldmarschall, Mineur gegen Bombe und die Reichweite des Aufklärers
+die Strategie hinter der Aufstellung
+das Verhalten bei fehlenden Zugmöglichkeiten
+Sinnvoll wären kurze Docstrings an den Klassen und öffentlichen Methoden sowie gezielte Kommentare zu den Spielregeln.
+
+Außerhalb der Wertung: zwei fachliche Probleme
+Geheime Figuren werden aufgedeckt (Bug): move() wechselt bereits den Spieler, und _refresh_board() läuft in _on_cell_clicked noch vor der Ergebnismeldung und dem Abdeckfenster. Der Spieler, der gerade gezogen hat, sieht dadurch die Ränge aller gegnerischen Figuren. Das Brett sollte verdeckt bleiben, bis der nächste Spieler auf „Bereit“ klickt.
+Kampfergebnisse fehlen beim Gegner: Das Ergebnis sieht nur der Angreifer, weil es vor dem Spielerwechsel angezeigt wird. Der Verteidiger erfährt nicht, was passiert ist.
+Ich würde zuerst das Informationsleck beheben, danach die Zugregeln zusammenführen und die Ränge als Enum modellieren.
+
+Erstelle aus deiner letzten Antwort ein Claude Doc.
+
+Ich erstelle jetzt aus dem Review ein Claude Doc.
+
+Code Review: jetbrains_stratego.py
+Claude Docs
+·Nur du
+Die Gliederung steht, ich fülle jetzt die Gesamtbewertung.
+
+Code Review: jetbrains_stratego.py ist fertig – du kannst es direkt bearbeiten oder kommentieren.

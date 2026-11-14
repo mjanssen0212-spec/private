@@ -1,0 +1,393 @@
+## Me
+Du bist Entwickler und coding Lehrer. 
+
+Erkläre die folgende Methode:
+
+    def _draw_token(
+        self,
+        canvas: "tk.Canvas",
+        x: float,
+        y: float,
+        size: float,
+        color: Color,
+        rank: Optional[Rank],
+    ) -> None:
+        style = COLOR_STYLES[color]
+        inset = size * 0.075
+        x0, y0 = x + inset, y + inset
+        x1, y1 = x + size - inset, y + size - inset
+        radius = size * 0.13
+        rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+        rounded_rect(canvas, x0, y0, x1, y1 - size * 0.01, radius, fill=style["face"])
+
+        center_x = x + size / 2
+        center_y = y + size / 2
+        if rank is None:
+            draw_sabres(
+                canvas, center_x, center_y, size * 0.42, style["mark"], max(2, size * 0.04)
+            )
+            return
+
+        symbol_y = center_y - size * 0.11
+        if rank is Rank.BOMB:
+            self._draw_bomb(canvas, center_x, symbol_y, size)
+        elif rank is Rank.FLAG:
+            self._draw_flag(canvas, center_x, symbol_y, size)
+        else:
+            canvas.create_text(
+                center_x, symbol_y,
+                text="S" if rank is Rank.SPY else str(rank.strength),
+                fill=TEXT, font=self._font(size * 0.37, True),
+            )
+        canvas.create_text(
+            center_x, center_y + size * 0.24,
+            text=rank.short, fill=TEXT, font=self._font(size * 0.15),
+        )
+
+## AI Assistant
+
+Die Methode _draw_token(...) zeichnet einen einzelnen Stratego-Spielstein auf ein tkinter.Canvas.
+Sie ist Teil der grafischen Oberfläche. Sie verändert nicht die Spiellogik, sondern erzeugt nur die visuelle Darstellung einer Figur: Farbe, Form, Rückseite oder Rangsymbol.
+ 
+Signatur``` python
+def _draw_token(
+    self,
+    canvas: "tk.Canvas",
+    x: float,
+    y: float,
+    size: float,
+    color: Color,
+    rank: Optional[Rank],
+) -> None:
+```
+
+Die Methode bekommt mehrere Informationen übergeben:
+Parameter
+Bedeutung
+canvas
+Die Zeichenfläche, auf die der Spielstein gemalt wird
+x
+Linke obere X-Position des Feldes
+y
+Linke obere Y-Position des Feldes
+size
+Größe des Feldes bzw. Spielsteins
+color
+Farbe des Spielers, also z. B. Rot oder Blau
+rank
+Rang der Figur, z. B. Bombe, Fahne, Spion, Marschall — oder None
+Wichtig ist vor allem rank.
+Wenn rank ein echter Rang ist, wird die Figur aufgedeckt gezeichnet.
+Wenn rank is None ist, wird die Figur verdeckt gezeichnet, also nur mit Rückseiten-Symbol.
+Das ist bei Stratego wichtig, weil der Gegner die Ränge der Figuren nicht sehen darf.
+ 
+1. Farbstil der Figur auswählen``` python
+style = COLOR_STYLES[color]
+```
+
+Hier wird aus einer Farbtabelle der passende Stil für Rot oder Blau geholt.
+Zum Beispiel enthält style Werte wie:``` python
+{
+    "face": "...",
+    "edge": "...",
+    "mark": "...",
+    "hover": "..."
+}
+```
+
+In dieser Methode werden vor allem verwendet:
+Schlüssel
+Bedeutung
+style["face"]
+Hauptfarbe der Vorderseite
+style["edge"]
+dunklere Rand-/Schattenfarbe
+style["mark"]
+Farbe für das Rückseitenzeichen
+ 
+2. Innenabstand und Koordinaten berechnen``` python
+inset = size * 0.075
+x0, y0 = x + inset, y + inset
+x1, y1 = x + size - inset, y + size - inset
+radius = size * 0.13
+```
+
+Der Spielstein soll nicht das komplette Feld ausfüllen. Deshalb wird ein kleiner Abstand zum Feldrand berechnet.
+inset bedeutet hier ungefähr:
+7,5 % der Feldgröße Abstand nach innen.
+Beispiel:
+Wenn size = 60, dann:``` python
+inset = 60 * 0.075
+inset = 4.5
+```
+
+Der Spielstein beginnt also nicht bei x, sondern bei x + 4.5.
+Die Variablen bedeuten:
+Variable
+Bedeutung
+x0, y0
+linke obere Ecke des Spielsteins
+x1, y1
+rechte untere Ecke des Spielsteins
+radius
+Rundung der Ecken
+ 
+3. Spielstein mit Schatten/Kante zeichnen``` python
+rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+rounded_rect(canvas, x0, y0, x1, y1 - size * 0.01, radius, fill=style["face"])
+```
+
+Hier werden zwei abgerundete Rechtecke übereinander gezeichnet.
+Erstes Rechteck``` python
+rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+```
+
+Das ist die dunklere Kante bzw. der Schatten.
+Auffällig ist:``` python
+y0 + size * 0.035
+y1 + size * 0.03
+```
+
+Dieses Rechteck wird leicht nach unten verschoben. Dadurch wirkt der Spielstein etwas plastischer, fast wie ein Button oder eine Spielmarke mit Dicke.
+Zweites Rechteck``` python
+rounded_rect(canvas, x0, y0, x1, y1 - size * 0.01, radius, fill=style["face"])
+```
+
+Das ist die eigentliche Vorderseite der Figur.
+Sie liegt minimal höher als die dunkle Kante. Dadurch entsteht ein Tiefeneffekt.
+ 
+4. Mittelpunkt berechnen``` python
+center_x = x + size / 2
+center_y = y + size / 2
+```
+
+Jetzt wird die Mitte des Feldes berechnet.
+Diese Werte werden später genutzt, um Symbole und Text mittig auf die Figur zu setzen.
+ 
+5. Fall: Figur ist verdeckt``` python
+if rank is None:
+    draw_sabres(
+        canvas, center_x, center_y, size * 0.42, style["mark"], max(2, size * 0.04)
+    )
+    return
+```
+
+Wenn rank is None, wird keine Ranginformation angezeigt.
+Stattdessen werden gekreuzte Säbel gezeichnet:``` python
+draw_sabres(...)
+```
+
+Das ist die Rückseite der Figur.
+Die Argumente bedeuten:``` python
+canvas
+```
+
+Zeichenfläche.``` python
+center_x, center_y
+```
+
+Position in der Mitte des Spielsteins.``` python
+size * 0.42
+```
+
+Größe des Säbel-Symbols relativ zur Feldgröße.``` python
+style["mark"]
+```
+
+Farbe des Symbols.``` python
+max(2, size * 0.04)
+```
+
+Linienstärke der Säbel.
+Der Ausdruck:``` python
+max(2, size * 0.04)
+```
+
+sorgt dafür, dass die Linie nie dünner als 2 Pixel wird. Bei kleinen Feldern bleibt das Symbol dadurch sichtbar.
+Danach kommt:``` python
+return
+```
+
+Das ist wichtig:
+Wenn die Figur verdeckt ist, endet die Methode hier. Es wird kein Rangtext und kein Symbol für Bombe/Fahne gezeichnet.
+ 
+6. Position für Rangsymbol berechnen``` python
+symbol_y = center_y - size * 0.11
+```
+
+Wenn die Figur sichtbar ist, wird oben auf dem Stein ein großes Symbol oder eine Zahl gezeichnet.
+symbol_y liegt etwas oberhalb der Mitte.
+Warum?
+Weil unten zusätzlich noch der Kurzname der Figur steht, z. B. "Mineur" oder "General".
+Der Stein wird also ungefähr so aufgeteilt:``` text
++----------------+
+|                |
+|       10       |  <- Symbol / Stärke / Spezialzeichen
+|                |
+|   Marschall    |  <- Kurzname
++----------------+
+```
+
+ 
+7. Spezialfall Bombe``` python
+if rank is Rank.BOMB:
+    self._draw_bomb(canvas, center_x, symbol_y, size)
+```
+
+Wenn der Rang eine Bombe ist, wird nicht einfach Text "Bombe" oder "0" gezeichnet.
+Stattdessen wird eine kleine Bombengrafik gezeichnet.
+Das übernimmt eine eigene Hilfsmethode:``` python
+self._draw_bomb(...)
+```
+
+ 
+8. Spezialfall Fahne``` python
+elif rank is Rank.FLAG:
+    self._draw_flag(canvas, center_x, symbol_y, size)
+```
+
+Bei der Fahne wird ebenfalls kein normaler Zahlenwert gezeichnet.
+Stattdessen wird ein kleines Flaggensymbol gemalt.
+Das übernimmt:``` python
+self._draw_flag(...)
+```
+
+ 
+9. Normale Figuren: Zahl oder S für Spion``` python
+else:
+    canvas.create_text(
+        center_x, symbol_y,
+        text="S" if rank is Rank.SPY else str(rank.strength),
+        fill=TEXT, font=self._font(size * 0.37, True),
+    )
+```
+
+Für normale bewegliche Figuren wird Text auf den Stein geschrieben.
+Dabei gibt es wieder einen Sonderfall:``` python
+text="S" if rank is Rank.SPY else str(rank.strength)
+```
+
+Das bedeutet:
+Wenn die Figur der Spion ist, zeige "S".
+Sonst zeige die Stärkezahl, z. B. "10", "9", "8" usw.
+Beispiele:
+Rang
+Anzeige
+Feldmarschall
+10
+General
+9
+Mineur
+3
+Aufklärer
+2
+Spion
+S
+Der Text wird mit dieser Farbe und Schrift gezeichnet:``` python
+fill=TEXT
+font=self._font(size * 0.37, True)
+```
+
+TEXT ist die Textfarbe.
+self._font(size * 0.37, True) erzeugt eine zur Figurgröße passende fette Schrift.
+ 
+10. Kurzname unten anzeigen``` python
+canvas.create_text(
+    center_x, center_y + size * 0.24,
+    text=rank.short, fill=TEXT, font=self._font(size * 0.15),
+)
+```
+
+Am Ende wird bei sichtbaren Figuren zusätzlich der Kurzname des Rangs angezeigt.
+Zum Beispiel:
+Rang
+rank.short
+Feldmarschall
+vermutlich "Marschall"
+Hauptmann
+vermutlich "Hauptm."
+Unteroffizier
+vermutlich "Unteroff."
+Bombe
+"Bombe"
+Fahne
+"Fahne"
+Die Position:``` python
+center_y + size * 0.24
+```
+
+liegt unterhalb der Mitte.
+Die Schrift ist kleiner:``` python
+self._font(size * 0.15)
+```
+
+ 
+Gesamtbild der Methode
+Vereinfacht gesagt macht _draw_token Folgendes:``` python
+def _draw_token(...):
+    # 1. Farben bestimmen
+    # 2. Rechteck-Koordinaten berechnen
+    # 3. Spielstein mit Schatten zeichnen
+    # 4. Wenn verdeckt:
+    #      Rückseiten-Symbol zeichnen und fertig
+    # 5. Wenn sichtbar:
+    #      Bombe/Fahne/Symbol/Zahl zeichnen
+    #      Kurzname darunter schreiben
+```
+
+ 
+Warum ist rank: Optional[Rank] wichtig?
+Der Typ:``` python
+Optional[Rank]
+```
+
+bedeutet:``` python
+Rank | None
+```
+
+Also: Der Wert kann entweder ein Rank sein oder None.
+Das ist eine elegante Lösung für verdeckte Gegnerfiguren.
+Statt eine extra Variable wie visible: bool zu übergeben, sagt die Methode:
+rank is None → verdeckt zeichnen
+rank vorhanden → offen zeichnen
+Das ist kurz und gut lesbar.
+ 
+Beispiel
+Angenommen, eine rote Figur ist sichtbar und hat den Rang Rank.MINER.
+Dann passiert ungefähr:
+Roter Stil wird geladen.
+Ein roter abgerundeter Spielstein mit dunkler Kante wird gezeichnet.
+In der Mitte oben wird "3" gezeichnet.
+Unten wird "Mineur" gezeichnet.
+Bei einer verdeckten blauen Figur:
+Blauer Stil wird geladen.
+Ein blauer Spielstein wird gezeichnet.
+In der Mitte werden gekreuzte Säbel gezeichnet.
+Keine Ranginformationen werden angezeigt.
+ 
+Wichtige tkinter-Methoden in dieser Methode
+Methode
+Zweck
+canvas.create_text(...)
+Text auf die Zeichenfläche schreiben
+rounded_rect(...)
+abgerundetes Rechteck zeichnen
+draw_sabres(...)
+gekreuzte Säbel zeichnen
+self._draw_bomb(...)
+Bombensymbol zeichnen
+self._draw_flag(...)
+Fahnensymbol zeichnen
+ 
+Kurzes Fazit
+_draw_token ist eine reine Zeichenmethode.
+Sie entscheidet:
+Welche Farbe hat die Figur?
+Ist sie verdeckt oder sichtbar?
+Muss ein Spezialzeichen gezeichnet werden?
+Bombe
+Fahne
+Säbelrückseite
+Oder wird eine Rangzahl bzw. ein S für Spion angezeigt?
+Welcher Kurzname steht unten auf der Figur?
+Damit kapselt die Methode die komplette Darstellung eines Stratego-Spielsteins an einer einzigen Stelle.

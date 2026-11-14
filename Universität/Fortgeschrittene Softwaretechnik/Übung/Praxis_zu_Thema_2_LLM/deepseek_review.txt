@@ -1,0 +1,100 @@
+PY
+
+Du bist professioneller Software Entwickler und Code Reviewer.
+
+Bewerte den folgenden Code anhand üblicher Kriterien. Dazu gehören:
+-Code smells
+-Code duplikate
+-Code Readability
+-Code Comments
+
+Gib eine detaillierte aber nicht zu ausschweifende Bewertung von 0-10 zu den jeweiligen Aspekten ab.
+
+
+--------------------------------------------
+
+
+
+
+Ich habe den Code nur gelesen, nicht ausgeführt.
+
+Gesamtnote: 6/10. Die Struktur ist solide und die Spiellogik weitgehend von der GUI getrennt. Abzüge gibt es vor allem für String-basierte Logik, zu lange Methoden und drei Fehler: Die Zwei-Felder-Regel greift nie, und das Spiel verrät an zwei Stellen geheime Informationen.
+
+Aspekt	Note
+Code Smells	5/10
+Code-Duplikate	7/10
+Readability	7/10
+Code Comments	6/10
+Code Smells: 5/10
+Stringly-typed Logik: "red", "Fahne", "Aufklärer" oder "attacker" werden überall direkt verglichen. Ein Tippfehler fällt dadurch erst zur Laufzeit auf. Besser sind Enums für Spieler, Figurentyp und Kampfergebnis.
+Untypisiertes Ergebnis: _resolve_attack gibt ein Dict mit festen Schlüsseln zurück. Eine kleine Dataclass wäre sicherer.
+Unnötige Zustandsänderung: _has_movable_pieces setzt current_player vorübergehend um, damit get_valid_moves funktioniert. Der einzige Aufrufer übergibt aber ohnehin den aktuellen Spieler. Der Parameter und das try/finally können also entfallen.
+Vermischte Verantwortlichkeiten:
+Die GUI setzt game_over selbst und ermittelt den Sieger.
+Die Spiellogik erzeugt dagegen fertige Anzeigetexte samt Emojis.
+Lange Methoden: _on_cell_click wählt Figuren aus, führt Züge aus, prüft das Spielende und steuert den Spielerwechsel. move und _refresh_board sind ebenfalls überladen.
+Toter oder redundanter Code:
+WM_DELETE_WINDOW ist bei overrideredirect(True) wirkungslos.
+Die Bedingung result["winner"] == "attacker" ist beim Fahnenangriff immer wahr.
+Magic Values: Die 9 in back_row sollte aus BOARD_SIZE abgeleitet werden, und Farbwerte sind direkt im Code verteilt.
+Stilles Abschneiden: zip(army, remaining) verliert bei falschen Figurenzahlen unbemerkt Figuren. Hier hilft strict=True (ab Python 3.10).
+Schwer testbar: random ist fest eingebaut, und die Aufstellung läuft direkt im Konstruktor. Ein injizierbares random.Random würde reproduzierbare Tests ermöglichen.
+Code-Duplikate: 7/10
+
+Es gibt keine großen Copy-Paste-Blöcke, aber mehrere kleine Wiederholungen:
+
+Bewegungslogik: Die Schleifen für Aufklärer und normale Figuren lassen sich zusammenführen:
+python
+  max_steps = BOARD_SIZE if piece.name == "Aufklärer" else 1
+  for dr, dc in DIRECTIONS:
+      for step in range(1, max_steps + 1):
+          nr, nc = r + dr * step, c + dc * step
+          if not self._in_bounds(nr, nc) or self._is_lake(nr, nc):
+              break
+          target = self.state.board[nr][nc]
+          if target is None:
+              moves.append((nr, nc))
+              continue
+          if target.owner != piece.owner:
+              moves.append((nr, nc))
+          break
+Zugausführung: board[fr][fc] = None steht dreimal in move, und _update_two_square_rule wird in beiden Zweigen aufgerufen. Beides kann einmalig vor oder nach der Verzweigung stehen.
+Gegnerermittlung: "blue" if ... == "red" else "red" kommt zweimal vor und gehört in eine Hilfsfunktion opponent().
+GUI-Zustand: selected = None und valid_targets = [] stehen dreimal im Code, was für ein _clear_selection() spricht.
+Validierung: move prüft Besitz und Beweglichkeit, obwohl get_valid_moves dasselbe noch einmal tut.
+Statustexte: „ist am Zug. Klicke eine eigene Figur an.“ steht zweimal im Code.
+Readability: 7/10
+
+Gut gelungen:
+
+Die Datei ist klar in Konstanten, Datenmodell, Logik und GUI gegliedert.
+Die meisten Methoden und Variablen sind aussagekräftig benannt.
+Dataclasses und PIECE_DEFS machen das Datenmodell gut verständlich.
+
+Verbesserungswürdig:
+
+Koordinaten: fr, fc, tr, tc sind knapp und lassen sich leicht verwechseln. Ein Typ Position würde auch die langen Parameterlisten kürzen.
+Irreführender Name: _has_movable_pieces prüft eigentlich, ob es gültige Züge gibt. has_legal_moves wäre treffender.
+Verschachtelung: Die Ternary-Kette für den Zellentext in _refresh_board gehört in eine eigene Methode.
+Type Hints: Sie sind lückenhaft, etwa bei _in_bounds und _update_two_square_rule.
+Code Comments: 6/10
+
+Gut gelungen:
+
+Der Dateikopf nennt Zweck, Regelquelle und Startbefehl.
+Einige Kommentare erklären das Warum, etwa die späte Prüfung der Bewegungsunfähigkeit.
+
+Verbesserungswürdig:
+
+Fehlende Docstrings: Klassen und zentrale Methoden wie move und get_valid_moves haben keine. Vor allem die Bedeutung von Tuple[bool, str] sollte dokumentiert sein.
+Irreführender Kommentar: „ANDERE Figur zieht → Zähler zurücksetzen“ beschreibt den Code nicht vollständig. Der Zweig greift auch, wenn dieselbe Figur auf ein anderes Feld zieht.
+Uneinheitliche Begriffe: Im Kommentar steht „Mehr-Feld-Regel“, im Code two_square.
+Wenig Mehrwert: Kommentare wie # Zug ausführen oder # Eigene Figur auswählen wiederholen nur den Code.
+Gefundene Fehler
+Die Zwei-Felder-Regel greift nie: Nach jedem Zug überschreibt _update_two_square_rule den Zustand mit der Figur des aktuellen Spielers. Da die Spieler abwechselnd ziehen, ist two_square_piece is piece beim nächsten Zug immer falsch, und der Zähler bleibt bei 0. Die Regel muss pro Spieler verfolgt werden.
+Der Gegner erfährt verdeckte Figuren: move erzeugt zum Beispiel „Hauptmann zog nach (5,4).“, und der Handover-Dialog zeigt das dem nächsten Spieler. Bei normalen Zügen sollte dort nur stehen, dass ein Zug erfolgt ist.
+Die Figuren des nächsten Spielers werden sichtbar: _refresh_board() läuft nach dem Spielerwechsel, aber vor dem Overlay. Das Brett kann also kurz aufblitzen. Das Overlay schützt es außerdem nur unzuverlässig, wenn das Hauptfenster verschoben wird oder ein Fensterwechsel es verdeckt. Das Brett sollte vor dem Dialog komplett verdeckt gerendert werden.
+
+Zusätzlich kann grab_set() unter Linux/X11 mit grab failed: window not viewable abbrechen, wenn das Fenster noch nicht sichtbar ist. Ein vorheriges dialog.wait_visibility() behebt das.
+
+Empfohlene Reihenfolge: Zuerst die drei Fehler beheben, dann die Enums einführen und zuletzt _on_cell_click und move aufteilen.

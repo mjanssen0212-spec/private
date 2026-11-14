@@ -1,0 +1,85 @@
+Du bist professioneller Software Entwickler und Code Reviewer.
+
+Bewerte den folgenden Code anhand üblicher Kriterien. Dazu gehören:
+-Code smells
+-Code duplikate
+-Code Readability
+-Code Comments
+
+Gib eine detaillierte aber nicht zu ausschweifende Bewertung von 0-10 zu den jeweiligen Aspekten ab.
+
+---------------------------------------------
+
+Code Review: gemini_stratego.py
+Gesamtbewertung: 6/10. Der Code ist für einen Prototyp gut lesbar und übersichtlich. Er vermischt aber Spiellogik und UI stark und ist dadurch schwer testbar und erweiterbar.
+
+Aspekt	Note
+Code Smells	5/10
+Code-Duplikate	6/10
+Readability	7/10
+Code Comments	6/10
+Code Smells: 5/10
+God Class: StrategoGame übernimmt Fenster, Rendering, Eingaben, Spielregeln und Spielzustand. Die Regeln lassen sich dadurch nicht ohne Tk-Fenster testen.
+Zu lange Methode: execute_move berechnet den Kampf, baut Texte, zeigt Dialoge, ändert das Brett, wechselt den Spieler und prüft den Sieg.
+Magic Strings: 'Rot', 'Blau', 'select', 'B' und 'F' sind fehleranfällig, Enums wären robuster.
+Uneinheitlicher Rangtyp: Ränge sind Strings und werden für den Vergleich mit int() umgewandelt.
+Magic Numbers: 600, 30, range(10) und range(6, 10) ignorieren cell_size und board_size. Eine Änderung dieser Werte würde das Layout oder den Aufbau beschädigen.
+Namenskollision: self.state überschreibt die Methode state() von tk.Tk. Das ist aktuell harmlos, zeigt aber das Risiko der Vererbung von tk.Tk.
+Flag-Variablen: win und draw bilden zusammen drei Ergebnisse ab, was ein Enum wie BattleResult klarer ausdrücken würde.
+Kleinere Punkte: get_random_pieces muss keine verschachtelte Funktion sein, und self.lakes wäre als set passender.
+Code-Duplikate: 6/10
+Es gibt keine großen kopierten Blöcke, aber viele kleine Wiederholungen:
+
+Figuren zeichnen: Beide Zweige in draw_board enthalten dasselbe create_rectangle. Es gehört vor das if.
+Koordinaten: Die Berechnung von x1, y1, x2, y2 kommt doppelt vor und passt in eine Methode wie cell_bounds(r, c).
+Auswahlprüfung: Die Bedingung piece and piece.color == ... and piece.is_movable() steht zweimal in on_click.
+Aufstellung: Die Schleifen für Blau und Rot in setup_board sind fast identisch.
+Gegner bestimmen: Die Logik steht zweimal in execute_move und passt in eine Funktion wie opponent(color).
+Figur bewegen: Die beiden Brett-Zuweisungen stehen sowohl im Sieg-Fall als auch beim normalen Zug.
+Spielende: messagebox.showinfo(...) und self.quit() wiederholen sich und könnten in end_game(message) liegen.
+Readability: 7/10
+Positiv
+
+Methodennamen wie is_valid_move, execute_move und setup_board sind klar.
+Der Aufbau ist logisch, und die Verschachtelung bleibt überwiegend moderat.
+sr, sc, er und ec sind im Kontext verständlich, auch wenn sie etwas knapp sind.
+Negativ
+
+Die Kampflogik in execute_move ist durch die eingestreuten Texte schwerer zu überblicken.
+Einzeiler wie if ...: return False verstoßen gegen PEP 8 und sind nicht einheitlich mit dem restlichen Code.
+Englische Bezeichner und deutsche Werte sind gemischt, zum Beispiel current_player = 'Rot'.
+Type Hints fehlen, obwohl sie gerade bei Positionstupeln helfen würden.
+Code Comments: 6/10
+Positiv
+
+Die Legende der Ränge am Dateianfang ist hilfreich.
+# Rot beginnt (Regel) und der Kommentar zu den Sprüngen der Aufklärer erklären Fachregeln.
+Negativ
+
+Docstrings fehlen vollständig, auch bei nicht offensichtlichen Methoden wie execute_move.
+Kommentare wie # Seen in der Mitte wiederholen weitgehend, was der Code ohnehin zeigt.
+Der Kommentar in has_movable_pieces versteckt eine bekannte Lücke und sollte ein klares TODO sein oder behoben werden.
+# Optional: Logo/Rückseite andeuten wirkt wie eine liegen gebliebene Notiz.
+Logikfehler
+Diese Punkte lagen außerhalb deiner Kriterien, sind aber wichtiger als die meisten Stilfragen:
+
+Das Spiel kann hängen bleiben: has_movable_pieces prüft nur, ob bewegliche Figuren existieren, nicht ob sie ziehen können. Ist ein Spieler vollständig blockiert, gibt es keinen legalen Zug und kein Spielende.
+Falscher Sieger möglich: Verlieren beide Spieler gleichzeitig ihre letzten beweglichen Figuren, wird trotzdem ein Sieger ausgerufen, obwohl auch dieser nicht mehr ziehen kann.
+Der Verteidiger erfährt nichts vom Kampf: Der Kampfbericht erscheint nur dem Angreifer, und nach dem Spielerwechsel gibt es keinen Hinweis. Bei Stratego werden die Ränge aber beiden Spielern gezeigt.
+Empfohlene Reihenfolge
+Die drei Logikfehler beheben.
+Spiellogik in eine UI-freie Klasse wie GameState auslagern und mit Unit-Tests absichern.
+Magic Strings durch Enums ersetzen und Ränge als int speichern.
+execute_move aufteilen, zum Beispiel in resolve_battle(), apply_result() und end_turn().
+Duplikate entfernen sowie Docstrings und Type Hints ergänzen.
+Erstelle aus deiner letzten Antwort ein Claude Doc.
+
+Ich erstelle jetzt aus dem Review ein Claude Doc.
+
+Code Review: gemini_stratego.py
+Claude Docs
+·Nur du
+Die Gliederung steht, jetzt fülle ich die Gesamtbewertung.
+
+Das Doc Code Review: gemini_stratego.py ist fertig. Du kannst es direkt bearbeiten, kommentieren oder teilen.
+

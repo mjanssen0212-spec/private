@@ -9,8 +9,21 @@ Hohe Kopplung GamePanel Bird
 
 GamePanel verantwortlich für zeichnen, Kollision in Methode überprüft -> weitergeleitet an Pipe??
 Klasse Texture nicht verwendet??
-Sprites nicht verwendet?? -> Funktionalität in GamePanel??
 
 bestScore / Highscore??????????
 
 kein poltergeist
+
+
+Aufgabe 2
+
+1. Unangebrachte intimität beheben, schnell zu lösen, getter Methode?
+2. Ausgeschlagenes erbe Bird
+3. Poltergeist, statischer Zugriff?
+4. Duplizierten Code
+5. Funktionale Zerlegung
+6. Fix Blob
+7. Sonstiges
+
+Begründung: kleiner Aufwand -> großer Aufwand
+Nach jedem Schritt Spiel auf funktionalität testen

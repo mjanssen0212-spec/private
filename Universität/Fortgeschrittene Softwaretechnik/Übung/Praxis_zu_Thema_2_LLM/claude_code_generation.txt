@@ -1,0 +1,52 @@
+Du bist professioneller Python Entwickler.
+
+Entwickle das Spiel Stratego in Python mit folgenden Requirements:
+
+2 Spieler
+Bewegungen nur innerhalb der Regeln
+Figuren werden am Anfang für beide Seiten zufällig aufgestellt
+Nach dem Zug des Spielers erscheint ein zwischen Fenster um den Bildschirm zu verdecken bis der andere Spieler akzeptiert um seinen Zug zu machen
+Die Regeln des Spiels sind als PDF der Anfrage hinzugefügt.
+Speichere Code in einer Datei mit Namen claude_stratego.py
+
+Stelle Rückfragen um mögliche Ungenauigkeiten zu eliminieren.
+
+Bevor ich mit der Entwicklung beginne, kläre ich die offenen Punkte aus deinen Anforderungen und der Spielanleitung.
+
+Diese Punkte würde ich so umsetzen. Sag einfach Bescheid, wenn du etwas anders möchtest:
+
+Sprache und Spielweise: Die Oberfläche ist deutsch, und beide spielen am selben Rechner.
+Brettansicht: Das Brett dreht sich, sodass der aktive Spieler seine Seite immer unten sieht.
+Startaufstellung: Die Figuren werden einmalig zufällig auf die vier hinteren Reihen verteilt, ohne Option zum Neumischen. Nur falls eine Aufstellung gar keinen Zug zulässt, wird automatisch neu gemischt.
+Kampfanzeige: Der Angreifer sieht das Kampfergebnis direkt nach seinem Zug, danach erscheint das Zwischenfenster.
+Blockierte Figuren: Die Anleitung nennt nur den Fall, dass alle beweglichen Figuren geschlagen sind. Ich werte es genauso als Niederlage, wenn ein Spieler noch bewegliche Figuren hat, aber keinen erlaubten Zug mehr.
+Unentschieden: Verlieren beide Spieler im selben Kampf ihre letzten beweglichen Figuren, endet das Spiel unentschieden.
+Womit soll das Spiel dargestellt werden?
+tkinter (Recommended)
+Was soll der nächste Spieler nach dem Zwischenfenster über den gegnerischen Zug erfahren?
+Zug und Kampf (Recommended)
+Bleiben Figuren nach einem Kampf für den Gegner sichtbar?
+Wieder verdeckt (Recommended)
+Hin- und Herziehen auf zwei Feldern ist höchstens fünfmal hintereinander erlaubt. Unterbricht ein Zug mit einer anderen Figur die Zählung?
+Ja, Zählung neu (Recommended)
+Die Anleitung habe ich jetzt komplett gelesen. Die Figurenzahlen passen mit 40 pro Seite. Als Nächstes richte ich tkinter für die Tests ein und lade die Hinweise zur Gestaltung der Oberfläche.
+
+Das Spiel ist fertig und liegt als claude_stratego.py bei. Du startest es mit python3 claude_stratego.py; zusätzliche Pakete brauchst du nicht. Nur unter Linux fehlt tkinter teils, dann installierst du es mit sudo apt install python3-tk.
+
+Ablauf einer Partie
+
+Start: Beide Seiten werden zufällig aufgestellt, Rot beginnt. Wer Rot spielt, macht ihr selbst aus, denn das Auslosen der Farben aus der Anleitung ist nicht eingebaut.
+Zug: Figur anklicken, die erlaubten Felder werden markiert. Bei einem verbotenen Zug nennt das Spiel den Grund.
+Zwischenfenster: Nach jedem Zug füllt es das komplette Spielfenster in der Farbe des nächsten Spielers. Das Brett wird dabei gar nicht gezeichnet, und erst „Brett aufdecken“ zeigt es wieder. Der Knopf reagiert erst nach 0,6 Sekunden, damit ein versehentlicher Doppelklick nichts aufdeckt.
+Kampf: Der Angreifer sieht zuerst das Ergebnis und klickt auf „Zug beenden“, dann kommt das Zwischenfenster. Der Gegner sieht danach beide Figuren und die markierten Felder, die überlebende Figur ist wieder verdeckt.
+Spielende: Alle Figuren werden aufgedeckt, danach kannst du ein neues Spiel starten oder beenden.
+Getestet
+
+Regeln: 38 Tests bestanden, darunter alle Kampfpaarungen, die Sonderregeln und 150 komplette Zufallspartien.
+Oberfläche: 43 Prüfungen mit simulierten Mausklicks bestanden, auch dass keine verdeckten Figuren sichtbar werden.
+Die Tests liefen unter Linux auf einem virtuellen Bildschirm. Windows und macOS konnte ich nicht testen, dort kann die Schrift etwas anders aussehen.
+Gut zu wissen
+
+Fester Fall beim Hin- und Herziehen: Die Anleitung lässt offen, ob auch ein Angriff unter das Limit fällt. Ich habe das Limit nur auf normale Züge angewendet: Ein Angriff ist immer erlaubt und setzt die Zählung zurück.
+Verdeckung: Das Zwischenfenster verdeckt nur das Spielfenster, nicht den restlichen Bildschirm.
+Keine Aufgabe-Funktion: Eine Partie endet nur nach den Regeln oder durch Schließen des Fensters. Da ein Zug mit einer anderen Figur die Zählung zurücksetzt, kann sich ein Endspiel theoretisch endlos hinziehen. Ein „Aufgeben“-Knopf wäre schnell ergänzt, falls du ihn möchtest.

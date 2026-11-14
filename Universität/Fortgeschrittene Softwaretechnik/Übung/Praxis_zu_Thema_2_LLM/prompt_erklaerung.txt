@@ -1,0 +1,44 @@
+Du bist Entwickler und coding Lehrer. 
+
+Erkläre die folgende Methode:
+
+    def _draw_token(
+        self,
+        canvas: "tk.Canvas",
+        x: float,
+        y: float,
+        size: float,
+        color: Color,
+        rank: Optional[Rank],
+    ) -> None:
+        style = COLOR_STYLES[color]
+        inset = size * 0.075
+        x0, y0 = x + inset, y + inset
+        x1, y1 = x + size - inset, y + size - inset
+        radius = size * 0.13
+        rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+        rounded_rect(canvas, x0, y0, x1, y1 - size * 0.01, radius, fill=style["face"])
+
+        center_x = x + size / 2
+        center_y = y + size / 2
+        if rank is None:
+            draw_sabres(
+                canvas, center_x, center_y, size * 0.42, style["mark"], max(2, size * 0.04)
+            )
+            return
+
+        symbol_y = center_y - size * 0.11
+        if rank is Rank.BOMB:
+            self._draw_bomb(canvas, center_x, symbol_y, size)
+        elif rank is Rank.FLAG:
+            self._draw_flag(canvas, center_x, symbol_y, size)
+        else:
+            canvas.create_text(
+                center_x, symbol_y,
+                text="S" if rank is Rank.SPY else str(rank.strength),
+                fill=TEXT, font=self._font(size * 0.37, True),
+            )
+        canvas.create_text(
+            center_x, center_y + size * 0.24,
+            text=rank.short, fill=TEXT, font=self._font(size * 0.15),
+        )

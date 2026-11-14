@@ -1,0 +1,102 @@
+Du bist professioneller Software Entwickler und Code Reviewer.
+
+Bewerte den angehängten Code anhand üblicher Kriterien. Dazu gehören:
+-Code smells
+-Code duplikate
+-Code Readability
+-Code Comments
+
+Gib eine detaillierte aber nicht zu ausschweifende Bewertung von 0-10 zu den jeweiligen Aspekten ab.
+
+Ich prüfe meine Befunde zuerst mit Linter- und Komplexitätsanalysen, damit die Bewertung auf belastbaren Zeilenangaben beruht.
+
+Code Review: claude_stratego.py
+Gesamtnote: 7,75/10 (ungewichteter Schnitt). Der Code ist sauber strukturiert und gut lesbar. Abzüge gibt es vor allem für die große UI-Klasse, kleine Überbleibsel und mehrfach hinterlegtes Wissen.
+
+Aspekt	Note
+Code Smells	7/10
+Code-Duplikate	7,5/10
+Lesbarkeit	8,5/10
+Kommentare	8/10
+Code Smells: 7/10
+Positiv: Spiellogik und Oberfläche sind strikt getrennt, und Game kommt ohne tkinter aus. Enums, dataclass(frozen=True) und die eigene Exception IllegalMove sind passend eingesetzt.
+
+Schwerer wiegend:
+
+God Class: StrategoApp umfasst 647 Zeilen, 39 Methoden und 33 Attribute. Sie vereint Ablaufsteuerung, Eingabe, Koordinaten und Zeichnen. Ein eigener BoardRenderer und ein SidePanel würden sie deutlich entlasten.
+Lange Regelprüfung: _move_error (Zeile 364) hat eine zyklomatische Komplexität von 18 und 12 Returns. Die frühen Returns sind gut lesbar, aber die Funktion prüft Figur, Geometrie, Pfad und Hin-und-Her-Limit auf einmal. Hilfsmethoden wie _path_error würden sie klar gliedern.
+Gebrochene Kapselung: show_cover setzt disabled_bg und disabled_fg von außen (Zeilen 745–746). Eine Methode wie set_disabled_colors() wäre sauberer. Auch .label wird von außen direkt gepackt.
+Kleinere Punkte:
+
+Toter Code:
+DIRECTIONS (Zeile 50)
+style in _draw_cover (Zeile 893)
+die Stilschlüssel "hover" (Zeilen 440–441)
+die Textwerte von Outcome und Phase, die nirgends gelesen werden
+Weggeworfenes Objekt: __init__ erzeugt ein Game (Zeile 551), das new_game() sofort ersetzt (Zeile 569).
+Doppeltes Rendern: Nach Angriffen und am Spielende zeichnet erst _finish_move (Zeilen 782 und 786), dann direkt danach _on_board_click (Zeile 804).
+Magic Numbers: Besonders auffällig sind die Pixelwerte 62, 66, 90 und 118 in _update_report. Außerdem umgehen 
+#F0C95F und 
+#4E6459 die Farbpalette, und 
+#1E2A25 wiederholt BACKDROP.
+Code-Duplikate: 7,5/10
+Große Copy-and-paste-Blöcke gibt es nicht. Mehrfach vorhanden ist aber fachliches Wissen, und das wiegt schwerer als wiederholte Syntax:
+
+Seen-Geometrie: Sie steht in LAKES (Zeile 55) und noch einmal fest in _draw_terrain (Zeilen 938 und 945–947). Eine Änderung an den Seen träfe nur eine Stelle.
+Hin-und-Her-Regel:
+Die Prüfung liegt nahezu gleich in blocked_return (Zeile 283) und _shuttle_exhausted (Zeile 405), ein Teil davon auch in _walk (Zeile 318).
+Die Texte nennen fest „fünfmal“ (Zeilen 399 und 835), obwohl es MAX_SHUTTLE_MOVES gibt.
+UI-Texte: „kann nicht gezogen werden“ steht in Logik und Oberfläche (Zeilen 369 und 827), „Wähle eine eigene Figur.“ dreimal.
+Kleine Wiederholungen:
+fast gleiche cover_text-Blöcke (Zeilen 731–734 und 737–740)
+die Oval-Aufrufe in _draw_selection (Zeilen 1094–1105)
+_set_hint("") plus _render() in _finish_move
+das Spalten-Tupel (Zeilen 680 und 695)
+canvas.delete("all") in beiden Pfaden von _draw_board
+Lesbarkeit: 8,5/10
+Positiv:
+
+Die Namen sind sprechend, zum Beispiel blocked_return, legal_targets und resolve_battle.
+Die Methoden sind überwiegend kurz, und Abschnitte wie „Abfragen“ und „Regelprüfung“ erleichtern die Orientierung.
+Die Typannotationen sind durchgängig. pylint vergibt 9,5/10 (ohne die Zeilenlängenprüfung).
+_flip löst die Brettdrehung elegant an einer Stelle.
+Verbesserbar:
+
+Datei-Länge: Mit 1.208 Zeilen wäre eine Aufteilung in game.py und ui.py sinnvoll.
+Dichte Stellen: _update_report hat eine Komplexität von 11, und Zeile 1157 ist mit 112 Zeichen zu lang. _update_band mischt Texte und Farben in verschachtelten Zweigen.
+Zu viele Parameter: FlatButton.__init__ hat 8, _draw_token 6.
+Alte Typing-Syntax: Dict, List und Optional ließen sich wegen from __future__ import annotations in den Annotationen modern schreiben.
+Kommentare: 8/10
+Positiv:
+
+Der Modul-Docstring ist die größte Stärke: Er nennt die Architektur und alle Festlegungen, die über die Anleitung hinausgehen.
+Kommentare erklären meist das Warum, etwa in Zeile 455 (Doppelklick-Schutz) und Zeile 581 (negative Werte bedeuten Pixel).
+Der Docstring von _flip ist ein gutes Beispiel für eine nützliche Erklärung.
+Auskommentierten Code oder veraltete TODOs gibt es nicht.
+Verbesserbar:
+
+Fehlende Erklärung: Die doppelten Stützpunkte in rounded_rect (Zeile 461) sehen wie ein Fehler aus, sind aber gewollt. Genau dort fehlt ein Kommentar.
+Fehlende Docstrings: Color, Outcome, Phase, rounded_rect und _update_end_state. Bei _update_end_state wäre die Reihenfolge der Endprüfungen erklärenswert.
+Unpräzise Aussage: „Rot beginnt immer“ (Zeile 209) passt nicht zum Parameter current. Auch Zeile 1152 setzt das fest voraus.
+Unerklärte Zeichenkonstanten: Werte wie 0.075 und 0.13 hätten mit benannten Konstanten mehr Aussagekraft.
+Empfohlene Reihenfolge
+Toten Code entfernen und die "fünfmal"-Texte aus MAX_SHUTTLE_MOVES erzeugen.
+_draw_terrain aus LAKES ableiten und die Hin-und-Her-Prüfung in einer Methode bündeln.
+Rendering aus StrategoApp herauslösen und _move_error aufteilen.
+Eine Testdatei ergänzen: Der Docstring verspricht direkte Testbarkeit, im Anhang sind aber keine Tests enthalten.
+Prüfung: Ich habe pyflakes, pylint, radon und vulture eingesetzt und 300 zufällige Partien simuliert. Alle endeten regulär und ohne Absturz, und das Limit greift wie vorgesehen beim sechsten Zug. Die Oberfläche habe ich nicht ausgeführt, sondern nur im Code gelesen.
+
+Erstelle aus deiner letzten Antwort ein Claude Doc.
+
+Ich erstelle daraus jetzt ein Claude Doc.
+
+Skill geladen
+docs
+Code Review: claude_stratego.py
+Claude Docs
+·Nur du
+Gliederung steht, jetzt fülle ich die Gesamtbewertung.
+
+Claude Docs verwendet, Artefakte verwendet
+Code Review: claude_stratego.py ist fertig: Du kannst es direkt bearbeiten, kommentieren oder teilen.
+

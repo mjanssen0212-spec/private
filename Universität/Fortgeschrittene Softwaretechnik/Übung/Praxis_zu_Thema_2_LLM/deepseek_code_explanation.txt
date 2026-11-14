@@ -1,0 +1,264 @@
+Du bist Entwickler und coding Lehrer. 
+
+Erkläre die folgende Methode:
+
+    def _draw_token(
+        self,
+        canvas: "tk.Canvas",
+        x: float,
+        y: float,
+        size: float,
+        color: Color,
+        rank: Optional[Rank],
+    ) -> None:
+        style = COLOR_STYLES[color]
+        inset = size * 0.075
+        x0, y0 = x + inset, y + inset
+        x1, y1 = x + size - inset, y + size - inset
+        radius = size * 0.13
+        rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+        rounded_rect(canvas, x0, y0, x1, y1 - size * 0.01, radius, fill=style["face"])
+
+        center_x = x + size / 2
+        center_y = y + size / 2
+        if rank is None:
+            draw_sabres(
+                canvas, center_x, center_y, size * 0.42, style["mark"], max(2, size * 0.04)
+            )
+            return
+
+        symbol_y = center_y - size * 0.11
+        if rank is Rank.BOMB:
+            self._draw_bomb(canvas, center_x, symbol_y, size)
+        elif rank is Rank.FLAG:
+            self._draw_flag(canvas, center_x, symbol_y, size)
+        else:
+            canvas.create_text(
+                center_x, symbol_y,
+                text="S" if rank is Rank.SPY else str(rank.strength),
+                fill=TEXT, font=self._font(size * 0.37, True),
+            )
+        canvas.create_text(
+            center_x, center_y + size * 0.24,
+            text=rank.short, fill=TEXT, font=self._font(size * 0.15),
+        )
+
+----------------------------------
+
+
+The user wants an explanation of this Python method. Let me analyze it carefully and explain it as a coding teacher.
+
+The method _draw_token draws a game token (piece) on a tkinter Canvas. It's from a Stratego-like game presumably (ranks like BOMB, FLAG, SPY, sabres symbol, short names).
+
+Let me break it down:
+
+Signature:
+
+self - instance method
+
+canvas - tkinter Canvas
+
+x, y - top-left position
+
+size - size of the token (square)
+
+color - color/enum
+
+rank - Optional[Rank], can be None
+
+returns None
+
+Body:
+
+style = COLOR_STYLES[color] - dict lookup for color style (face, edge, mark colors)
+
+inset = size * 0.075 - padding
+
+Calculate inner rectangle corners
+
+radius = size * 0.13 - corner radius for rounded rect
+
+Draw shadow/edge: rounded_rect offset down by ~3.5% of size, filled with edge color
+
+Draw face: rounded_rect slightly offset up, filled with face color
+
+Center coordinates
+
+If rank is None: draw sabres (crossed swords) decoration, min thickness
+
+Otherwise:
+
+symbol_y positioned above center
+
+BOMB: draw bomb
+
+FLAG: draw flag
+
+Other: draw text - "S" for spy, otherwise the numeric strength
+
+Draw short label at bottom
+
+Let me write a clear, structured explanation in German. Include:
+
+Purpose
+
+Parameters
+
+Step-by-step logic
+
+Design/visual rationale
+
+Potential gotchas/learning points
+
+Since it's a teaching context, I should explain the "why" too - the layered drawing for 3D effect, magic numbers, etc.
+
+Let me write it out.
+
+Erklärung: _draw_token
+Diese Methode zeichnet einen einzelnen Spielstein (Token) auf ein tk.Canvas — typisch für ein Stratego-ähnliches Brettspiel. Sie bekommt eine Position, eine Größe, eine Farbe und optional einen Rang und rendert daraus einen hübschen, leicht „3D"-wirkenden Spielstein.
+
+1. Signatur und Parameter
+python
+def _draw_token(
+    self,
+    canvas: "tk.Canvas",
+    x: float,
+    y: float,
+    size: float,
+    color: Color,
+    rank: Optional[Rank],
+) -> None:
+Parameter	Bedeutung
+canvas	Die tkinter-Zeichenfläche, auf der gezeichnet wird
+x, y	Linke obere Ecke des Tokens (nicht das Zentrum!)
+size	Kantenlänge in Pixeln — der Token ist quadratisch
+color	Farbe des Spielers (Enum), z. B. Color.RED
+rank	Rang der Figur (Rank.BOMB, Rank.SPY, …) oder None
+→ Rückgabe	None — die Methode zeichnet nur, sie gibt nichts zurück
+Das Optional[Rank] ist wichtig: None bedeutet „unbekannte Figur" — also die Rückseite eines Tokens, wenn der Gegner sie nicht sehen soll.
+
+2. Farb-Styling nachschlagen
+python
+style = COLOR_STYLES[color]
+COLOR_STYLES ist ein Dict, das zu jeder Spielerfarbe ein Style-Dictionary liefert. Vermutlich mit Keys wie "face", "edge" und "mark":
+
+face = Hauptfläche
+
+edge = dunklerer Rand (für den Schatten-Effekt)
+
+mark = Farbe für Symbole (z. B. gekreuzte Säbel)
+
+So bleibt das Design an einer Stelle zentral definiert und die Methode ist frei von hartkodierten Farbwerten.
+
+3. Geometrie: Innenrechteck und Eckenradius
+python
+inset = size * 0.075
+x0, y0 = x + inset, y + inset
+x1, y1 = x + size - inset, y + size - inset
+radius = size * 0.13
+inset = 7,5 % Rand pro Seite → das eigentliche Rechteck ist etwas kleiner als size.
+
+(x0, y0) und (x1, y1) sind die linke obere bzw. rechte untere Ecke dieses Innenrechtecks.
+
+radius = 13 % der Größe als Eckenradius für die abgerundeten Rechtecke.
+
+Merke: Alles wird relativ zu size berechnet. Das ist wichtig, damit der Token bei jeder Größe (Vorschau vs. Spielfeld) gleich aussieht. Solche „Magic Numbers" wie 0.075 sind typisch — sie sind Design-Entscheidungen, keine Physik.
+
+4. Der „3D-Effekt" durch zwei Schichten
+python
+rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+rounded_rect(canvas, x0, y0,               x1, y1 - size * 0.01, radius, fill=style["face"])
+Hier passiert der Trick: Es werden zwei abgerundete Rechtecke übereinander gezeichnet:
+
+Erste (hinten): um ca. 3–3,5 % nach unten verschoben, Farbe edge (dunkel) → wirkt wie ein Schatten / Seitenkante.
+
+Zweite (vorne): normal positioniert, leicht nach oben gezogen (unten -1 %), Farbe face (hell) → die Oberfläche.
+
+Ergebnis: ein Token, der aussieht, als hätte er Dicke — wie ein Stück Plastik auf dem Tisch. Das ist ein klassischer 2D-Trick („fake extrusion"), ohne echte 3D-Renderung.
+
+Beachte: Das zweite Rechteck ist unten etwas kürzer (y1 - size*0.01), damit der Schatten unten leicht rausschaut — das verstärkt den Effekt.
+
+5. Zentrum berechnen
+python
+center_x = x + size / 2
+center_y = y + size / 2
+Alle Symbole orientieren sich am Mittelpunkt des Tokens. Die Methode rechnet bewusst von x, y (Ecke) nach center_* — Caller-Code kann also einfacher mit Ecken arbeiten.
+
+6. Fall 1: Unbekannte Figur (rank is None)
+python
+if rank is None:
+    draw_sabres(
+        canvas, center_x, center_y, size * 0.42, style["mark"], max(2, size * 0.04)
+    )
+    return
+Bei unbekanntem Rang wird nur ein dekoratives Symbol gezeichnet: zwei gekreuzte Säbel (draw_sabres). Parameter:
+
+Mittelpunkt
+
+Länge size * 0.42 (also ca. 42 % des Tokens)
+
+Farbe style["mark"]
+
+Strichdicke max(2, size * 0.04) — nie dünner als 2 px, damit's auf kleinen Tokens nicht verschwindet.
+
+Dann return — der Rest der Methode (Rang-Text etc.) wird übersprungen. Das ist das klassische „Early Return"-Muster.
+
+7. Fall 2: Bekannter Rang
+python
+symbol_y = center_y - size * 0.11
+Der Rang wird etwas oberhalb des Zentrums gezeichnet, damit unten noch Platz für das Kürzel bleibt.
+
+Symbol je nach Rang
+python
+if rank is Rank.BOMB:
+    self._draw_bomb(canvas, center_x, symbol_y, size)
+elif rank is Rank.FLAG:
+    self._draw_flag(canvas, center_x, symbol_y, size)
+else:
+    canvas.create_text(
+        center_x, symbol_y,
+        text="S" if rank is Rank.SPY else str(rank.strength),
+        fill=TEXT, font=self._font(size * 0.37, True),
+    )
+Bombe und Flagge bekommen eigene Zeichenmethoden (hübsche Icons).
+
+Alle anderen Ränge bekommen Text:
+
+Spion → Buchstabe "S"
+
+Sonst → rank.strength (die Zahl, z. B. "7" für den Major)
+
+font=self._font(size * 0.37, True) — Schriftgröße skaliert mit dem Token (37 %), True bedeutet vermutlich „fett".
+
+Detail am Rande: if rank is Rank.SPY else ... — hier wird is (Identitätsvergleich) statt == verwendet. Bei Enums ist das korrekt und sogar idiomatisch, weil Enum-Member Singletons sind.
+
+Kürzel darunter
+python
+canvas.create_text(
+    center_x, center_y + size * 0.24,
+    text=rank.short, fill=TEXT, font=self._font(size * 0.15),
+)
+Unter dem Symbol (24 % unter der Mitte) wird das Kürzel des Rangs gezeichnet (z. B. "MAJ" für Major), in kleiner Schrift (15 %). Das ist das typische Stratego-Design: großes Symbol/Zahl + kleines Namenskürzel.
+
+8. Didaktische Takeaways
+Relative Koordinaten (size * k) überall — macht die Methode größenunabhängig. Faustregel: keine absoluten Pixel außer als Mindestwerte (max(2, …)).
+
+Layering als Design-Technik — zwei Rechtecke = Pseudo-3D. Günstig und effektiv.
+
+Single Source of Truth — Farben kommen aus COLOR_STYLES, nicht aus der Methode. Ändert man das Design, ändert man nur das Dict.
+
+Early Return bei rank is None — hält den Code flach, statt in ein großes if rank is not None: einzupacken.
+
+Enum mit is vergleichen — korrekt bei Python-Enums.
+
+Delegation — Bombe/Flagge sind in eigene Methoden (_draw_bomb, _draw_flag) ausgelagert. Die Hauptmethode bleibt lesbar, auch wenn's nur ein Symbol betrifft.
+
+Guard-Clauses für Schriftgrößen — max(2, size*0.04) verhindert unsichtbare Linien bei Mini-Tokens.
+
+9. Kleine Schwachstellen / Diskussionspunkte
+Magic Numbers wie 0.075, 0.035, 0.11, 0.24 sind nirgends benannt. In einem größeren Projekt würde man sie als Konstanten (TOKEN_INSET_RATIO, …) auslagern — oder als kleines Layout-NamedTuple.
+
+Der Parameter x, y als Ecke ist nicht offensichtlich aus dem Namen — ein Docstring wäre hier Gold wert („Zeichnet einen Token mit linker oberer Ecke bei (x, y)").
+
+style["face"] etc. sind String-Keys — ein TypedDict oder @dataclass würde Tippfehler zur Laufzeit vermeiden helfen.
+

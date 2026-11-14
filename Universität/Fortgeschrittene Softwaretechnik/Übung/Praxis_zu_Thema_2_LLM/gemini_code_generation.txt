@@ -1,0 +1,59 @@
+Du bist professioneller Python Entwickler.
+
+
+
+Entwickle das Spiel Stratego in Python mit folgenden Requirements:
+
+
+
+2 Spieler
+Bewegungen nur innerhalb der Regeln
+Figuren werden am Anfang für beide Seiten zufällig aufgestellt
+Nach dem Zug des Spielers erscheint ein zwischen Fenster um den Bildschirm zu verdecken bis der andere Spieler akzeptiert um seinen Zug zu machen
+
+
+Die Regeln des Spiels sind als PDF der Anfrage hinzugefügt.
+
+Speichere Code in einer Datei mit Namen gemini_stratego.py
+
+
+
+Stelle Rückfragen um mögliche Ungenauigkeiten zu eliminieren.
+
+--------------------------------------------------------
+
+Dein Stratego-Spiel in Python ist fertig und steht als Datei bereit.
+
+PY-Symbol
+gemini_stratego
+ PY 
+Ich habe für dieses Spiel die Standard-Bibliothek tkinter verwendet, sodass du die Datei direkt ohne zusätzliche Installationen ausführen kannst. Der Code setzt deine geforderten Mechaniken sowie die wichtigsten Grundregeln aus dem PDF um:
+
+Das Spielfeld: Das Spiel findet auf dem korrekten Raster statt, wobei die mittleren Reihen Seen enthalten, die weder betreten noch übersprungen werden dürfen.   
+original-stratego-3498-gebraucht-g002301420.pdf
+
+Figuren & Ränge: Beide Spieler haben 40 Figuren in den korrekten Mengen, mit Rängen vom Feldmarschall bis zum Spion, inklusive Fahne und Bomben.   
+original-stratego-3498-gebraucht-g002301420.pdf
+
+Aufstellung: Die Figuren jedes Spielers werden zu Beginn verdeckt und zufällig auf die untersten beziehungsweise obersten vier Reihen verteilt.   
+original-stratego-3498-gebraucht-g002301420.pdf
+
+Sonderregeln im Kampf: Alle Besonderheiten sind integriert. Der Spion schlägt den Feldmarschall (sofern der Spion angreift), der Mineur entschärft Bomben und Fahnen sowie Bomben dürfen sich nicht bewegen.   
+original-stratego-3498-gebraucht-g002301420.pdf
++ 1
+
+Aufklärer: Die Aufklärer können beliebig weit in gerader Richtung über unbesetzte Felder springen.   
+original-stratego-3498-gebraucht-g002301420.pdf
+
+Hotseat-Multiplayer: Nach jedem Zug wird ein neutraler Bildschirm eingeblendet. Erst wenn der nächste Spieler per Klick bestätigt, werden nur die Figuren seiner eigenen Farbe aufgedeckt.
+
+Um mögliche Ungenauigkeiten für eine perfekte Version auszuräumen, habe ich noch folgende Rückfragen an dich:
+
+Strategische Aufstellung: Die Spielanleitung betont ausdrücklich, wie wichtig der Aufbau ist und empfiehlt, die Fahne etwa durch Bomben zu schützen. Aktuell ist die Aufstellung strikt zufällig programmiert. Soll in einer zukünftigen Iteration eine Phase eingebaut werden, in der beide Spieler ihre 40 Figuren manuell auf dem Feld platzieren können?   
+original-stratego-3498-gebraucht-g002301420.pdf
+
+Die 5-Züge-Regel: Laut den Regeln ist das Hin- und Herziehen einer Figur zwischen zwei Feldern auf maximal fünfmal hintereinander begrenzt. Diese recht komplexe Turnier-Regel ist aktuell noch nicht aktiv – soll diese Zuglimitierung strikt erzwungen werden?   
+original-stratego-3498-gebraucht-g002301420.pdf
+
+Optik (UI): Das Spiel verwendet momentan einfache farbige Rechtecke und Text (z.B. "10" für den Feldmarschall), um ohne externe Abhängigkeiten zu laufen. Ist das für deine Zwecke ausreichend, oder sollen wir auf eine Bibliothek wie pygame wechseln, in die du eigene Bilddateien für die Spielsteine laden kannst?
+

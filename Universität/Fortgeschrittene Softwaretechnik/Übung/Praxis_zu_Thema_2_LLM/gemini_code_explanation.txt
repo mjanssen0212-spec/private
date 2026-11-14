@@ -1,0 +1,143 @@
+Du bist Entwickler und coding Lehrer. 
+
+
+
+Erkläre die folgende Methode:
+
+
+
+    def _draw_token(
+
+        self,
+
+        canvas: "tk.Canvas",
+
+        x: float,
+
+        y: float,
+
+        size: float,
+
+        color: Color,
+
+        rank: Optional[Rank],
+
+    ) -> None:
+
+        style = COLOR_STYLES[color]
+
+        inset = size * 0.075
+
+        x0, y0 = x + inset, y + inset
+
+        x1, y1 = x + size - inset, y + size - inset
+
+        radius = size * 0.13
+
+        rounded_rect(canvas, x0, y0 + size * 0.035, x1, y1 + size * 0.03, radius, fill=style["edge"])
+
+        rounded_rect(canvas, x0, y0, x1, y1 - size * 0.01, radius, fill=style["face"])
+
+
+
+        center_x = x + size / 2
+
+        center_y = y + size / 2
+
+        if rank is None:
+
+            draw_sabres(
+
+                canvas, center_x, center_y, size * 0.42, style["mark"], max(2, size * 0.04)
+
+            )
+
+            return
+
+
+
+        symbol_y = center_y - size * 0.11
+
+        if rank is Rank.BOMB:
+
+            self._draw_bomb(canvas, center_x, symbol_y, size)
+
+        elif rank is Rank.FLAG:
+
+            self._draw_flag(canvas, center_x, symbol_y, size)
+
+        else:
+
+            canvas.create_text(
+
+                center_x, symbol_y,
+
+                text="S" if rank is Rank.SPY else str(rank.strength),
+
+                fill=TEXT, font=self._font(size * 0.37, True),
+
+            )
+
+        canvas.create_text(
+
+            center_x, center_y + size * 0.24,
+
+            text=rank.short, fill=TEXT, font=self._font(size * 0.15),
+
+        ) 
+
+
+-------------------------------------------------------
+
+
+Diese Methode _draw_token rendert einen einzelnen Spielstein (z. B. für ein Stratego-Brettspiel) auf einem Tkinter-Canvas. Sie deckt von der geometrischen 3D-Optik über die Skalierung bis hin zur Darstellung verdeckter oder aufgedeckter Figuren alle visuellen Details ab.
+
+1. Parameter & Funktionskopf
+canvas: Das Tkinter-Zeichenfeld, auf dem das Element gezeichnet wird.
+
+x, y, size: Die Position der linken oberen Ecke und die Kantenlänge des quadratischen Zielsfeldes.
+
+color: Die Teamfarbe (z. B. Rot oder Blau), anhand derer über das Dictionairy COLOR_STYLES Farbwerte für Kanten und Flächen geladen werden.
+
+rank: Ein optionaler Enum-Wert (Optional[Rank]). Ist rank gleich None, ist die Figur für den Spieler verdeckt.
+
+2. Geometrie & 3D-Optik (Relative Skalierung)
+Der Code arbeitet vollständig mit relativen Maßen basierend auf size anstelle von starren Pixelwerten. Das macht das Layout vektoriell / responsiv:
+
+inset & radius: Erzeugen einen inneren Sicherheitsabstand (size * 0.075) und abgerundete Ecken (size * 0.13).
+
+Doppel-Rechteck für den 3D-Look:
+
+Das erste rounded_rect wird vertikal leicht nach unten versetzt gezeichnet (y0 + size * 0.035) und nutzt die dunklere Farbe style["edge"]. Es bildet den Rand bzw. Schlagschatten der Kante.
+
+Das zweite rounded_rect wird leicht nach oben versetzt darübergelegt (fill=style["face"]). Dadurch entsteht die Illusion eines plastischen, angehobenen Spielsteins.
+
+3. Logik-Verzweigung: Verdeckt vs. Aufgedeckt
+A. Verdeckter Stein (rank is None)
+Wenn der Rang geheim ist (z. B. eine gegnerische Figur), greift das Early Return Pattern:
+
+Es wird über draw_sabres(...) ein neutrales Symbol (gekreuzte Säbel für die Rückseite) in der Mitte platziert.
+
+Die Methode bricht mit return sofort ab, damit keine Rangdetails gezeichnet werden.
+
+B. Aufgedeckter Stein (rank vorhanden)
+Ist der Rang bekannt, wird das Innere in zwei Ebenen aufgeteilt (Hauptsymbol oben, Beschriftung unten):
+
+Hauptsymbol (symbol_y):
+
+Spezialfiguren (BOMB, FLAG): Rufen dedizierte Hilfsmethoden (self._draw_bomb, self._draw_flag) auf.
+
+Spion & Zahlenwerte: Zeichnet per canvas.create_text entweder ein "S" für den Spion oder die Rangstärke (rank.strength) mit fettgedruckter, großer Schrift (size * 0.37).
+
+Klartext-Bezeichnung (Untertitel):
+
+Darunter (center_y + size * 0.24) wird das Kurzsymbol (rank.short, z. B. „B“, „F“, „Sp“) in kleinerer Schriftgröße (size * 0.15) platziert.
+
+Key Takeaways für Clean Code & Software-Architektur
+Vollständige Skalierbarkeit: Alle Offsets, Radien und Schriftgrößen sind Faktoren von size. Der Stein sieht auf einem 4K-Monitor bei 200 Pixeln Größe genauso stimmig aus wie auf 30 Pixeln.
+
+Separation of Concerns: Das Zeichnen komplexer Formen (Säbel, Bomben, Fahnen) wird an eigene Methoden abgegeben, was _draw_token übersichtlich hält.
+
+Guard Clauses: Der frühzeitige Ausstieg bei rank is None erspart tiefe if/else-Verschachtelungen.
+
+Soll ich erklären, wie rounded_rect implementiert wird oder wie Hilfsmethoden wie _draw_bomb funktionieren?
