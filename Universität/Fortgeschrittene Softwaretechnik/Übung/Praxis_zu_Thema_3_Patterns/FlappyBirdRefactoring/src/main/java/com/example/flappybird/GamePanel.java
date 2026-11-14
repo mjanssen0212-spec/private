@@ -18,13 +18,13 @@ import java.util.Calendar;
 
 public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
-	private Random rand;
-	private Calendar cal;
 	
 	////////////////////
 	// Game variables //
 	////////////////////
-	
+	private GameSession gameSession;
+
+
 	// Fonts
 	private Font flappyFontBase, 
 				 flappyFontReal, 
@@ -44,27 +44,18 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	final static int GAME = 1;
 	private int gameState = MENU;  
 
-	private int score;           // Player score
-	private int pipeDistTracker; // Distance between pipes
 	
 	public boolean ready = false;                   // If game has loaded
 	private boolean inStartGameState = false;       // To show instructions scren
-	private Point clickedPoint = new Point(-1, -1); // Store point when player clicks 
-	private boolean scoreWasGreater;                // If score was greater than previous highscore
-	private boolean darkTheme;                      // Boolean to show dark or light screen
-	private String randomBird;                      // Random bird color
+	private Point clickedPoint = new Point(-1, -1); // Store point when player clicks
 	private String medal;                           // Medal to be awarded after each game
-	public ArrayList<Pipe> pipes;                   // Arraylist of Pipe objects
 
-	private Bird gameBird;
-	private Highscore highscore = new Highscore();
+
 	public static Audio audio   = new Audio();
 
 
 	public GamePanel () {
-
-		rand = new Random();
-
+		
 		// Try to load ttf file
 		try {
 			InputStream is = new BufferedInputStream(this.getClass().getResourceAsStream("/res/fonts/flappy-font.ttf"));
@@ -85,6 +76,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		this.sprites = new Sprites();
 		this.textures = sprites.getGameTextures();
 
+		this.gameSession = new GameSession(textures);
 		restart(); // Reset game variables
 
 		// Input listeners
@@ -115,36 +107,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	 */
 	public void restart () {
 
-		// Reset game statistics
-		score            = 0;
-		pipeDistTracker  = 0;
-		scoreWasGreater  = false;
-
-		// Get current hour with Calendar
-		// If it is past noon, use the dark theme
-		cal = Calendar.getInstance();
-		int currentHour = cal.get(Calendar.HOUR_OF_DAY);
-
-		// Array of bird colors
-		String[] birds = new String[] {
-			"yellow",
-			"blue",
-			"red"
-		};
-
-		// Set random scene assets
-		darkTheme = currentHour > 12; // If we should use the dark theme
-		randomBird = birds[rand.nextInt(3)]; // Random bird color
-
-		// Game bird
-		gameBird = new Bird(randomBird, 172, 250, new BufferedImage[] {
-			textures.get(randomBird + "Bird1").getImage(),
-			textures.get(randomBird + "Bird2").getImage(),
-			textures.get(randomBird + "Bird3").getImage()
-		});
-
-		// Remove old pipes
-		pipes = new ArrayList<>();
+		this.gameSession = new GameSession(textures);
 
 	}
 
@@ -162,6 +125,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void paintComponent (Graphics g) {
 		super.paintComponent(g);
 
+		Bird gameBird = gameSession.getBird();
+
 		// Set font and color
 		g.setFont(flappyFontReal);
 		g.setColor(Color.white);
@@ -176,7 +141,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		}
 
 		// Background
-		drawComponent(darkTheme ? "background2" : "background1", 0, 0, g);
+		drawComponent(gameSession.isDarkTheme() ? "background2" : "background1", 0, 0, g);
 
 		// Draw bird
 		gameBird.renderBird(g);
@@ -209,7 +174,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 					drawBase(g);
 
-					drawScore(g, score, false, 0, 0); // Draw player score
+					drawScore(g, gameSession.getScore(), false, 0, 0); // Draw player score
 
 				} else {
 
@@ -307,7 +272,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void startGameScreen (Graphics g) {
 
 		// Set bird's new position
-		gameBird.setGameStartPos();
+		gameSession.getBird().setGameStartPos();
 
 		// Get ready text
 		drawComponent("getReadyText", g);
@@ -363,10 +328,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	 * Moves and repositions pipes
 	 */
 	public void pipeHandler (Graphics g) {
+		int pipeDist = gameSession.getPipeDistTracker();
+		Bird gameBird = gameSession.getBird();
+		ArrayList<Pipe> pipes = (ArrayList<Pipe>) gameSession.getPipes();
 
 		// Decrease distance between pipes
 		if (gameBird.isAlive()) {
-			pipeDistTracker --;
+			gameSession.reducePipeDist();
 		}
 
 		// Initialize pipes as null
@@ -375,10 +343,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		// If there is no distance,
 		// a new pipe is needed
-		if (pipeDistTracker < 0) {
+		if (pipeDist < 0) {
 
 			// Reset distance
-			pipeDistTracker = Pipe.PIPE_DISTANCE;
+			gameSession.setPipeDistTracker(Pipe.PIPE_DISTANCE);
 
 			for (Pipe p : pipes) {
 
@@ -435,7 +403,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 						// Increase score and play sound
 						if (p.getCanAwardPoint()) {
 							audio.point();
-							score ++;
+							gameSession.addScore();
 							p.setCanAwardPoint(false);
 						}
 					}
@@ -447,7 +415,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	private Pipe addOrReset(Pipe p, String pipeType) {
 		if (p == null) {
 			p = new Pipe(pipeType);
-			pipes.add(p);
+			gameSession.addPipe(p);
 		} else {
 			p.reset();
 		}
@@ -457,6 +425,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	public void gameOver (Graphics g) {
 
+		int score = gameSession.getScore();
+		Highscore highscore = gameSession.getHighscore();
 		// Game over text
 		drawComponent("gameOverText", g);
 
@@ -464,7 +434,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		drawComponent("scoreCard", g);
 
 		// New highscore image
-		if (scoreWasGreater) {
+		if (gameSession.isNewHighscore()) {
 			drawComponent("newHighscore", g);
 		}
 
@@ -476,7 +446,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		if (score > highscore.bestScore()) {
 
 			// New best score
-			scoreWasGreater = true;
+			gameSession.setNewHighscore(true);
 			highscore.setNewBest(score); // Set in data file
 		}
 
@@ -516,7 +486,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				startGame();
 			}
 
-		} else if (gameState == GAME && gameBird.isAlive()) {
+		} else if (gameState == GAME && gameSession.getBird().isAlive()) {
 
 			if (keyCode == KeyEvent.VK_SPACE) {
 
@@ -539,6 +509,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void mouseClicked (MouseEvent e) {}
 
 	public void mousePressed (MouseEvent e) {
+		Bird gameBird = gameSession.getBird();
 
 		// Save clicked point
 		clickedPoint = e.getPoint();
@@ -598,7 +569,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	}
 
 	private void flap() {
-		gameBird.jump();
+		gameSession.getBird().jump();
 		audio.jump();
 	}
 
