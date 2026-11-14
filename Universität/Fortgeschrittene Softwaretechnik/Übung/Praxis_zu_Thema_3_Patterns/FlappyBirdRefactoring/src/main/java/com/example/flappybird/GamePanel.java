@@ -91,6 +91,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	}
 
+	public static void playHitSound () {
+		audio.hit();
+	}
+
 	/**
 	 * To start game after everything has been loaded
 	 */
@@ -365,11 +369,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				if (p.getX() < 0) {
 					if (topPipe == null) { 
 						topPipe = p;
-						topPipe.canAwardPoint = true;
+						topPipe.setCanAwardPoint(true);
 					}
 					else if (bottomPipe == null) {
 						bottomPipe = p; 
-						topPipe.canAwardPoint = true;
+						topPipe.setCanAwardPoint(true);;
 					}
 				}
 			}
@@ -392,7 +396,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 				pipes.add(bottomPipe);
 
 				// Avoid doubling points when passing initial pipes
-				bottomPipe.canAwardPoint = false;
+				bottomPipe.setCanAwardPoint(false);
 			} else {
 				bottomPipe.reset();
 			}
@@ -436,10 +440,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 					if (gameBird.getX() >= p.getX() + p.WIDTH / 2) {
 
 						// Increase score and play sound
-						if (p.canAwardPoint) {
+						if (p.getCanAwardPoint()) {
 							audio.point();
 							score ++;
-							p.canAwardPoint = false;
+							p.setCanAwardPoint(false);
 						}
 					}
 				}

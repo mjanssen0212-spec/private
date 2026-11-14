@@ -72,6 +72,14 @@ public class Pipe {
 
 	}
 
+	public boolean getCanAwardPoint () {
+		return canAwardPoint;
+	}
+
+	public void setCanAwardPoint (boolean canAwardPoint) {
+		this.canAwardPoint = canAwardPoint;
+	}
+
 	/**
 	 * @return     Pipe's x-coordinate
 	 */

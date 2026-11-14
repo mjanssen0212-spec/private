@@ -126,7 +126,7 @@ public class Bird extends JPanel {
 		} else {
 
 			// Play audio and set state to dead
-			GamePanel.audio.hit();
+			GamePanel.playHitSound();
 			isAlive = false;
 		}
 

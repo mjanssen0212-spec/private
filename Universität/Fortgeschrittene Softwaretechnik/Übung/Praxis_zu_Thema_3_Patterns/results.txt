@@ -21,9 +21,10 @@ Aufgabe 2
 2. Ausgeschlagenes erbe Bird
 3. Poltergeist, statischer Zugriff?
 4. Duplizierten Code
-5. Funktionale Zerlegung
-6. Fix Blob
-7. Sonstiges
+5. State Pattern
+6. Funktionale Zerlegung
+7. Fix Blob
+8. Sonstiges
 
 Begründung: kleiner Aufwand -> großer Aufwand
 Nach jedem Schritt Spiel auf funktionalität testen
