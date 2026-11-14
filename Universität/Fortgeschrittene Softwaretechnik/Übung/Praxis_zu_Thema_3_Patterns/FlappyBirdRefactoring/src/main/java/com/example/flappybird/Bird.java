@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 
-public class Bird extends JPanel {
+public class Bird {
 
 	// Bird attributes
 	public String color;

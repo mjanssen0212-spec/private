@@ -17,7 +17,7 @@ kein poltergeist
 
 Aufgabe 2
 
-1. Unangebrachte intimität beheben, schnell zu lösen, getter Methode?
+1. Unangebrachte intimität beheben, schnell zu lösen, getter Methode? ✓
 2. Ausgeschlagenes erbe Bird
 3. Poltergeist, statischer Zugriff?
 4. Duplizierten Code
