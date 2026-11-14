@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.awt.image.BufferedImage;
 import java.util.Calendar;
 
@@ -72,9 +71,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 			flappyFontBase = Font.createFont(Font.TRUETYPE_FONT, is);
 
 			// Header and sub-header fonts
-			flappyScoreFont = flappyFontBase.deriveFont(Font.PLAIN, 50);
-			flappyFontReal  = flappyFontBase.deriveFont(Font.PLAIN, 20);
-			flappyMiniFont  = flappyFontBase.deriveFont(Font.PLAIN, 15);
+			flappyScoreFont = getFont(50);
+			flappyFontReal  = getFont(20);
+			flappyMiniFont  = getFont(15);
 
 		} catch (Exception ex) {
 
@@ -92,6 +91,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		addKeyListener(this);
 		addMouseListener(this);
 
+	}
+
+	private Font getFont(int size) {
+		return flappyFontBase.deriveFont(Font.PLAIN, size);
 	}
 
 	public static void playHitSound () {
@@ -141,7 +144,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		});
 
 		// Remove old pipes
-		pipes = new ArrayList<Pipe>();
+		pipes = new ArrayList<>();
 
 	}
 
@@ -173,17 +176,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		}
 
 		// Background
-		g.drawImage(darkTheme ? textures.get("background2").getImage() : 
-			textures.get("background1").getImage(), 0, 0, null);
+		drawComponent(darkTheme ? "background2" : "background1", 0, 0, g);
 
 		// Draw bird
 		gameBird.renderBird(g);
+
+		drawBase(g);
 
 		switch (gameState) {
 
 			case MENU:
 
-				drawBase(g);
 				drawMenu(g);
 
 				gameBird.menuFloat();
@@ -204,13 +207,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 						gameBird.inGame();
 					}
 
-					drawBase(g);                      // Draw base over pipes
 					drawScore(g, score, false, 0, 0); // Draw player score
 
 				} else {
 
 					pipeHandler(g);
-					drawBase(g);
 
 					// Draw game over assets
 					gameOver(g);
@@ -248,8 +249,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void drawBase (Graphics g) {
 
 		// Moving base effect
-		g.drawImage(textures.get("base").getImage(), baseCoords[0], textures.get("base").getY(), null);
-		g.drawImage(textures.get("base").getImage(), baseCoords[1], textures.get("base").getY(), null);
+		drawComponent("base", baseCoords[0], g);
+		drawComponent("base", baseCoords[1], g);
 
 	}
 
@@ -260,25 +261,39 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	private void drawMenu (Graphics g) {
 
 		// Title
-		g.drawImage(textures.get("titleText").getImage(), 
-			textures.get("titleText").getX(), 
-			textures.get("titleText").getY(), null);
+		drawComponent("titleText", g);
 
 		// Buttons
-		g.drawImage(textures.get("playButton").getImage(),
-			textures.get("playButton").getX(),
-			textures.get("playButton").getY(), null);
-		g.drawImage(textures.get("leaderboard").getImage(),
-			textures.get("leaderboard").getX(),
-			textures.get("leaderboard").getY(), null);
-		g.drawImage(textures.get("rateButton").getImage(),
-			textures.get("rateButton").getX(),
-			textures.get("rateButton").getY(), null);
+		drawComponent("playButton", g);
+		drawComponent("leaderboard", g);
+		drawComponent("rateButton", g);
 
 		// Credits :p
-		drawCentered("Created by Paul Krishnamurthy", FlappyBird.WIDTH, FlappyBird.HEIGHT, 600, g);
+		drawCredits("Created by Paul Krishnamurthy", "www.PaulKr.com", g);
+	}
+
+	private void drawComponent(String component, Graphics g) {
+		g.drawImage(textures.get(component).getImage(),
+				textures.get(component).getX(),
+				textures.get(component).getY(), null);
+	}
+
+	private void drawComponent(String component, int x, Graphics g) {
+		g.drawImage(textures.get(component).getImage(),
+				x,
+				textures.get(component).getY(), null);
+	}
+
+	private void drawComponent(String component, int x, int y, Graphics g) {
+		g.drawImage(textures.get(component).getImage(),
+				x,
+				y, null);
+	}
+
+	private void drawCredits(String s1, String s2, Graphics g) {
+		drawCentered(s1, FlappyBird.WIDTH, FlappyBird.HEIGHT, 600, g);
 		g.setFont(flappyMiniFont); // Change font
-		drawCentered("www.PaulKr.com", FlappyBird.WIDTH, FlappyBird.HEIGHT, 630, g);
+		drawCentered(s2, FlappyBird.WIDTH, FlappyBird.HEIGHT, 630, g);
 
 	}
 
@@ -292,14 +307,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		gameBird.setGameStartPos();
 
 		// Get ready text
-		g.drawImage(textures.get("getReadyText").getImage(),
-			textures.get("getReadyText").getX(),
-			textures.get("getReadyText").getY(), null);
+		drawComponent("getReadyText", g);
 
 		// Instructions image
-		g.drawImage(textures.get("instructions").getImage(), 
-			textures.get("instructions").getX(),
-			textures.get("instructions").getY(), null);
+		drawComponent("instructions", g);
 
 	}
 
@@ -333,7 +344,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		// Draw every digit
 		for (int i = 0; i < digitCount; i++) {
-			g.drawImage(textures.get((mini ? "mini-score-" : "score-") + digits[i]).getImage(), drawScoreX, (mini ? y : 60), null);
+			drawComponent(mini ? "mini-score-" : "score-" + digits[i], drawScoreX, mini ? y : 60, g);
 			
 			// Size to add varies based on texture
 			if (mini) {
@@ -421,9 +432,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 			// Draw the top and bottom pipes
 			if (p.getY() <= 0) {
-				g.drawImage(textures.get("pipe-top").getImage(), p.getX(), p.getY(), null);
+				drawComponent("pipe-top", p.getX(), p.getY(), g);
 			} else {
-				g.drawImage(textures.get("pipe-bottom").getImage(), p.getX(), p.getY(), null);
+				drawComponent("pipe-bottom", p.getX(), p.getY(), g);
 			}
 
 			// Check if bird hits pipes
@@ -457,20 +468,14 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void gameOver (Graphics g) {
 
 		// Game over text
-		g.drawImage(textures.get("gameOverText").getImage(), 
-			textures.get("gameOverText").getX(), 
-			textures.get("gameOverText").getY(), null);
+		drawComponent("gameOverText", g);
 
 		// Scorecard
-		g.drawImage(textures.get("scoreCard").getImage(),
-			textures.get("scoreCard").getX(),
-			textures.get("scoreCard").getY(), null);
+		drawComponent("scoreCard", g);
 
 		// New highscore image
 		if (scoreWasGreater) {
-			g.drawImage(textures.get("newHighscore").getImage(),
-				textures.get("newHighscore").getX(),
-				textures.get("newHighscore").getY(), null);
+			drawComponent("newHighscore", g);
 		}
 
 		// Draw mini fonts for current and best scores
@@ -493,18 +498,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		// Only award a medal if they deserve it
 		if (score > 9) {
-			g.drawImage(textures.get(medal).getImage(),
-				textures.get(medal).getX(),
-				textures.get(medal).getY(), null);
+			drawComponent(medal, g);
 		}
 
 		// Buttons
-		g.drawImage(textures.get("playButton").getImage(),
-			textures.get("playButton").getX(),
-			textures.get("playButton").getY(), null);
-		g.drawImage(textures.get("leaderboard").getImage(),
-			textures.get("leaderboard").getX(),
-			textures.get("leaderboard").getY(), null);
+		drawComponent("playButton", g);
+		drawComponent("leaderboard", g);
 
 	}
 
