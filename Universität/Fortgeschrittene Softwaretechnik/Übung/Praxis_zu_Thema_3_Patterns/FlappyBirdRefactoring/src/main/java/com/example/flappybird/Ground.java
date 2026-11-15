@@ -13,8 +13,9 @@ public class Ground {
         this.baseSpeed = baseSpeed;
     }
 
-    public void move(int index) {
-        coordinates[index] = coordinates[index] - baseSpeed < -435 ? 435 : coordinates[index] - baseSpeed;
+    public void move() {
+        coordinates[0] = coordinates[0] - baseSpeed < -435 ? 435 : coordinates[0] - baseSpeed;
+        coordinates[1] = coordinates[1] - baseSpeed < -435 ? 435 : coordinates[1] - baseSpeed;
     }
 
     /**
