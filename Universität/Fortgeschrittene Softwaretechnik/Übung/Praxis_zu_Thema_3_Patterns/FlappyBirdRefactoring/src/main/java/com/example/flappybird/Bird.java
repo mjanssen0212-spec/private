@@ -126,7 +126,6 @@ public class Bird {
 		} else {
 
 			// Play audio and set state to dead
-			GamePanel.playHitSound();
 			isAlive = false;
 		}
 
