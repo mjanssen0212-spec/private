@@ -8,13 +8,7 @@ package com.example.flappybird; /**
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.Random;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.awt.image.BufferedImage;
-import java.util.Calendar;
 
 public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
@@ -22,55 +16,56 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	////////////////////
 	// Game variables //
 	////////////////////
-	private GameSession gameSession;
+	private final GameSession gameSession;
 
-	private Renderer renderer;
+	private final Renderer renderer;
 
-	Ground ground;
+	private final Ground ground;
+
+	private GameStateAbstract currentGameState;
+
+	private final MenuState menuState;
+	private final InGameState inGameState;
+	private final GameOverState gameOverState;
 
 	// Textures
-	private Sprites sprites;
+	private final Sprites sprites;
 	public static HashMap<String, Texture> textures;
 	
 	// Moving base effect
 	private final static int baseSpeed    = 2;
 	private final static int[] baseCoords = { 0, 435 };
 
-	// Game states
-	final static int MENU = 0;
-	final static int GAME = 1;
-	private int gameState = MENU;  
-
 	
 	public boolean ready = false;                   // If game has loaded
-	private boolean inStartGameState = false;       // To show instructions scren
-	private Point clickedPoint = new Point(-1, -1); // Store point when player clicks
-	private String medal;                           // Medal to be awarded after each game
-
 
 	public static Audio audio   = new Audio();
 
 
 	public GamePanel () {
 
-
 		this.sprites = new Sprites();
 		this.textures = sprites.getGameTextures();
 
 		this.renderer = new Renderer(textures);
-
 		this.ground = new Ground(baseCoords, renderer, baseSpeed);
-
 		this.gameSession = new GameSession(textures);
-		restart(); // Reset game variables
+
+		this.menuState = new MenuState(renderer, ground, gameSession);
+		this.inGameState = new InGameState(renderer, ground, gameSession);
+		this.gameOverState = new GameOverState(renderer, ground, gameSession);
+
+		this.currentGameState = menuState;
+
+		this.menuState.setNextGameState(inGameState);
+		this.inGameState.setNextGameState(gameOverState);
+		this.gameOverState.setNextGameState(inGameState);
 
 		// Input listeners
 		addKeyListener(this);
 		addMouseListener(this);
 
 	}
-
-
 
 	public static void playHitSound () {
 		audio.hit();
@@ -83,25 +78,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		super.addNotify();
 		requestFocus();
 		ready = true;
-	}
-
-	/**
-	 * Restarts game by resetting game variables
-	 */
-	public void restart () {
-
-		this.gameSession = new GameSession(textures);
-
-	}
-
-	/**
-	 * Checks if point is in rectangle
-	 * 
-	 * @param      r     Rectangle
-	 * @return           Boolean if point collides with rectangle
-	 */
-	private boolean isTouching (Rectangle r) {
-		return r.contains(clickedPoint);
 	}
 
 	@Override
@@ -118,8 +94,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		if (gameBird.isAlive()) {
 
 			// Move base
-			ground.move(0);
-			ground.move(1);
+			ground.move();
 
 		}
 
@@ -129,244 +104,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		// Draw bird
 		gameBird.renderBird(g);
 
-		switch (gameState) {
-
-			case MENU:
-
-				ground.render(g);
-
-				drawMenu(g);
-
-				gameBird.menuFloat();
-
-				break;
-
-			case GAME:
-
-				if (gameBird.isAlive()) {
-
-					// Start at instructions state
-					if (inStartGameState) {
-						startGameScreen(g);
-
-					} else {
-						// Start game
-						pipeHandler(g);
-						gameBird.inGame();
-					}
-
-					ground.render(g);
-
-					renderer.drawScore(g, gameSession.getScore(), false, 0, 0); // Draw player score
-
-				} else {
-
-					pipeHandler(g);
-
-					ground.render(g);
-
-					// Draw game over assets
-					gameOver(g);
-
-				}
-
-				break;
-		}
-
+		currentGameState = currentGameState.update(g);
+		currentGameState.render(g);
 	}
-
-
-
-	/////////////////////////
-	// All drawing methods //
-	/////////////////////////
-
-
-
-	////////////////
-	// Menuscreen //
-	////////////////
-
-	private void drawMenu (Graphics g) {
-
-		// Title
-		renderer.drawComponent("titleText", g);
-
-		// Buttons
-		renderer.drawComponent("playButton", g);
-		renderer.drawComponent("leaderboard", g);
-		renderer.drawComponent("rateButton", g);
-
-		// Credits :p
-		renderer.drawCredits("Created by Paul Krishnamurthy", "www.PaulKr.com", g);
-	}
-
-
-
-	/////////////////
-	// Game screen //
-	/////////////////
-
-	public void startGameScreen (Graphics g) {
-
-		// Set bird's new position
-		gameSession.getBird().setGameStartPos();
-
-		// Get ready text
-		renderer.drawComponent("getReadyText", g);
-
-		// Instructions image
-		renderer.drawComponent("instructions", g);
-
-	}
-
-
-
-
-
-	/**
-	 * Moves and repositions pipes
-	 */
-	public void pipeHandler (Graphics g) {
-		int pipeDist = gameSession.getPipeDistTracker();
-		Bird gameBird = gameSession.getBird();
-		ArrayList<Pipe> pipes = (ArrayList<Pipe>) gameSession.getPipes();
-
-		// Decrease distance between pipes
-		if (gameBird.isAlive()) {
-			gameSession.reducePipeDist();
-		}
-
-		// Initialize pipes as null
-		Pipe topPipe = null;
-		Pipe bottomPipe = null;
-
-		// If there is no distance,
-		// a new pipe is needed
-		if (pipeDist < 0) {
-
-			// Reset distance
-			gameSession.setPipeDistTracker(Pipe.PIPE_DISTANCE);
-
-			for (Pipe p : pipes) {
-
-				// If pipe is out of screen
-				if (p.getX() < 0) {
-					if (topPipe == null) { 
-						topPipe = p;
-					}
-					else if (bottomPipe == null) {
-						bottomPipe = p; 
-					}
-					topPipe.setCanAwardPoint(true);
-				}
-			}
-
-			// Move and handle initial creation of top and bottom pipes
-
-			topPipe = addOrReset(topPipe, "top");
-
-			bottomPipe = addOrReset(bottomPipe, "bottom");
-			bottomPipe.setCanAwardPoint(false);
-
-			// Set y-coordinate of bottom pipe based on 
-			// y-coordinate of top pipe
-			bottomPipe.setY(topPipe.getY() + Pipe.PIPE_SPACING);
-
-		}
-
-		// Move and draw each pipe
-
-		for (Pipe p : pipes) {
-
-			// Move the pipe
-			if (gameBird.isAlive()) {
-				p.move();
-			}
-
-			// Draw the top and bottom pipes
-			renderer.drawComponent(p.getY() <= 0 ? "pipe-top" : "pipe-bottom", p.getX(), p.getY(), g);
-
-			// Check if bird hits pipes
-			if (gameBird.isAlive()) {
-				if (p.collide(
-					gameBird.getHitbox()
-				)) {
-					// Kill bird and play sound
-					gameBird.kill();
-					audio.hit();
-				} else {
-
-					// Checks if bird passes a pipe
-					if (gameBird.getX() >= p.getX() + p.WIDTH / 2) {
-
-						// Increase score and play sound
-						if (p.getCanAwardPoint()) {
-							audio.point();
-							gameSession.addScore();
-							p.setCanAwardPoint(false);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private Pipe addOrReset(Pipe p, String pipeType) {
-		if (p == null) {
-			p = new Pipe(pipeType);
-			gameSession.addPipe(p);
-		} else {
-			p.reset();
-		}
-
-		return p;
-	}
-
-	public void gameOver (Graphics g) {
-
-		int score = gameSession.getScore();
-		Highscore highscore = gameSession.getHighscore();
-		// Game over text
-		renderer.drawComponent("gameOverText", g);
-
-		// Scorecard
-		renderer.drawComponent("scoreCard", g);
-
-		// New highscore image
-		if (gameSession.isNewHighscore()) {
-			renderer.drawComponent("newHighscore", g);
-		}
-
-		// Draw mini fonts for current and best scores
-		renderer.drawScore(g, score, true, 303, 276);
-		renderer.drawScore(g, highscore.bestScore(), true, 303, 330);
-
-		// Handle highscore
-		if (score > highscore.bestScore()) {
-
-			// New best score
-			gameSession.setNewHighscore(true);
-			highscore.setNewBest(score); // Set in data file
-		}
-
-		// Medal
-		if (score >= 10) { medal = "bronze"; }
-		if (score >= 20) { medal = "silver"; }
-		if (score >= 30) { medal = "gold"; }
-		if (score >= 40) { medal = "platinum"; }
-
-		// Only award a medal if they deserve it
-		if (score > 9) {
-			renderer.drawComponent(medal, g);
-		}
-
-		// Buttons
-		renderer.drawComponent("playButton", g);
-		renderer.drawComponent("leaderboard", g);
-
-	}
-
 
 	//////////////////////
 	// Keyboard actions //
@@ -376,27 +116,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void keyReleased (KeyEvent e) {}
 
 	public void keyPressed (KeyEvent e) {
+		currentGameState = currentGameState.handleKeyEvent(e);
 
-		int keyCode = e.getKeyCode();
-
-		if (gameState == MENU) {
-
-			// Start game on 'enter' key
-			if (keyCode == KeyEvent.VK_ENTER) {
-				startGame();
-			}
-
-		} else if (gameState == GAME && gameSession.getBird().isAlive()) {
-
-			if (keyCode == KeyEvent.VK_SPACE) {
-
-				// Exit instructions state
-				inStartGameState = false;
-
-				// Jump and play audio even if in instructions state
-				flap();
-			}
-		}
 	}
 
 	///////////////////
@@ -409,73 +130,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	public void mouseClicked (MouseEvent e) {}
 
 	public void mousePressed (MouseEvent e) {
-		Bird gameBird = gameSession.getBird();
-
-		// Save clicked point
-		clickedPoint = e.getPoint();
-
-		if (gameState == MENU) {
-
-			if (isTouching(getTextureRect("playButton"))) {
-				startGame();
-
-			} else if (isTouching(getTextureRect("leaderboard"))) {
-
-				// Dummy message
-				showErrorMessage();
-			}
-
-			if (gameBird.isAlive()) {
-
-				if (isTouching(getTextureRect("rateButton"))) {
-					Helper.openURL("http://paulkr.com"); // Open website
-				}
-
-			}
-
-		} else if (gameState == GAME) {
-
-			if (gameBird.isAlive()) {
-
-				// Allow jump with clicks
-				inStartGameState = false;
-
-				// Jump and play sound
-				flap();
-
-			} else {
-
-				// On game over screen, allow restart and leaderboard buttons
-				if (isTouching(getTextureRect("playButton"))) {
-					startGame();
-					restart();
-					gameBird.setGameStartPos();
-
-				} else if (isTouching(getTextureRect("leaderboard"))) {
-
-					// Dummy message
-					showErrorMessage();
-				}
-
-			}
-			
-		}
-
+		currentGameState = currentGameState.handleMouseEvent(e);
 	}
 
-	private void startGame() {
-		gameState = GAME;
-		inStartGameState = true;
-	}
 
-	private void flap() {
-		gameSession.getBird().jump();
-		audio.jump();
-	}
 
-	public Rectangle getTextureRect(String textureName) {
-		return textures.get(textureName).getRect();
-	}
+
+
 
 	public void showErrorMessage() {
 		JOptionPane.showMessageDialog(this,
