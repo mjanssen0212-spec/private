@@ -98,6 +98,10 @@ public class Renderer {
 
     }
 
+    public Rectangle getTextureRect(String textureName) {
+        return textures.get(textureName).getRect();
+    }
+
     private int digitSize(char digit, boolean mini) {
         if (mini) {
             return 18;

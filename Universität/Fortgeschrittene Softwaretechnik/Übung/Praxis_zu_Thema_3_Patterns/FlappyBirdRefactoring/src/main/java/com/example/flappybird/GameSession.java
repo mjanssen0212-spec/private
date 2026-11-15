@@ -4,8 +4,9 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class GameSession {
+    private final Map<String, Texture> textures;
     private int score;
-    private final Bird bird;
+    private Bird bird;
     private final Highscore highscore = new Highscore();
     private boolean newHighscore;
     private List<Pipe> pipes;
@@ -18,7 +19,12 @@ public class GameSession {
 
     public GameSession(Map<String, Texture> textures) {
         rand = new Random();
+        this.textures = textures;
 
+        reset();
+    }
+
+    public void reset() {
         // Reset game statistics
         score            = 0;
         pipeDistTracker  = 0;
