@@ -3,20 +3,12 @@ package com.example.flappybird;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class GameOverState extends GameStateAbstract {
-    private Renderer renderer;
-    private Ground ground;
-    private GameSession gameSession;
     private String medal;
-    private GameStateAbstract nextGameState;
-    private Audio audio = new Audio();
 
     public GameOverState(Renderer renderer, Ground ground, GameSession gameSession) {
-        this.renderer = renderer;
-        this.ground = ground;
-        this.gameSession = gameSession;
+        super(renderer, ground, gameSession);
     }
 
     @Override
@@ -26,7 +18,7 @@ public class GameOverState extends GameStateAbstract {
     }
 
     @Override
-    public GameStateAbstract update(Graphics g) {
+    public GameStateAbstract update() {
         return this;
     }
 
@@ -35,6 +27,8 @@ public class GameOverState extends GameStateAbstract {
         int keycode = e.getKeyCode();
 
         if (keycode == KeyEvent.VK_ENTER) {
+            nextGameState.onEnter();
+            gameSession.reset();
             return nextGameState;
         }
 
@@ -47,22 +41,37 @@ public class GameOverState extends GameStateAbstract {
 
         if(isTouching(renderer.getTextureRect("playButton"), clickedPoint)) {
             gameSession.reset();
+            nextGameState.onEnter();
             return nextGameState;
         } else if (isTouching(renderer.getTextureRect("leaderboard"), clickedPoint)) {
+            showErrorMessage();
             return this;
         }
         return this;
     }
 
     @Override
-    public void updatePipes(Graphics g) {
+    public void onEnter() {
+        int score = gameSession.getScore();
+        Highscore highscore = gameSession.getHighscore();
+
+        // Handle highscore
+        if (score > highscore.bestScore()) {
+
+            // New best score
+            gameSession.setNewHighscore(true);
+            highscore.setNewBest(score); // Set in data file
+        }
+
+
+        // Medal
+        if (score >= 10) { medal = "bronze"; }
+        if (score >= 20) { medal = "silver"; }
+        if (score >= 30) { medal = "gold"; }
+        if (score >= 40) { medal = "platinum"; }
 
     }
 
-
-    public void setNextGameState(GameStateAbstract nextGameState) {
-        this.nextGameState = nextGameState;
-    }
 
     public void gameOver (Graphics g) {
 
@@ -82,20 +91,6 @@ public class GameOverState extends GameStateAbstract {
         // Draw mini fonts for current and best scores
         renderer.drawScore(g, score, true, 303, 276);
         renderer.drawScore(g, highscore.bestScore(), true, 303, 330);
-
-        // Handle highscore
-        if (score > highscore.bestScore()) {
-
-            // New best score
-            gameSession.setNewHighscore(true);
-            highscore.setNewBest(score); // Set in data file
-        }
-
-        // Medal
-        if (score >= 10) { medal = "bronze"; }
-        if (score >= 20) { medal = "silver"; }
-        if (score >= 30) { medal = "gold"; }
-        if (score >= 40) { medal = "platinum"; }
 
         // Only award a medal if they deserve it
         if (score > 9) {

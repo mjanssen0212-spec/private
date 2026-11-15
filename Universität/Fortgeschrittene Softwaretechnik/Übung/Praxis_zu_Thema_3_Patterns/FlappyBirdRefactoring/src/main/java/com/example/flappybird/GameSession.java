@@ -9,17 +9,17 @@ public class GameSession {
     private Bird bird;
     private final Highscore highscore = new Highscore();
     private boolean newHighscore;
-    private List<Pipe> pipes;
-    private int pipeDistTracker;
+    private final PipeManager pipeManager;
     private String randomBird;
     private boolean darkTheme;
 
     private Calendar cal;
     private Random rand;
 
-    public GameSession(Map<String, Texture> textures) {
+    public GameSession(Map<String, Texture> textures, PipeManager pipeManager) {
         rand = new Random();
         this.textures = textures;
+        this.pipeManager = pipeManager;
 
         reset();
     }
@@ -27,7 +27,6 @@ public class GameSession {
     public void reset() {
         // Reset game statistics
         score            = 0;
-        pipeDistTracker  = 0;
         newHighscore     = false;
 
         // Get current hour with Calendar
@@ -52,9 +51,7 @@ public class GameSession {
                 textures.get(randomBird + "Bird2").getImage(),
                 textures.get(randomBird + "Bird3").getImage()
         });
-
-        // Remove old pipes
-        pipes = new ArrayList<Pipe>();
+        pipeManager.reset();
     }
 
     public int getScore() {
@@ -81,20 +78,8 @@ public class GameSession {
         this.newHighscore = newHighscore;
     }
 
-    public List<Pipe> getPipes() {
-        return pipes;
-    }
-
-    public void setPipes(List<Pipe> pipes) {
-        this.pipes = pipes;
-    }
-
-    public int getPipeDistTracker() {
-        return pipeDistTracker;
-    }
-
-    public void setPipeDistTracker(int pipeDistTracker) {
-        this.pipeDistTracker = pipeDistTracker;
+    public PipeManager getPipeManager() {
+        return pipeManager;
     }
 
     public String getRandomBird() {
@@ -113,15 +98,7 @@ public class GameSession {
         this.darkTheme = darkTheme;
     }
 
-    public void reducePipeDist() {
-        pipeDistTracker --;
-    }
-
     public void addScore() {
         score++;
-    }
-
-    public void addPipe(Pipe pipe) {
-        pipes.add(pipe);
     }
 }

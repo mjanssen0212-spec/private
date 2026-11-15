@@ -1,4 +1,6 @@
-package com.example.flappybird; /**
+package com.example.flappybird;
+
+/**
  * GamePanel.java
  * Main game panel
  *
@@ -22,6 +24,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	private final Ground ground;
 
+	private final PipeManager pipeManager = new PipeManager();
+
 	private GameStateAbstract currentGameState;
 
 	private final MenuState menuState;
@@ -39,7 +43,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	
 	public boolean ready = false;                   // If game has loaded
 
-	public static Audio audio   = new Audio();
+	private final Audio audio   = new Audio();
 
 
 	public GamePanel () {
@@ -49,10 +53,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		this.renderer = new Renderer(textures);
 		this.ground = new Ground(baseCoords, renderer, baseSpeed);
-		this.gameSession = new GameSession(textures);
+		this.gameSession = new GameSession(textures, pipeManager);
 
 		this.menuState = new MenuState(renderer, ground, gameSession);
-		this.inGameState = new InGameState(renderer, ground, gameSession);
+		this.inGameState = new InGameState(renderer, ground, gameSession, audio);
 		this.gameOverState = new GameOverState(renderer, ground, gameSession);
 
 		this.currentGameState = menuState;
@@ -65,10 +69,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		addKeyListener(this);
 		addMouseListener(this);
 
-	}
-
-	public static void playHitSound () {
-		audio.hit();
 	}
 
 	/**
@@ -90,21 +90,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		g.setFont(renderer.getFlappyFontReal());
 		g.setColor(Color.white);
 
-		// Only move screen if bird is alive
-		if (gameBird.isAlive()) {
-
-			// Move base
-			ground.move();
-
-		}
-
 		// Background
 		renderer.drawComponent(gameSession.isDarkTheme() ? "background2" : "background1", 0, 0, g);
 
 		// Draw bird
 		gameBird.renderBird(g);
 
-		currentGameState = currentGameState.update(g);
+		currentGameState = currentGameState.update();
 		currentGameState.render(g);
 	}
 
@@ -138,12 +130,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 
 
-	public void showErrorMessage() {
-		JOptionPane.showMessageDialog(this,
-	"We can't access the leaderboard right now!",
-		"Oops!",
-			JOptionPane.ERROR_MESSAGE);
-	}
+
 
 
 }

@@ -6,125 +6,67 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class InGameState extends GameStateAbstract{
-    private Renderer renderer;
-    private Ground ground;
-    private GameSession gameSession;
-    private GameStateAbstract nextGameState;
     private boolean inStartGameState = true;
-    private Audio audio = new Audio();
+    private Audio audio;
 
-    public InGameState(Renderer renderer, Ground ground, GameSession gameSession) {
-        this.renderer = renderer;
-        this.ground = ground;
-        this.gameSession = gameSession;
+    public InGameState(Renderer renderer, Ground ground, GameSession gameSession, Audio audio) {
+        super(renderer, ground, gameSession);
+        this.audio = audio;
     }
 
     @Override
     public void render(Graphics g) {
         if (inStartGameState) {
             startGameScreen(g);
-//            inStartGameState = false;
-        } else {
-            updatePipes(g);
-            gameSession.getBird().inGame();
         }
 
+        PipeManager pm = gameSession.getPipeManager();
+        pm.render(renderer, g);
         ground.render(g);
         renderer.drawScore(g, gameSession.getScore(), false, 0, 0);
     }
 
     @Override
-    public GameStateAbstract update(Graphics g) {
+    public GameStateAbstract update() {
+        Bird gameBird = gameSession.getBird();
+        ground.move();
+
         if (inStartGameState) {
             return this;
         }
         if (!gameSession.getBird().isAlive()) {
+            nextGameState.onEnter();
             return nextGameState;
         }
 
-        updatePipes(g);
+        updatePipes();
+        gameBird.inGame();
+        if (!gameBird.isAlive()) {
+            audio.hit();
+        }
         return this;
 
     }
 
-    @Override
-    public void updatePipes(Graphics g) {
-        int pipeDist = gameSession.getPipeDistTracker();
+    public void updatePipes() {
+        PipeManager pm = gameSession.getPipeManager();
         Bird gameBird = gameSession.getBird();
-        ArrayList<Pipe> pipes = (ArrayList<Pipe>) gameSession.getPipes();
-
-        // Decrease distance between pipes
-        gameSession.reducePipeDist();
-
-
-        // Initialize pipes as null
-        Pipe topPipe = null;
-        Pipe bottomPipe = null;
-
-        // If there is no distance,
-        // a new pipe is needed
-        if (pipeDist < 0) {
-
-            // Reset distance
-            gameSession.setPipeDistTracker(Pipe.PIPE_DISTANCE);
-
-            for (Pipe p : pipes) {
-
-                // If pipe is out of screen
-                if (p.getX() < 0) {
-                    if (topPipe == null) {
-                        topPipe = p;
-                    }
-                    else if (bottomPipe == null) {
-                        bottomPipe = p;
-                    }
-                    topPipe.setCanAwardPoint(true);
-                }
-            }
-
-            // Move and handle initial creation of top and bottom pipes
-
-            topPipe = addOrReset(topPipe, "top");
-
-            bottomPipe = addOrReset(bottomPipe, "bottom");
-            bottomPipe.setCanAwardPoint(false);
-
-            // Set y-coordinate of bottom pipe based on
-            // y-coordinate of top pipe
-            bottomPipe.setY(topPipe.getY() + Pipe.PIPE_SPACING);
-
-        }
+        Rectangle hitbox = gameBird.getHitbox();
 
         // Move and draw each pipe
+        pm.update();
 
-        for (Pipe p : pipes) {
+        if (pm.collide(hitbox)) {
+            // Kill bird and play sound
+            gameBird.kill();
 
-            // Move the pipe
-            p.move();
+//            audio.hit();
+            return;
+        }
 
-            // Draw the top and bottom pipes
-            renderer.drawComponent(p.getY() <= 0 ? "pipe-top" : "pipe-bottom", p.getX(), p.getY(), g);
-
-            // Check if bird hits pipes
-            if (p.collide(
-                    gameBird.getHitbox()
-            )) {
-                // Kill bird and play sound
-                gameBird.kill();
-                audio.hit();
-            } else {
-
-                // Checks if bird passes a pipe
-                if (gameBird.getX() >= p.getX() + p.WIDTH / 2) {
-
-                    // Increase score and play sound
-                    if (p.getCanAwardPoint()) {
-                        audio.point();
-                        gameSession.addScore();
-                        p.setCanAwardPoint(false);
-                    }
-                }
-            }
+        if (pm.collectPoints(hitbox)) {
+            audio.point();
+            gameSession.addScore();
         }
     }
 
@@ -148,8 +90,10 @@ public class InGameState extends GameStateAbstract{
         return this;
     }
 
-    public void setNextGameState(GameStateAbstract nextGameState) {
-        this.nextGameState = nextGameState;
+    @Override
+    public void onEnter() {
+        inStartGameState = true;
+        gameSession.getBird().setGameStartPos();
     }
 
     public void startGameScreen (Graphics g) {
@@ -165,16 +109,7 @@ public class InGameState extends GameStateAbstract{
 
     }
 
-    private Pipe addOrReset(Pipe p, String pipeType) {
-        if (p == null) {
-            p = new Pipe(pipeType);
-            gameSession.addPipe(p);
-        } else {
-            p.reset();
-        }
 
-        return p;
-    }
 
     private void flap() {
         gameSession.getBird().jump();

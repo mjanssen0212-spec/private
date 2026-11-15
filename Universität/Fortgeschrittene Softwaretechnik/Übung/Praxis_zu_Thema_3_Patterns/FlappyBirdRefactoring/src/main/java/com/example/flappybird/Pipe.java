@@ -10,38 +10,22 @@ import java.awt.*;
  */
 
 public class Pipe {
-
+	private final int START_X = FlappyBird.WIDTH + 5;
 	// Pipe coordinates
-	private int x = FlappyBird.WIDTH + 5;
+	private int x = START_X;
 	private int y;
 
 	// Placement (top or bottom) of pipe
-	String location;
 
 	// Pipe constants
 	public static final int WIDTH         = 67;
 	public static final int HEIGHT        = 416;
 	public static final int PIPE_DISTANCE = 150;          // Horizontal distance between pipes
 	public static final int PIPE_SPACING  = HEIGHT + 170; // Vertical distance between pipes
-	private static final int SPEED        = -2;
+	public static final int SPEED        = -2;
 
 	// If the bird can get a point passing this pipe
-	public boolean canAwardPoint = true;
-
-	public Pipe (String location) {
-		this.location = location;
-		reset();
-	}
-
-	public void reset () {
-		x = FlappyBird.WIDTH + 5; // Reset x-coordinate
-
-		// Set boundaries for top pipes
-		// This y-coordinte + PIPE_SPACING will be for the bottom pipe
-		if (location.equals("top")) {
-			y = - Math.max((int) (Math.random() * 320) + 30, 140);
-		}
-	}
+	private boolean canAwardPoint = true;
 
 	/**
 	 * Moves the pipe
@@ -50,6 +34,11 @@ public class Pipe {
 		x += SPEED;
 	}
 
+	public void render(Renderer renderer, Graphics g) {
+		// Draw the top and bottom pipes
+		renderer.drawComponent(y <= 0 ? "pipe-top" : "pipe-bottom", x, y, g);
+
+	}
 
 	/**
 	 * Checks for bird colliding with pipe
@@ -68,12 +57,28 @@ public class Pipe {
 
 	}
 
-	public boolean getCanAwardPoint () {
-		return canAwardPoint;
+	public boolean checkAwardPoint(Rectangle hitbox) {
+		if (hitbox.getX() >= x + (double) WIDTH / 2) {
+			// Increase score and play sound
+			if (canAwardPoint) {
+				canAwardPoint = false;
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	public void setCanAwardPoint (boolean canAwardPoint) {
-		this.canAwardPoint = canAwardPoint;
+	public void respawnAsTop() {
+		x = START_X;
+		y = -Math.max((int) (Math.random() * 320) + 30, 140);
+		canAwardPoint = true;
+	}
+
+	public void respawnAsBottom(int topY) {
+		x = START_X;
+		y = topY + PIPE_SPACING;
+		canAwardPoint = false;
 	}
 
 	/**
@@ -90,14 +95,8 @@ public class Pipe {
 		return y;
 	}
 
-	/**
-	 * Set's pipe's y-coordinate (for bottom pipes)
-	 * 
-	 * @param newY     New y-coordinate
-	 */
-	public void setY (int newY) {
-		y = newY;
-	}
+
+
 
 }
 

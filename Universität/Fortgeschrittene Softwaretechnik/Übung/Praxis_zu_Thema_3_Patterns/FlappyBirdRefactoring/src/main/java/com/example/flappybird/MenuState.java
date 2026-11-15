@@ -5,26 +5,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class MenuState extends GameStateAbstract{
-    private Renderer renderer;
-    private Ground ground;
-    private GameSession gameSession;
-    private GameStateAbstract nextGameState;
 
     public MenuState(Renderer renderer, Ground ground, GameSession gameSession) {
-        this.gameSession = gameSession;
-        this.renderer = renderer;
-        this.ground = ground;
+        super(renderer, ground, gameSession);
     }
 
     @Override
     public void render(Graphics g) {
         ground.render(g);
         drawMenu(g);
-        gameSession.getBird().menuFloat();
     }
 
     @Override
-    public GameStateAbstract update(Graphics g) {
+    public GameStateAbstract update() {
+        gameSession.getBird().menuFloat();
         return this;
     }
 
@@ -46,6 +40,7 @@ public class MenuState extends GameStateAbstract{
         if(isTouching(renderer.getTextureRect("playButton"), clickedPoint)) {
             return this.nextGameState;
         } else if (isTouching(renderer.getTextureRect("leaderboard"), clickedPoint)) {
+            showErrorMessage();
             return this;
         }
 
@@ -59,20 +54,6 @@ public class MenuState extends GameStateAbstract{
 
         return this;
     }
-
-    @Override
-    public void updatePipes(Graphics g) {
-
-    }
-
-    public void setNextGameState(GameStateAbstract nextGameState) {
-        this.nextGameState = nextGameState;
-    }
-
-//    private void startGame() {
-//        currentGameState = inGameState;
-//        inStartGameState = true;
-//    }
 
     private void drawMenu (Graphics g) {
 
