@@ -20,7 +20,7 @@ public class Sprites {
 	private static BufferedImage spriteSheet = null;
 
 	// HashMap of texture objects
-	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
+	private final HashMap<String, Texture> textures = new HashMap<String, Texture>();
 
 	public Sprites () {
 

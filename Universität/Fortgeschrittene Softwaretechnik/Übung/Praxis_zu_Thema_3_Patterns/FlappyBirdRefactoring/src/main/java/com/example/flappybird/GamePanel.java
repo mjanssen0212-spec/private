@@ -31,10 +31,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 	private final MenuState menuState;
 	private final InGameState inGameState;
 	private final GameOverState gameOverState;
-
-	// Textures
-	private final Sprites sprites;
-	public static HashMap<String, Texture> textures;
 	
 	// Moving base effect
 	private final static int baseSpeed    = 2;
@@ -48,8 +44,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	public GamePanel () {
 
-		this.sprites = new Sprites();
-		this.textures = sprites.getGameTextures();
+		Sprites sprites = new Sprites();
+		HashMap<String, Texture> textures = sprites.getGameTextures();
 
 		this.renderer = new Renderer(textures);
 		this.ground = new Ground(baseCoords, renderer, baseSpeed);
