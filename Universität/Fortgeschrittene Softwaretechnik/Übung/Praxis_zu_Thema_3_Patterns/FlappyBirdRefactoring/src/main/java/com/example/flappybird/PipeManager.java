@@ -8,9 +8,8 @@ public class PipeManager {
     private List<Pipe> pipes = new ArrayList<>();
     private int pipeDistTracker = 0;
 
-    public PipeManager() {
+    public static final int PIPE_DISTANCE = 150;          // Horizontal distance between pipes
 
-    }
 
     public void reset() {
         pipes = new ArrayList<>();
@@ -20,12 +19,12 @@ public class PipeManager {
     public void update() {
 
         // Decrease distance between pipes
-        reducePipeDistTracker();
+        pipeDistTracker--;
 
         // If there is no distance,
         // a new pipe is needed
         if (pipeDistTracker < 0) {
-            this.pipeDistTracker = Pipe.PIPE_DISTANCE;
+            this.pipeDistTracker = PIPE_DISTANCE;
             spawnPipePair();
         }
 
@@ -57,10 +56,6 @@ public class PipeManager {
         for (Pipe p: pipes) {
             p.render(renderer, g);
         }
-    }
-
-    private void reducePipeDistTracker() {
-        pipeDistTracker--;
     }
 
     private void spawnPipePair() {

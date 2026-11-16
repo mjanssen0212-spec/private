@@ -16,9 +16,8 @@ public class Pipe {
 	private int y;
 
 	// Pipe constants
-	public static final int WIDTH         = 67;
-	public static final int HEIGHT        = 416;
-	public static final int PIPE_DISTANCE = 150;          // Horizontal distance between pipes
+	private static final int WIDTH         = 67;
+	private static final int HEIGHT        = 416;
 	public static final int PIPE_SPACING  = HEIGHT + 170; // Vertical distance between pipes
 	private static final int SPEED        = -2;
 
@@ -93,8 +92,4 @@ public class Pipe {
 		return y;
 	}
 
-
-
-
 }
-

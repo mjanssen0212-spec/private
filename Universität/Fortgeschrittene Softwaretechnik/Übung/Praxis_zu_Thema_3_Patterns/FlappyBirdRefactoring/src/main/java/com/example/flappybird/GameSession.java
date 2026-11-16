@@ -10,10 +10,8 @@ public class GameSession {
     private final Highscore highscore = new Highscore();
     private boolean newHighscore;
     private final PipeManager pipeManager;
-    private String randomBird;
     private boolean darkTheme;
 
-    private Calendar cal;
     private Random rand;
 
     public GameSession(Map<String, Texture> textures) {
@@ -31,7 +29,7 @@ public class GameSession {
 
         // Get current hour with Calendar
         // If it is past noon, use the dark theme
-        cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         int currentHour = cal.get(Calendar.HOUR_OF_DAY);
 
         // Array of bird colors
@@ -43,7 +41,7 @@ public class GameSession {
 
         // Set random scene assets
         darkTheme = currentHour > 12; // If we should use the dark theme
-        randomBird = birds[rand.nextInt(3)]; // Random bird color
+        String randomBird = birds[rand.nextInt(3)]; // Random bird color
 
         // Game bird
         this.bird = new Bird(172, 250, new BufferedImage[] {

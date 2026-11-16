@@ -11,7 +11,6 @@ public class Renderer {
     // Fonts
     private Font flappyFontBase,
             flappyFontReal,
-            flappyScoreFont,
             flappyMiniFont = null;
 
     public Renderer(Map<String, Texture> textures) {
@@ -23,7 +22,6 @@ public class Renderer {
             flappyFontBase = Font.createFont(Font.TRUETYPE_FONT, is);
 
             // Header and sub-header fonts
-            flappyScoreFont = getFont(50);
             flappyFontReal  = getFont(20);
             flappyMiniFont  = getFont(15);
 
@@ -50,13 +48,13 @@ public class Renderer {
     }
 
     public void drawCredits(String s1, String s2, Graphics g) {
-        drawCentered(s1, FlappyBird.WIDTH, FlappyBird.HEIGHT, 600, g);
+        drawCentered(s1, FlappyBird.WIDTH, FlappyBird.HEIGHT, g);
         g.setFont(flappyMiniFont); // Change font
-        drawCentered(s2, FlappyBird.WIDTH, FlappyBird.HEIGHT, 630, g);
+        drawCentered(s2, FlappyBird.WIDTH, FlappyBird.HEIGHT, g);
 
     }
 
-    public void drawCentered (String s, int w, int h, int y, Graphics g) {
+    public void drawCentered (String s, int w, int y, Graphics g) {
         FontMetrics fm = g.getFontMetrics();
 
         // Calculate x-coordinate based on string length and width

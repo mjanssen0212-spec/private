@@ -33,7 +33,7 @@ public class InGameState extends GameStateAbstract{
         if (inStartGameState) {
             return this;
         }
-        if (!gameSession.getBird().isAlive()) {
+        if (!gameBird.isAlive()) {
             nextGameState.onEnter();
             return nextGameState;
         }
@@ -47,7 +47,7 @@ public class InGameState extends GameStateAbstract{
 
     }
 
-    public void updatePipes() {
+    private void updatePipes() {
         PipeManager pm = gameSession.getPipeManager();
         Bird gameBird = gameSession.getBird();
         Rectangle hitbox = gameBird.getHitbox();

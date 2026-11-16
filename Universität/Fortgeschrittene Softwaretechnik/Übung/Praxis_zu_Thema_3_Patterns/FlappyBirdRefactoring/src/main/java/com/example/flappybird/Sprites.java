@@ -8,14 +8,13 @@ package com.example.flappybird; /**
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.io.IOException;
-import java.io.File;
 import javax.imageio.ImageIO;
 import java.util.HashMap;
 
 public class Sprites {
 
 	// Resize factor to match frame size
-	private final double RESIZE_FACTOR = 2.605;
+	private static final double RESIZE_FACTOR = 2.605;
 
 	private BufferedImage spriteSheet = null;
 
@@ -32,7 +31,6 @@ public class Sprites {
 			e.printStackTrace();
 			System.out.println("Could not load sprite sheet.");
 			System.exit(-1); // Exit program if file could not be found
-			return;
 		}
 
 		// Backgrounds
@@ -111,7 +109,7 @@ public class Sprites {
 	 * @param  image     BufferedImage object
 	 * @return           New resized image
 	 */
-	private BufferedImage resize (BufferedImage image) {
+	private static BufferedImage resize (BufferedImage image) {
 
 		// New width and height
 		int newWidth = (int) (image.getWidth() * RESIZE_FACTOR);

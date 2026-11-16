@@ -14,10 +14,10 @@ public class Bird {
 	private int x, y;
 	private boolean isAlive = true;
 	
+	private int floatMultiplier = -1;
 	// Bird constants
-	private int FLOAT_MULTIPLIER      = -1;
-	public final int BIRD_WIDTH       = 44;
-	public final int BIRD_HEIGHT      = 31;
+	private final int BIRD_WIDTH       = 44;
+	private final int BIRD_HEIGHT      = 31;
 	private final int BASE_COLLISION  = 521 - BIRD_HEIGHT - 5;
 	private final int SHIFT           = 10;
 	private final int STARTING_BIRD_X = 90;
@@ -27,7 +27,6 @@ public class Bird {
 	private double velocity           = 0;
 	private double gravity            = .41;
 	private double delay              = 0;
-	private double rotation           = 0;
 
     //Animation
 	private final Animation animation;
@@ -67,13 +66,13 @@ public class Bird {
 	 */
 	public void menuFloat () {
 
-		y += FLOAT_MULTIPLIER;
+		y += floatMultiplier;
 
 		// Change direction within floating range
 		if (y < 220) {
-			FLOAT_MULTIPLIER *= -1;
+			floatMultiplier *= -1;
 		} else if (y > 280) {
-			FLOAT_MULTIPLIER *= -1;
+			floatMultiplier *= -1;
 		}
 
 	}
@@ -121,7 +120,7 @@ public class Bird {
 	public void renderBird (Graphics g) {
 
 		// Calculate angle to rotate bird based on y-velocity
-		rotation = ((90 * (velocity + 25) / 25) - 90) * Math.PI / 180;
+        double rotation = ((90 * (velocity + 25) / 25) - 90) * Math.PI / 180;
 		
 		// Divide for clean jump
 		rotation /= 2;
@@ -140,7 +139,7 @@ public class Bird {
 		}
 
 		// Create bird animation and pass in rotation angle
-		animation.animate(g, x, y,  rotation);
+		animation.animate(g, x, y, rotation);
 
 	}
 
