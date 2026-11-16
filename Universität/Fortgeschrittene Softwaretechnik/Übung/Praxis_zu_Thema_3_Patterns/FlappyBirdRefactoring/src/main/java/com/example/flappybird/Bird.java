@@ -34,12 +34,16 @@ public class Bird {
 	// Bird sprites
 	private BufferedImage[] sprites;
 
+	//Animation
+	private Animation animation;
+
 
 	public Bird (String color, int x, int y, BufferedImage[] s) {
 		this.color = color;
 		this.x = x;
 		this.y = y;
 		this.sprites = s;
+		animation = new Animation(sprites, .09);
 	}
 
 	/**
@@ -156,7 +160,7 @@ public class Bird {
 		}
 
 		// Create bird animation and pass in rotation angle
-		Animation.animate(g, sprites, x, y, .09, rotation);
+		animation.animate(g, x, y,  rotation);
 
 	}
 

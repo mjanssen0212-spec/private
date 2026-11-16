@@ -13,18 +13,23 @@ import java.awt.geom.AffineTransform;
 public class Animation {
 
 	// Start at first frame
-	private static double currentFrame = 0;
+	private double currentFrame = 0;
+	private BufferedImage[] sprites;
+	private double speed;
+
+	public Animation(BufferedImage[] sprites, double speed) {
+		this.sprites = sprites;
+		this.speed = speed;
+	}
 
 	/**
 	 * Creates an animation with an array of sprites
 	 * 
-	 * @param sprites     Array of BufferedImages
 	 * @param x           x-coordinate
 	 * @param y           y-coordinate
-	 * @param speed       Speed of animation
 	 * @param angle       Angle to rotate sprite
 	 */
-	public static void animate (Graphics g, BufferedImage[] sprites, int x, int y, double speed, double angle) {
+	public void animate (Graphics g, int x, int y, double angle) {
 		
 		Graphics2D g2d        = (Graphics2D) g;
 		AffineTransform trans = g2d.getTransform();
