@@ -19,6 +19,7 @@ public class MenuState extends GameStateAbstract{
     @Override
     public GameStateAbstract update() {
         gameSession.getBird().menuFloat();
+        ground.move();
         return this;
     }
 

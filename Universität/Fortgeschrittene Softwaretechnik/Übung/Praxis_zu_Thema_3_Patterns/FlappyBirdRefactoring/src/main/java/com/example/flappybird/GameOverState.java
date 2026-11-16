@@ -27,8 +27,8 @@ public class GameOverState extends GameStateAbstract {
         int keycode = e.getKeyCode();
 
         if (keycode == KeyEvent.VK_ENTER) {
-            nextGameState.onEnter();
             gameSession.reset();
+            nextGameState.onEnter();
             return nextGameState;
         }
 
