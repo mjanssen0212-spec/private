@@ -16,10 +16,10 @@ public class GameSession {
     private Calendar cal;
     private Random rand;
 
-    public GameSession(Map<String, Texture> textures, PipeManager pipeManager) {
+    public GameSession(Map<String, Texture> textures) {
         rand = new Random();
         this.textures = textures;
-        this.pipeManager = pipeManager;
+        this.pipeManager = new PipeManager();
 
         reset();
     }
@@ -46,7 +46,7 @@ public class GameSession {
         randomBird = birds[rand.nextInt(3)]; // Random bird color
 
         // Game bird
-        this.bird = new Bird(randomBird, 172, 250, new BufferedImage[] {
+        this.bird = new Bird(172, 250, new BufferedImage[] {
                 textures.get(randomBird + "Bird1").getImage(),
                 textures.get(randomBird + "Bird2").getImage(),
                 textures.get(randomBird + "Bird3").getImage()
@@ -56,10 +56,6 @@ public class GameSession {
 
     public int getScore() {
         return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public Bird getBird() {
@@ -82,20 +78,8 @@ public class GameSession {
         return pipeManager;
     }
 
-    public String getRandomBird() {
-        return randomBird;
-    }
-
-    public void setRandomBird(String randomBird) {
-        this.randomBird = randomBird;
-    }
-
     public boolean isDarkTheme() {
         return darkTheme;
-    }
-
-    public void setDarkTheme(boolean darkTheme) {
-        this.darkTheme = darkTheme;
     }
 
     public void addScore() {

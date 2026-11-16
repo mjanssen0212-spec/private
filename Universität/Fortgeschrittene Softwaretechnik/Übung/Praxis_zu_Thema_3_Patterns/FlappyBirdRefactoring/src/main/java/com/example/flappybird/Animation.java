@@ -23,7 +23,7 @@ public class Animation {
 	}
 
 	/**
-	 * Creates an animation with an array of sprites
+	 * Draws the current frame and advances the animation
 	 * 
 	 * @param x           x-coordinate
 	 * @param y           y-coordinate

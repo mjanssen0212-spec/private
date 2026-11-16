@@ -114,36 +114,8 @@ public class Renderer {
         return textures;
     }
 
-    public Font getFlappyFontBase() {
-        return flappyFontBase;
-    }
-
-    public void setFlappyFontBase(Font flappyFontBase) {
-        this.flappyFontBase = flappyFontBase;
-    }
-
     public Font getFlappyFontReal() {
         return flappyFontReal;
-    }
-
-    public void setFlappyFontReal(Font flappyFontReal) {
-        this.flappyFontReal = flappyFontReal;
-    }
-
-    public Font getFlappyScoreFont() {
-        return flappyScoreFont;
-    }
-
-    public void setFlappyScoreFont(Font flappyScoreFont) {
-        this.flappyScoreFont = flappyScoreFont;
-    }
-
-    public Font getFlappyMiniFont() {
-        return flappyMiniFont;
-    }
-
-    public void setFlappyMiniFont(Font flappyMiniFont) {
-        this.flappyMiniFont = flappyMiniFont;
     }
 
     private Font getFont(int size) {

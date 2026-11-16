@@ -44,14 +44,13 @@ public class PipeManager {
     }
 
     public boolean collectPoints(Rectangle hitbox) {
-        boolean awardPoint = false;
         for (Pipe p: pipes) {
-            awardPoint = p.checkAwardPoint(hitbox);
-            if (awardPoint) {
-                break;
+            if (p.checkAwardPoint(hitbox)) {
+                return true;
             }
+
         }
-        return awardPoint;
+        return false;
     }
 
     public void render(Renderer renderer, Graphics g) {
@@ -65,14 +64,14 @@ public class PipeManager {
     }
 
     private void spawnPipePair() {
-        Pipe top = findOffscrrenOrCreate();
+        Pipe top = findOffscreenOrCreate();
         top.respawnAsTop();
 
-        Pipe bottom = findOffscrrenOrCreate();
+        Pipe bottom = findOffscreenOrCreate();
         bottom.respawnAsBottom(top.getY());
     }
 
-    private Pipe findOffscrrenOrCreate() {
+    private Pipe findOffscreenOrCreate() {
         for (Pipe p: pipes) {
             if (p.getX() < 0) {
                 return p;

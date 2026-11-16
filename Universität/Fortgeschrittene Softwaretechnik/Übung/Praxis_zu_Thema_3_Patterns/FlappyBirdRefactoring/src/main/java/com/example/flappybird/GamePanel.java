@@ -24,8 +24,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 	private final Ground ground;
 
-	private final PipeManager pipeManager = new PipeManager();
-
 	private GameStateAbstract currentGameState;
 
 	private final MenuState menuState;
@@ -49,7 +47,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 
 		this.renderer = new Renderer(textures);
 		this.ground = new Ground(baseCoords, renderer, baseSpeed);
-		this.gameSession = new GameSession(textures, pipeManager);
+		this.gameSession = new GameSession(textures);
 
 		this.menuState = new MenuState(renderer, ground, gameSession);
 		this.inGameState = new InGameState(renderer, ground, gameSession, audio);
@@ -121,13 +119,4 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		currentGameState = currentGameState.handleMouseEvent(e);
 	}
 
-
-
-
-
-
-
-
-
 }
-

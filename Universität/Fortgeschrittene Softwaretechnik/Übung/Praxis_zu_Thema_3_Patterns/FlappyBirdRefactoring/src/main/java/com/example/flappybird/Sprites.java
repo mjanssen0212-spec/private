@@ -15,9 +15,9 @@ import java.util.HashMap;
 public class Sprites {
 
 	// Resize factor to match frame size
-	private static final double RESIZE_FACTOR = 2.605;
+	private final double RESIZE_FACTOR = 2.605;
 
-	private static BufferedImage spriteSheet = null;
+	private BufferedImage spriteSheet = null;
 
 	// HashMap of texture objects
 	private final HashMap<String, Texture> textures = new HashMap<String, Texture>();
@@ -111,7 +111,7 @@ public class Sprites {
 	 * @param  image     BufferedImage object
 	 * @return           New resized image
 	 */
-	private static BufferedImage resize (BufferedImage image) {
+	private BufferedImage resize (BufferedImage image) {
 
 		// New width and height
 		int newWidth = (int) (image.getWidth() * RESIZE_FACTOR);

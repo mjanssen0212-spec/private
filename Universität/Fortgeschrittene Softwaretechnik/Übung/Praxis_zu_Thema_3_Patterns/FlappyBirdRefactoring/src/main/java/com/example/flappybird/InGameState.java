@@ -3,7 +3,6 @@ package com.example.flappybird;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class InGameState extends GameStateAbstract{
     private boolean inStartGameState = true;
@@ -53,14 +52,13 @@ public class InGameState extends GameStateAbstract{
         Bird gameBird = gameSession.getBird();
         Rectangle hitbox = gameBird.getHitbox();
 
-        // Move and draw each pipe
+        //Update all Pipes
         pm.update();
 
         if (pm.collide(hitbox)) {
-            // Kill bird and play sound
+            // Kill bird
             gameBird.kill();
 
-//            audio.hit();
             return;
         }
 
@@ -97,16 +95,11 @@ public class InGameState extends GameStateAbstract{
     }
 
     public void startGameScreen (Graphics g) {
-
-        // Set bird's new position
-        gameSession.getBird().setGameStartPos();
-
         // Get ready text
         renderer.drawComponent("getReadyText", g);
 
         // Instructions image
         renderer.drawComponent("instructions", g);
-
     }
 
 

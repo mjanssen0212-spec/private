@@ -5,14 +5,12 @@ package com.example.flappybird; /**
  * @author  Paul Krishnamurthy
  */
 
-import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Bird {
 
 	// Bird attributes
-	public String color;
 	private int x, y;
 	private boolean isAlive = true;
 	
@@ -31,33 +29,15 @@ public class Bird {
 	private double delay              = 0;
 	private double rotation           = 0;
 
-	// Bird sprites
-	private BufferedImage[] sprites;
-
-	//Animation
-	private Animation animation;
+    //Animation
+	private final Animation animation;
 
 
-	public Bird (String color, int x, int y, BufferedImage[] s) {
-		this.color = color;
+	public Bird (int x, int y, BufferedImage[] s) {
 		this.x = x;
 		this.y = y;
-		this.sprites = s;
-		animation = new Animation(sprites, .09);
-	}
-
-	/**
-	 * @return     Bird's x-coordinate
-	 */
-	public int getX () {
-		return x;
-	}
-
-	/**
-	 * @return     Bird's y-coordinate
-	 */
-	public int getY () {
-		return y;
+        // Bird sprites
+        animation = new Animation(s, .09);
 	}
 
 	/**
@@ -129,7 +109,7 @@ public class Bird {
 
 		} else {
 
-			// Play audio and set state to dead
+			// Set state to dead
 			isAlive = false;
 		}
 

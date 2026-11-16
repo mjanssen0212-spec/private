@@ -10,19 +10,17 @@ import java.awt.*;
  */
 
 public class Pipe {
-	private final int START_X = FlappyBird.WIDTH + 5;
+	private static final int START_X = FlappyBird.WIDTH + 5;
 	// Pipe coordinates
 	private int x = START_X;
 	private int y;
-
-	// Placement (top or bottom) of pipe
 
 	// Pipe constants
 	public static final int WIDTH         = 67;
 	public static final int HEIGHT        = 416;
 	public static final int PIPE_DISTANCE = 150;          // Horizontal distance between pipes
 	public static final int PIPE_SPACING  = HEIGHT + 170; // Vertical distance between pipes
-	public static final int SPEED        = -2;
+	private static final int SPEED        = -2;
 
 	// If the bird can get a point passing this pipe
 	private boolean canAwardPoint = true;
@@ -59,7 +57,7 @@ public class Pipe {
 
 	public boolean checkAwardPoint(Rectangle hitbox) {
 		if (hitbox.getX() >= x + (double) WIDTH / 2) {
-			// Increase score and play sound
+			// Increase score
 			if (canAwardPoint) {
 				canAwardPoint = false;
 				return true;
